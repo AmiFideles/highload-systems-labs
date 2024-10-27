@@ -1,0 +1,226 @@
+collection:
+  post:
+    tags:
+      - Listing
+    operationId: createListing
+    summary: Создать новое объявление
+    parameters:
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/ListingDto.yaml#/ListingRequestDto'
+    responses:
+      '201':
+        description: Объявление создано
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  get:
+    tags:
+      - Listing
+    operationId: searchListings
+    summary: Найти объявления
+    x-spring-paginated: true
+    parameters:
+      - name: max_price
+        in: query
+        required: false
+        description: Максимальная цена
+        schema:
+          type: number
+          format: double
+      - name: min_price
+        in: query
+        required: false
+        description: Минимальная цена
+        schema:
+          type: number
+          format: double
+      - name: categories_in
+        in: query
+        required: false
+        description: Список категорий (ID)
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int64
+      - name: is_used
+        in: query
+        required: false
+        description: Статус использования (true или false)
+        schema:
+          type: boolean
+    responses:
+      '200':
+        description: Список найденных объявлений
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+
+singleton:
+  get:
+    tags:
+      - Listing
+    operationId: getListingById
+    summary: Получить объявление по ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID объявления
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: Информация об объявлении
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  put:
+    tags:
+      - Listing
+    summary: Обновить объявление
+    operationId: updateListing
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID объявления
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/ListingDto.yaml#/ListingRequestDto'
+    responses:
+      '200':
+        description: Объявление обновлено
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  delete:
+    tags:
+      - Listing
+    summary: Удалить объявление
+    operationId: deleteListing
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID объявления
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '204':
+        description: Объявление удалено
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+status:
+  put:
+    tags:
+      - Listing
+    summary: Управление статусом объявления (только для MODERATOR/ADMIN)
+    operationId: updateListingStatus
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID объявления
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/ListingDto.yaml#/ModeratorListingRequestDto'
+    responses:
+      '200':
+        description: Статус объявления обновлен
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ModeratedListingResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+open:
+  get:
+    tags:
+      - Listing
+    operationId: getOpenListings
+    summary: Найти открытые объявления
+    x-spring-paginated: true
+    responses:
+      '200':
+        description: Список найденных открытых объявлений
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+
+
+user_listings:
+  get:
+    tags:
+      - User
+    operationId: getUserListings
+    summary: Получить мои объявления (только для SELLER)
+    x-spring-paginated: true
+    parameters:
+      - name: status
+        in: query
+        required: false
+        description: Статус объявления
+        schema:
+          $ref: '../component/ListingDto.yaml#/ListingStatusDto'
+      - name: user_id
+        in: query
+        required: false
+        description: ID пользователя
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '200':
+        description: Список объявлений пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '../component/ListingDto.yaml#/ListingPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'

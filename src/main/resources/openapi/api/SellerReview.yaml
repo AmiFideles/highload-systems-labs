@@ -1,0 +1,116 @@
+collection:
+  get:
+    tags:
+      - SellerReview
+    operationId: getMySellerReviews
+    summary: Получить мои отзывы на продавцов
+    x-spring-paginated: true
+    parameters:
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '200':
+        description: Список моих отзывов на продавцов
+        content:
+          application/json:
+            schema:
+              $ref: '../component/SellerReviewDto.yaml#/SellerReviewPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  post:
+    tags:
+      - SellerReview
+    operationId: createSellerReview
+    summary: Создать новый отзыв на продавца
+    parameters:
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/SellerReviewDto.yaml#/SellerReviewCreateRequestDto'
+    responses:
+      '201':
+        description: Отзыв на продавца создан
+        content:
+          application/json:
+            schema:
+              $ref: '../component/SellerReviewDto.yaml#/SellerReviewResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+singleton:
+  get:
+    tags:
+      - SellerReview
+    operationId: getSellerReviewsBySellerId
+    summary: Получить отзывы на продавца по ID
+    x-spring-paginated: true
+    parameters:
+      - name: seller_id
+        in: path
+        required: true
+        description: ID продавца
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: Список отзывов на продавца
+        content:
+          application/json:
+            schema:
+              $ref: '../component/SellerReviewDto.yaml#/SellerReviewPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  put:
+    tags:
+      - SellerReview
+    operationId: updateSellerReview
+    summary: Обновить отзыв на продавца
+    parameters:
+      - name: seller_id
+        in: path
+        required: true
+        description: ID продавца
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/SellerReviewDto.yaml#/SellerReviewUpdateRequestDto'
+    responses:
+      '200':
+        description: Отзыв на продавца обновлен
+        content:
+          application/json:
+            schema:
+              $ref: '../component/SellerReviewDto.yaml#/SellerReviewResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  delete:
+    tags:
+      - SellerReview
+    operationId: deleteSellerReview
+    summary: Удалить отзыв на продавца
+    parameters:
+      - name: seller_id
+        in: path
+        required: true
+        description: ID продавца
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '204':
+        description: Отзыв на продавца удален
+      default:
+        $ref: '../common.yaml#/ErrorResponse'

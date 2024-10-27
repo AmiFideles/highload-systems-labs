@@ -1,0 +1,110 @@
+collection:
+  get:
+    tags:
+      - Category
+    operationId: getList
+    summary: Получить все категории
+    x-spring-paginated: true
+    responses:
+      '200':
+        description: Список категорий
+        content:
+          application/json:
+            schema:
+              $ref: '../component/CategoryDto.yaml#/CategoryPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  post:
+    tags:
+      - Category
+    operationId: create
+    summary: Создать новую категорию
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/CategoryDto.yaml#/CategoryRequestDto'
+    responses:
+      '201':
+        description: Категория создана
+        content:
+          application/json:
+            schema:
+              $ref: '../component/CategoryDto.yaml#/CategoryResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+
+singleton:
+  get:
+    tags:
+      - Category
+    operationId: get
+    summary: Получить категорию по ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID категории
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: Информация о категории
+        content:
+          application/json:
+            schema:
+              $ref: '../component/CategoryDto.yaml#/CategoryResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  put:
+    tags:
+      - Category
+    summary: Обновить категорию
+    operationId: update
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID категории
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/CategoryDto.yaml#/CategoryRequestDto'
+    responses:
+      '200':
+        description: Категория обновлена
+        content:
+          application/json:
+            schema:
+              $ref: '../component/CategoryDto.yaml#/CategoryResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  delete:
+    tags:
+      - Category
+    summary: Удалить категорию
+    operationId: delete
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID категории
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '204':
+        description: Категория удалена
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
