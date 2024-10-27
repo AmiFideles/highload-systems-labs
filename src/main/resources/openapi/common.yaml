@@ -1,0 +1,52 @@
+ErrorResponse:
+  content:
+    application/json:
+      schema:
+        $ref: '#/ApiErrorDto'
+
+ApiErrorDto:
+  type: object
+  properties:
+    code:
+      type: string
+    message:
+      type: string
+  required:
+    - code
+    - message
+
+Page:
+  type: object
+  properties:
+    content:
+      type: array
+    total_elements:
+      type: integer
+    total_pages:
+      type: integer
+    size:
+      type: integer
+      description: 'Page size'
+    number:
+      type: integer
+      description: 'Page number'
+    number_of_elements:
+      type: integer
+      description: 'Number of elements on current page'
+    first:
+      type: boolean
+    last:
+      type: boolean
+    empty:
+      type: boolean
+
+components:
+  parameters:
+    UserIdHeader:
+      name: X-User-Id
+      in: header
+      required: true
+      description: ID of the user
+      schema:
+        type: integer
+        format: int64
