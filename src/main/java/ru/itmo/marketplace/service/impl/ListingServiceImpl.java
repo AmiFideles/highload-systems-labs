@@ -110,6 +110,9 @@ public class ListingServiceImpl implements ListingService {
         if (!userService.existsById(userId)) {
             throw new NotFoundException("User with id %s not found".formatted(userId));
         }
+        if (status == null) {
+            return listingRepository.findByCreatorId(userId, pageable);
+        }
         return listingRepository.findByStatusAndCreatorId(status, userId, pageable);
     }
 
