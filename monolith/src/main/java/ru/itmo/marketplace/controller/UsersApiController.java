@@ -15,13 +15,18 @@ import ru.itmo.marketplace.entity.User;
 import ru.itmo.marketplace.mapper.custom.DealCustomMapper;
 import ru.itmo.marketplace.mapper.custom.ListingCustomMapper;
 import ru.itmo.marketplace.mapper.mapstruct.UserMapper;
-import ru.itmo.marketplace.model.*;
+import ru.itmo.marketplace.model.DealPageableResponseDto;
+import ru.itmo.marketplace.model.DealStatusDto;
+import ru.itmo.marketplace.model.ListingPageableResponseDto;
+import ru.itmo.marketplace.model.ListingStatusDto;
+import ru.itmo.marketplace.model.UserPageableResponseDto;
+import ru.itmo.marketplace.model.UserRequestDto;
+import ru.itmo.marketplace.model.UserResponseDto;
 import ru.itmo.marketplace.service.DealService;
 import ru.itmo.marketplace.service.ListingService;
 import ru.itmo.marketplace.service.UserService;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
