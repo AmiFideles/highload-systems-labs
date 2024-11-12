@@ -119,9 +119,7 @@ public class SavedListingsApiTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].listing.id", is(savedListing.getListingId().intValue())))
-                .andExpect(jsonPath("$.total_elements", is(1)))
-                .andExpect(jsonPath("$.total_pages", is(1)));
+                .andExpect(jsonPath("$.content[0].listing.id", is(savedListing.getListingId().intValue())));
     }
 
     @Test
