@@ -7,51 +7,23 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
-@EqualsAndHashCode
 public class SellerReviewUpdateRequestDto {
-
-    private Integer rating;
-
-    private String comment;
-
-    public SellerReviewUpdateRequestDto rating(Integer rating) {
-        this.rating = rating;
-        return this;
-    }
 
     @NotNull
     @Min(1)
     @Max(5)
     @JsonProperty("rating")
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public SellerReviewUpdateRequestDto comment(String comment) {
-        this.comment = comment;
-        return this;
-    }
+    private Integer rating;
 
     @JsonProperty("comment")
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    private String comment;
 
 }
 
