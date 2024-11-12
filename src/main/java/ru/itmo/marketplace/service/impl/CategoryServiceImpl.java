@@ -35,11 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category create(Category category) {
-        if (existsById(category.getId())) {
-            throw new DuplicateException("Category with id " + category.getId() + " already exists");
-        }
         if (existsByName(category.getName())) {
-            throw new DuplicateException("Category with id " + category.getId() + " already exists");
+            throw new DuplicateException("Category with name " + category.getName() + " already exists");
         }
         return repository.save(category);
     }
