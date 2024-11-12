@@ -1,0 +1,29 @@
+SavedListingRequestDto:
+  type: object
+  properties:
+    listing_id:
+      type: integer
+      format: int64
+  required:
+    - listing_id
+
+SavedListingResponseDto:
+  type: object
+  properties:
+    listing:
+      $ref: './ListingDto.yaml#/ListingResponseDto'
+    created_at:
+      type: string
+      format: date-time
+  required:
+    - listing
+    - created_at
+
+SavedListingPageableResponseDto:
+  allOf:
+    - $ref: '../common.yaml#/Page'
+    - type: object
+      properties:
+        content:
+          items:
+            $ref: '#/SavedListingResponseDto'

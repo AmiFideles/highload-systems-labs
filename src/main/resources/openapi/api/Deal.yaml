@@ -1,0 +1,152 @@
+collection:
+  get:
+    tags:
+      - Deal
+    operationId: getDealList
+    summary: Получить список моих сделок
+    x-spring-paginated: true
+    parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: '../component/DealDto.yaml#/DealStatusDto'
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '200':
+        description: Список сделок
+        content:
+          application/json:
+            schema:
+              $ref: '../component/DealDto.yaml#/DealPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  post:
+    tags:
+      - Deal
+    operationId: createDeal
+    summary: Создать новую сделку
+    parameters:
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/DealDto.yaml#/DealCreateRequestDto'
+    responses:
+      '201':
+        description: Сделка создана
+        content:
+          application/json:
+            schema:
+              $ref: '../component/DealDto.yaml#/DealResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+singleton:
+  get:
+    tags:
+      - Deal
+    operationId: getDealById
+    summary: Получить сделку по ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID сделки
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '200':
+        description: Информация о сделке
+        content:
+          application/json:
+            schema:
+              $ref: '../component/DealDto.yaml#/DealResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  put:
+    tags:
+      - Deal
+    operationId: updateDealStatus
+    summary: Обновить статус сделки
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID сделки
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/DealDto.yaml#/DealStatusUpdateRequestDto'
+    responses:
+      '200':
+        description: Статус сделки обновлен
+        content:
+          application/json:
+            schema:
+              $ref: '../component/DealDto.yaml#/DealResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  delete:
+    tags:
+      - Deal
+    operationId: deleteDeal
+    summary: Удалить сделку
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID сделки
+        schema:
+          type: integer
+          format: int64
+      - $ref: '../common.yaml#/components/parameters/UserIdHeader'
+    responses:
+      '204':
+        description: Сделка удалена
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+users_used_id_deals:
+  get:
+    tags:
+      - Deal
+    operationId: getUserDeals
+    summary: Получить сделки пользователя
+    x-spring-paginated: true
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: ID пользователя
+        schema:
+          type: integer
+          format: int64
+      - name: status
+        in: query
+        required: false
+        description: Статус объявления
+        schema:
+          $ref: '../component/DealDto.yaml#/DealStatusDto'
+    responses:
+      '200':
+        description: Список сделок пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '../component/DealDto.yaml#/DealPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'

@@ -1,0 +1,110 @@
+collection:
+  get:
+    tags:
+      - User
+    operationId: getUserList
+    summary: Получить всех пользователей
+    x-spring-paginated: true
+    responses:
+      '200':
+        description: Список пользователей
+        content:
+          application/json:
+            schema:
+              $ref: '../component/UserDto.yaml#/UserPageableResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  post:
+    tags:
+      - User
+    operationId: createUser
+    summary: Создать нового пользователя
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/UserDto.yaml#/UserRequestDto'
+    responses:
+      '201':
+        description: Пользователь создан
+        content:
+          application/json:
+            schema:
+              $ref: '../component/UserDto.yaml#/UserResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+
+singleton:
+  get:
+    tags:
+      - User
+    operationId: getUserById
+    summary: Получить пользователя по ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID пользователя
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: Информация о пользователе
+        content:
+          application/json:
+            schema:
+              $ref: '../component/UserDto.yaml#/UserResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  put:
+    tags:
+      - User
+    summary: Обновить пользователя
+    operationId: updateUser
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID пользователя
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../component/UserDto.yaml#/UserRequestDto'
+    responses:
+      '200':
+        description: Пользователь обновлен
+        content:
+          application/json:
+            schema:
+              $ref: '../component/UserDto.yaml#/UserResponseDto'
+      default:
+        $ref: '../common.yaml#/ErrorResponse'
+
+  delete:
+    tags:
+      - User
+    summary: Удалить пользователя
+    operationId: deleteUser
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID пользователя
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '204':
+        description: Пользователь удален
+      default:
+        $ref: '../common.yaml#/ErrorResponse'

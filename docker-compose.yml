@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: "pg_isready -d postgres -U postgres"
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.18
+    container_name: migrations
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - --hub-mode=off
+      - --changelog-file=cumulative.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://db:5432/postgres
+      - --username=postgres
+      - --password=postgres
+      - --secure-parsing=false
+      - update
+    volumes:
+      - ./src/main/resources/db:/liquibase/changelog
+    networks:
+      - backend
+
+  app:
+    build:
+      context: ./
+    environment:
+      DATASOURCE_URL: "jdbc:postgresql://db:5432/postgres"
+      DATASOURCE_USERNAME: postgres
+      DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - liquibase-migrations
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
+    driver: bridge
