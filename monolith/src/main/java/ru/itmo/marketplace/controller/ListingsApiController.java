@@ -6,12 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itmo.marketplace.api.ListingsApi;
+import ru.itmo.marketplace.dto.ListingPageableResponseDto;
+import ru.itmo.marketplace.dto.ListingRequestDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
+import ru.itmo.marketplace.dto.ModeratedListingResponseDto;
+import ru.itmo.marketplace.dto.ModeratorListingRequestDto;
 import ru.itmo.marketplace.entity.Listing;
 import ru.itmo.marketplace.entity.ListingStatus;
 import ru.itmo.marketplace.mapper.custom.ListingCustomMapper;
-import ru.itmo.marketplace.model.*;
 import ru.itmo.marketplace.service.ListingFilter;
 import ru.itmo.marketplace.service.ListingService;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
@@ -23,11 +27,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
-public class ListingsApiController implements ListingsApi {
+public class ListingsApiController {
     private final ListingService listingService;
     private final ListingCustomMapper listingMapper;
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/listings",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<ListingResponseDto> createListing(Long userId, ListingRequestDto listingRequestDto) {
         Listing listing = listingMapper.fromDto(listingRequestDto);
         listing = listingService.create(listing, userId);
@@ -36,7 +45,11 @@ public class ListingsApiController implements ListingsApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/listings/{id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<ListingResponseDto> getListingById(Long id) {
         Listing listing = listingService.findById(id).orElseThrow(
                 () -> new NotFoundException("Listing with id %s not found".formatted(id))
@@ -46,7 +59,12 @@ public class ListingsApiController implements ListingsApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/listings/{id}/status",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<ListingResponseDto> updateListing(
             Long id, Long userId, ListingRequestDto listingRequestDto
     ) {
@@ -60,7 +78,11 @@ public class ListingsApiController implements ListingsApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/listings/{id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<Void> deleteListing(Long id, Long userId) {
         if (!listingService.deleteById(id, userId)) {
             throw new NotFoundException("Listing with id %s not found".formatted(id));
@@ -68,7 +90,11 @@ public class ListingsApiController implements ListingsApi {
         return ResponseEntity.ok().build();
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/listings",
+            produces = { "application/json" }
+    )
     public ResponseEntity<ListingPageableResponseDto> searchListings(Double maxPrice, Double minPrice, List<Long> categoriesIn, Boolean isUsed, Pageable pageable) {
         ListingFilter listingFilter = ListingFilter.builder()
                 .minPrice(minPrice)
@@ -79,13 +105,22 @@ public class ListingsApiController implements ListingsApi {
         return ResponseEntity.ok(listingMapper.toDto(listings));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/listings/open",
+            produces = { "application/json" }
+    )
     public ResponseEntity<ListingPageableResponseDto> getOpenListings(Pageable pageable) {
         Page<Listing> openListings = listingService.findOpenListings(pageable);
         return ResponseEntity.ok(listingMapper.toDto(openListings));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/listings/{id}",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<ModeratedListingResponseDto> updateListingStatus(
             Long id, Long UserId, ModeratorListingRequestDto moderatorListingRequestDto
     ) {

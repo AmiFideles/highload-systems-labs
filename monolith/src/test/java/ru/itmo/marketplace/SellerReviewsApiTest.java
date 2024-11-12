@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.marketplace.entity.SellerReview;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.model.SellerReviewCreateRequestDto;
-import ru.itmo.marketplace.model.SellerReviewUpdateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewCreateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewUpdateRequestDto;
 import ru.itmo.marketplace.service.SellerReviewService;
 
 import static org.hamcrest.Matchers.hasSize;

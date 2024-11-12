@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itmo.marketplace.api.DealReviewsApi;
 import ru.itmo.marketplace.entity.DealReview;
 import ru.itmo.marketplace.mapper.custom.DealReviewCustomMapper;
-import ru.itmo.marketplace.model.DealReviewPageableResponseDto;
-import ru.itmo.marketplace.model.DealReviewRequestDto;
-import ru.itmo.marketplace.model.DealReviewResponseDto;
+import ru.itmo.marketplace.dto.DealReviewPageableResponseDto;
+import ru.itmo.marketplace.dto.DealReviewRequestDto;
+import ru.itmo.marketplace.dto.DealReviewResponseDto;
 import ru.itmo.marketplace.service.DealReviewService;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 
@@ -20,11 +20,16 @@ import ru.itmo.marketplace.service.exceptions.NotFoundException;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
-public class DealReviewsApiController implements DealReviewsApi {
+public class DealReviewsApiController {
     private final DealReviewService dealReviewService;
     private final DealReviewCustomMapper dealReviewMapper;
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/deal-reviews",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<DealReviewResponseDto> createDealReview(Long userId, DealReviewRequestDto dealReviewRequestDto) {
         DealReview dealReview = dealReviewMapper.fromDto(dealReviewRequestDto);
 
@@ -34,7 +39,11 @@ public class DealReviewsApiController implements DealReviewsApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/deal-reviews/{id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<Void> deleteDealReview(Long id, Long userId) {
         boolean deleted = dealReviewService.deleteById(id, userId);
         if (!deleted) {
@@ -43,7 +52,11 @@ public class DealReviewsApiController implements DealReviewsApi {
         return ResponseEntity.noContent().build();
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/deal-reviews/{id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<DealReviewResponseDto> getDealReviewById(Long id) {
         return dealReviewService.findById(id)
                 .map(dealReviewMapper::toDto)
@@ -51,7 +64,11 @@ public class DealReviewsApiController implements DealReviewsApi {
                 .orElseThrow(() -> new NotFoundException("Deal review with id %s not found".formatted(id)));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/deal-reviews",
+            produces = { "application/json" }
+    )
     public ResponseEntity<DealReviewPageableResponseDto> getDealReviewList(Long userId, Pageable pageable) {
         Page<DealReview> reviewsPage = dealReviewService.findAll(userId, pageable);
         return ResponseEntity.ok(
@@ -59,7 +76,12 @@ public class DealReviewsApiController implements DealReviewsApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/deal-reviews/{id}",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<DealReviewResponseDto> updateDealReview(Long id, Long userId, DealReviewRequestDto dealReviewRequestDto) {
         DealReview dealReview = dealReviewMapper.fromDto(dealReviewRequestDto);
         dealReview.setId(id);

@@ -10,6 +10,7 @@
 
     <modules>
         <module>monolith</module>
+        <module>config-server</module>
     </modules>
 
     <properties>
@@ -155,50 +156,6 @@
                     </executions>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.openapitools</groupId>
-                    <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>7.9.0</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                            <configuration>
-                                <inputSpec>
-                                    ${project.basedir}/src/main/resources/openapi/api.yaml
-                                </inputSpec>
-                                <supportingFilesToGenerate>
-                                    ApiUtil.java
-                                </supportingFilesToGenerate>
-                                <generatorName>spring</generatorName>
-                                <apiPackage>ru.itmo.marketplace.api</apiPackage>
-                                <modelPackage>ru.itmo.marketplace.model</modelPackage>
-                                <configOptions>
-                                    <additionalModelTypeAnnotations>
-                                        @lombok.AllArgsConstructor
-                                        @lombok.NoArgsConstructor
-                                        @lombok.Builder
-                                    </additionalModelTypeAnnotations>
-                                    <useSpringBoot3>true</useSpringBoot3>
-                                    <useJakartaEe>true</useJakartaEe>
-                                    <interfaceOnly>true</interfaceOnly>
-                                    <skipValidateSpec>false</skipValidateSpec>
-                                    <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
-
-                                    <java8>true</java8>
-                                    <dateLibrary>custom</dateLibrary>
-                                </configOptions>
-                                <typeMappings>
-                                    <typeMapping>DateTime=LocalDateTime</typeMapping>
-                                </typeMappings>
-                                <importMappings>
-                                    <importMapping>LocalDateTime=java.time.LocalDateTime</importMapping>
-                                </importMappings>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>

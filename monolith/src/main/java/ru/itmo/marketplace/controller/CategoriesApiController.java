@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itmo.marketplace.api.CategoriesApi;
 import ru.itmo.marketplace.entity.Category;
 import ru.itmo.marketplace.mapper.mapstruct.CategoryMapper;
-import ru.itmo.marketplace.model.CategoryPageableResponseDto;
-import ru.itmo.marketplace.model.CategoryRequestDto;
-import ru.itmo.marketplace.model.CategoryResponseDto;
+import ru.itmo.marketplace.dto.CategoryPageableResponseDto;
+import ru.itmo.marketplace.dto.CategoryRequestDto;
+import ru.itmo.marketplace.dto.CategoryResponseDto;
 import ru.itmo.marketplace.service.CategoryService;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 
@@ -20,19 +20,31 @@ import ru.itmo.marketplace.service.exceptions.NotFoundException;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
-public class CategoriesApiController implements CategoriesApi {
+public class CategoriesApiController {
     private final CategoryMapper mapper;
     private final CategoryService service;
 
-    @Override
+//    @Value("${app.test}")
+//    String prop;
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/categories",
+            produces = {"application/json"}
+    )
     public ResponseEntity<CategoryPageableResponseDto> getList(Pageable pageable) {
+//        log.info(prop);
         Page<Category> categories = service.findAll(pageable);
         return ResponseEntity.ok(
                 mapper.toDto(categories)
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/categories/{id}",
+            produces = {"application/json"}
+    )
     public ResponseEntity<CategoryResponseDto> get(Long id) {
         var category = service.findById(id).orElseThrow(
                 () -> new NotFoundException("Category with id %s not found".formatted(id))
@@ -42,7 +54,12 @@ public class CategoriesApiController implements CategoriesApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/categories",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
     public ResponseEntity<CategoryResponseDto> create(CategoryRequestDto categoryRequestDto) {
         var category = mapper.fromDto(categoryRequestDto);
         category = service.create(category);
@@ -51,7 +68,12 @@ public class CategoriesApiController implements CategoriesApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/categories/{id}",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
     public ResponseEntity<CategoryResponseDto> update(Long id, CategoryRequestDto categoryRequestDto) {
         var category = mapper.fromDto(categoryRequestDto);
         category.setId(id);
@@ -63,7 +85,11 @@ public class CategoriesApiController implements CategoriesApi {
         );
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/categories/{id}",
+            produces = {"application/json"}
+    )
     public ResponseEntity<Void> delete(Long id) {
         if (!service.deleteById(id)) {
             throw new NotFoundException("Category with id %s not found".formatted(id));
