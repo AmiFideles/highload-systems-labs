@@ -1,10 +1,15 @@
 package ru.itmo.marketplace.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,13 +32,16 @@ public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/deal-reviews",
-            produces = { "application/json" },
-            consumes = { "application/json" }
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
-    public ResponseEntity<DealReviewResponseDto> createDealReview(Long userId, DealReviewRequestDto dealReviewRequestDto) {
+    public ResponseEntity<DealReviewResponseDto> createDealReview(
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            @Valid @RequestBody DealReviewRequestDto dealReviewRequestDto
+    ) {
         DealReview dealReview = dealReviewMapper.fromDto(dealReviewRequestDto);
 
-        dealReview = dealReviewService.create(dealReview, userId);
+        dealReview = dealReviewService.create(dealReview, xUserId);
         return ResponseEntity.ok(
                 dealReviewMapper.toDto(dealReview)
         );
@@ -42,10 +50,13 @@ public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/deal-reviews/{id}",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<Void> deleteDealReview(Long id, Long userId) {
-        boolean deleted = dealReviewService.deleteById(id, userId);
+    public ResponseEntity<Void> deleteDealReview(
+            @PathVariable("id") Long id,
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId
+    ) {
+        boolean deleted = dealReviewService.deleteById(id, xUserId);
         if (!deleted) {
             throw new NotFoundException("Deal review with id %s not found".formatted(id));
         }
@@ -55,9 +66,11 @@ public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/deal-reviews/{id}",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<DealReviewResponseDto> getDealReviewById(Long id) {
+    public ResponseEntity<DealReviewResponseDto> getDealReviewById(
+            @PathVariable("id") Long id
+    ) {
         return dealReviewService.findById(id)
                 .map(dealReviewMapper::toDto)
                 .map(ResponseEntity::ok)
@@ -67,10 +80,13 @@ public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/deal-reviews",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<DealReviewPageableResponseDto> getDealReviewList(Long userId, Pageable pageable) {
-        Page<DealReview> reviewsPage = dealReviewService.findAll(userId, pageable);
+    public ResponseEntity<DealReviewPageableResponseDto> getDealReviewList(
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            Pageable pageable
+    ) {
+        Page<DealReview> reviewsPage = dealReviewService.findAll(xUserId, pageable);
         return ResponseEntity.ok(
                 dealReviewMapper.toDto(reviewsPage)
         );
@@ -79,14 +95,18 @@ public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/deal-reviews/{id}",
-            produces = { "application/json" },
-            consumes = { "application/json" }
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
-    public ResponseEntity<DealReviewResponseDto> updateDealReview(Long id, Long userId, DealReviewRequestDto dealReviewRequestDto) {
+    public ResponseEntity<DealReviewResponseDto> updateDealReview(
+            @PathVariable("id") Long id,
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            @Valid @RequestBody DealReviewRequestDto dealReviewRequestDto
+    ) {
         DealReview dealReview = dealReviewMapper.fromDto(dealReviewRequestDto);
         dealReview.setId(id);
 
-        return dealReviewService.update(dealReview, userId)
+        return dealReviewService.update(dealReview, xUserId)
                 .map(dealReviewMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new NotFoundException("Deal review with id %s not found".formatted(id)));

@@ -1,10 +1,15 @@
 package ru.itmo.marketplace.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,16 +29,18 @@ public class SavedListingsApiController {
     private final SavedListingCustomMapper savedListingMapper;
     private final SavedListingService savedListingService;
 
-
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/saved-listings",
-            produces = { "application/json" },
-            consumes = { "application/json" }
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
-    public ResponseEntity<SavedListingResponseDto> addSavedListing(Long userId, SavedListingRequestDto savedListingRequestDto) {
+    public ResponseEntity<SavedListingResponseDto> addSavedListing(
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            @Valid @RequestBody SavedListingRequestDto savedListingRequestDto
+    ) {
         SavedListing savedListing = savedListingMapper.fromDto(savedListingRequestDto);
-        savedListing.setUserId(userId);
+        savedListing.setUserId(xUserId);
 
         savedListing = savedListingService.create(savedListing);
 
@@ -45,10 +52,13 @@ public class SavedListingsApiController {
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/saved-listings/{listing_id}",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<SavedListingResponseDto> getSavedListingById(Long listingId, Long userId) {
-        SavedListing savedListing = savedListingService.findById(listingId, userId).orElseThrow(
+    public ResponseEntity<SavedListingResponseDto> getSavedListingById(
+            @PathVariable("listing_id") Long listingId,
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId
+    ) {
+        SavedListing savedListing = savedListingService.findById(listingId, xUserId).orElseThrow(
                 () -> new NotFoundException("Saved listing with id %s not found".formatted(listingId))
         );
         return ResponseEntity.ok(
@@ -59,20 +69,26 @@ public class SavedListingsApiController {
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/saved-listings",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<SavedListingPageableResponseDto> getSavedListings(Long userId, Pageable pageable) {
-        Page<SavedListing> savedListings = savedListingService.findAll(userId, pageable);
+    public ResponseEntity<SavedListingPageableResponseDto> getSavedListings(
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            Pageable pageable
+    ) {
+        Page<SavedListing> savedListings = savedListingService.findAll(xUserId, pageable);
         return ResponseEntity.ok(savedListingMapper.toDto(savedListings));
     }
 
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/saved-listings/{listing_id}",
-            produces = { "application/json" }
+            produces = {"application/json"}
     )
-    public ResponseEntity<Void> deleteSavedListing(Long listingId, Long userId) {
-        boolean deleted = savedListingService.deleteById(listingId, userId);
+    public ResponseEntity<Void> deleteSavedListing(
+            @PathVariable("listing_id") Long listingId,
+            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId
+    ) {
+        boolean deleted = savedListingService.deleteById(listingId, xUserId);
         if (!deleted) {
             throw new NotFoundException("Saved listing with id %s not found".formatted(listingId));
         }
