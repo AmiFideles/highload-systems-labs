@@ -1,10 +1,13 @@
 package ru.itmo.marketplace.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,16 +27,14 @@ public class CategoriesApiController {
     private final CategoryMapper mapper;
     private final CategoryService service;
 
-//    @Value("${app.test}")
-//    String prop;
-
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/categories",
             produces = {"application/json"}
     )
-    public ResponseEntity<CategoryPageableResponseDto> getList(Pageable pageable) {
-//        log.info(prop);
+    public ResponseEntity<CategoryPageableResponseDto> getList(
+            Pageable pageable
+    ) {
         Page<Category> categories = service.findAll(pageable);
         return ResponseEntity.ok(
                 mapper.toDto(categories)
@@ -45,7 +46,9 @@ public class CategoriesApiController {
             value = "/categories/{id}",
             produces = {"application/json"}
     )
-    public ResponseEntity<CategoryResponseDto> get(Long id) {
+    public ResponseEntity<CategoryResponseDto> get(
+            @PathVariable("id") Long id
+    ) {
         var category = service.findById(id).orElseThrow(
                 () -> new NotFoundException("Category with id %s not found".formatted(id))
         );
@@ -60,7 +63,9 @@ public class CategoriesApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<CategoryResponseDto> create(CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<CategoryResponseDto> create(
+            @Valid @RequestBody CategoryRequestDto categoryRequestDto
+    ) {
         var category = mapper.fromDto(categoryRequestDto);
         category = service.create(category);
         return ResponseEntity.ok(
@@ -74,7 +79,10 @@ public class CategoriesApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<CategoryResponseDto> update(Long id, CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<CategoryResponseDto> update(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody CategoryRequestDto categoryRequestDto
+    ) {
         var category = mapper.fromDto(categoryRequestDto);
         category.setId(id);
         category = service.update(category).orElseThrow(
@@ -90,7 +98,9 @@ public class CategoriesApiController {
             value = "/categories/{id}",
             produces = {"application/json"}
     )
-    public ResponseEntity<Void> delete(Long id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable("id") Long id
+    ) {
         if (!service.deleteById(id)) {
             throw new NotFoundException("Category with id %s not found".formatted(id));
         }
