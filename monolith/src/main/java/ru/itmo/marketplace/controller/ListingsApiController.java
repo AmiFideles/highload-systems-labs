@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itmo.marketplace.dto.ListingPageableResponseDto;
 import ru.itmo.marketplace.dto.ListingRequestDto;
 import ru.itmo.marketplace.dto.ListingResponseDto;
 import ru.itmo.marketplace.dto.ModeratedListingResponseDto;
@@ -72,7 +71,7 @@ public class ListingsApiController {
 
     @RequestMapping(
             method = RequestMethod.PUT,
-            value = "/listings/{id}/status",
+            value = "/listings/{id}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -111,7 +110,7 @@ public class ListingsApiController {
             value = "/listings",
             produces = {"application/json"}
     )
-    public ResponseEntity<ListingPageableResponseDto> searchListings(
+    public ResponseEntity<Page<ListingResponseDto>> searchListings(
             @Valid @RequestParam(value = "max_price", required = false) Double maxPrice,
             @Valid @RequestParam(value = "min_price", required = false) Double minPrice,
             @Valid @RequestParam(value = "categories_in", required = false) List<Long> categoriesIn,
@@ -124,7 +123,9 @@ public class ListingsApiController {
                 .categoriesIn(categoriesIn)
                 .isUsed(isUsed).build();
         Page<Listing> listings = listingService.findAll(listingFilter, pageable);
-        return ResponseEntity.ok(listingMapper.toDto(listings));
+        return ResponseEntity.ok(
+                listings.map(listingMapper::toDto)
+        );
     }
 
     @RequestMapping(
@@ -132,16 +133,18 @@ public class ListingsApiController {
             value = "/listings/open",
             produces = {"application/json"}
     )
-    public ResponseEntity<ListingPageableResponseDto> getOpenListings(
+    public ResponseEntity<Page<ListingResponseDto>> getOpenListings(
             Pageable pageable
     ) {
         Page<Listing> openListings = listingService.findOpenListings(pageable);
-        return ResponseEntity.ok(listingMapper.toDto(openListings));
+        return ResponseEntity.ok(
+                openListings.map(listingMapper::toDto)
+        );
     }
 
     @RequestMapping(
             method = RequestMethod.PUT,
-            value = "/listings/{id}",
+            value = "/listings/{id}/status",
             produces = {"application/json"},
             consumes = {"application/json"}
     )

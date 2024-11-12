@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
@@ -14,24 +16,13 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
+@Setter
+@Getter
 public class CategoryRequestDto {
-
-    private String name;
-
-    public CategoryRequestDto name(String name) {
-        this.name = name;
-        return this;
-    }
 
     @NotNull
     @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String name;
 
 }
 

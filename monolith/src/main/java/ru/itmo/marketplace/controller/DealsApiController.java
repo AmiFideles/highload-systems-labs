@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.dto.DealCreateRequestDto;
-import ru.itmo.marketplace.dto.DealPageableResponseDto;
 import ru.itmo.marketplace.dto.DealResponseDto;
 import ru.itmo.marketplace.dto.DealStatusDto;
 import ru.itmo.marketplace.dto.DealStatusUpdateRequestDto;
@@ -72,7 +71,7 @@ public class DealsApiController {
             value = "/deals",
             produces = {"application/json"}
     )
-    public ResponseEntity<DealPageableResponseDto> getDealList(
+    public ResponseEntity<Page<DealResponseDto>> getDealList(
             @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             @Valid @RequestParam(value = "status", required = false) DealStatusDto status,
             Pageable pageable
@@ -80,7 +79,7 @@ public class DealsApiController {
         DealStatus dealStatus = dealCustomMapper.fromDto(status);
         Page<Deal> deals = dealService.findAllByStatus(xUserId, dealStatus, pageable);
         return ResponseEntity.ok(
-                dealCustomMapper.toDto(deals)
+                deals.map(dealCustomMapper::toDto)
         );
     }
 

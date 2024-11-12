@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itmo.marketplace.dto.DealResponseDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.DealStatus;
 import ru.itmo.marketplace.entity.Listing;
@@ -21,11 +23,8 @@ import ru.itmo.marketplace.entity.User;
 import ru.itmo.marketplace.mapper.custom.DealCustomMapper;
 import ru.itmo.marketplace.mapper.custom.ListingCustomMapper;
 import ru.itmo.marketplace.mapper.mapstruct.UserMapper;
-import ru.itmo.marketplace.dto.DealPageableResponseDto;
 import ru.itmo.marketplace.dto.DealStatusDto;
-import ru.itmo.marketplace.dto.ListingPageableResponseDto;
 import ru.itmo.marketplace.dto.ListingStatusDto;
-import ru.itmo.marketplace.dto.UserPageableResponseDto;
 import ru.itmo.marketplace.dto.UserRequestDto;
 import ru.itmo.marketplace.dto.UserResponseDto;
 import ru.itmo.marketplace.service.DealService;
@@ -80,11 +79,13 @@ public class UsersApiController {
             value = "/users",
             produces = {"application/json"}
     )
-    public ResponseEntity<UserPageableResponseDto> getUserList(
+    public ResponseEntity<Page<UserResponseDto>> getUserList(
             Pageable pageable
     ) {
         Page<User> users = userService.findAll(pageable);
-        return ResponseEntity.ok(mapper.toDto(users));
+        return ResponseEntity.ok(
+                users.map(mapper::toDto)
+        );
     }
 
     @RequestMapping(
@@ -126,7 +127,7 @@ public class UsersApiController {
             value = "/users/{user_id}/deals",
             produces = {"application/json"}
     )
-    public ResponseEntity<DealPageableResponseDto> getUserDeals(
+    public ResponseEntity<Page<DealResponseDto>> getUserDeals(
             @PathVariable("user_id") Long userId,
             @Valid @RequestParam(value = "status", required = false) DealStatusDto status,
             Pageable pageable
@@ -134,7 +135,7 @@ public class UsersApiController {
         DealStatus dealStatus = dealCustomMapper.fromDto(status);
         Page<Deal> deals = dealService.findAllByStatus(userId, dealStatus, pageable);
         return ResponseEntity.ok(
-                dealCustomMapper.toDto(deals)
+                deals.map(dealCustomMapper::toDto)
         );
     }
 
@@ -143,7 +144,7 @@ public class UsersApiController {
             value = "/users/listings",
             produces = {"application/json"}
     )
-    public ResponseEntity<ListingPageableResponseDto> getUserListings(
+    public ResponseEntity<Page<ListingResponseDto>> getUserListings(
             @NotNull @RequestHeader(value = "X-User-Id", required = true) Long xUserId,
             @Valid @RequestParam(value = "status", required = false) ListingStatusDto status,
             @Valid @RequestParam(value = "user_id", required = false) Long userId,
@@ -153,7 +154,7 @@ public class UsersApiController {
         var listingStatus = listingCustomMapper.fromDto(status);
         Page<Listing> listings = listingService.findByUserIdAndStatus(idUser, listingStatus, pageable);
         return ResponseEntity.ok(
-                listingCustomMapper.toDto(listings)
+                listings.map(listingCustomMapper::toDto)
         );
     }
 }

@@ -1,9 +1,7 @@
 package ru.itmo.marketplace.mapper.custom;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import ru.itmo.marketplace.dto.ListingPageableResponseDto;
 import ru.itmo.marketplace.dto.ListingRequestDto;
 import ru.itmo.marketplace.dto.ListingResponseDto;
 import ru.itmo.marketplace.dto.ListingStatusDto;
@@ -43,12 +41,6 @@ public class ListingCustomMapper {
         ListingResponseDto dto = listingMapper.toDto(listing);
         dto.setCreatorId(listing.getCreator().getId());
         dto.setCategories(listing.getCategories().stream().map(categoryMapper::toDto).toList());
-        return dto;
-    }
-
-    public ListingPageableResponseDto toDto(Page<Listing> page) {
-        ListingPageableResponseDto dto = listingMapper.toDto(page);
-        dto.setContent(page.getContent().stream().map(this::toDto).toList());
         return dto;
     }
 

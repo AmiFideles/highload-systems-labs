@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.entity.Category;
 import ru.itmo.marketplace.mapper.mapstruct.CategoryMapper;
-import ru.itmo.marketplace.dto.CategoryPageableResponseDto;
 import ru.itmo.marketplace.dto.CategoryRequestDto;
 import ru.itmo.marketplace.dto.CategoryResponseDto;
 import ru.itmo.marketplace.service.CategoryService;
@@ -32,12 +31,12 @@ public class CategoriesApiController {
             value = "/categories",
             produces = {"application/json"}
     )
-    public ResponseEntity<CategoryPageableResponseDto> getList(
+    public ResponseEntity<Page<CategoryResponseDto>> getList(
             Pageable pageable
     ) {
         Page<Category> categories = service.findAll(pageable);
         return ResponseEntity.ok(
-                mapper.toDto(categories)
+                categories.map(mapper::toDto)
         );
     }
 

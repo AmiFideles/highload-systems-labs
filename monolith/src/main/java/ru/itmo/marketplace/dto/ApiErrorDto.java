@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
@@ -14,16 +15,12 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
+@Setter
 public class ApiErrorDto {
 
     private String code;
 
     private String message;
-
-    public ApiErrorDto code(String code) {
-        this.code = code;
-        return this;
-    }
 
     @NotNull
     @JsonProperty("code")
@@ -31,23 +28,10 @@ public class ApiErrorDto {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public ApiErrorDto message(String message) {
-        this.message = message;
-        return this;
-    }
-
     @NotNull
     @JsonProperty("message")
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
 }
