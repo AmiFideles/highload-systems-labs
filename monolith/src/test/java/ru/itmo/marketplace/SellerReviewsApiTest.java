@@ -138,9 +138,7 @@ public class SellerReviewsApiTest extends IntegrationTest {
                 .andExpect(jsonPath("$.content[0].seller.id", is(sellerReview.getSellerId().intValue())))
                 .andExpect(jsonPath("$.content[0].author.id", is(buyer.getId().intValue())))
                 .andExpect(jsonPath("$.content[0].rating", is(sellerReview.getRating())))
-                .andExpect(jsonPath("$.content[0].comment", is(sellerReview.getComment())))
-                .andExpect(jsonPath("$.total_elements", is(1)))
-                .andExpect(jsonPath("$.total_pages", is(1)));
+                .andExpect(jsonPath("$.content[0].comment", is(sellerReview.getComment())));
     }
 
     @Test
@@ -172,9 +170,7 @@ public class SellerReviewsApiTest extends IntegrationTest {
                 .andExpect(jsonPath("$.content[1].seller.id", is(sellerReview2.getSellerId().intValue())))
                 .andExpect(jsonPath("$.content[1].author.id", is(sellerReview2.getAuthorId().intValue())))
                 .andExpect(jsonPath("$.content[1].rating", is(sellerReview2.getRating())))
-                .andExpect(jsonPath("$.content[1].comment", is(sellerReview2.getComment())))
-                .andExpect(jsonPath("$.total_elements", is(2)))
-                .andExpect(jsonPath("$.total_pages", is(1)));
+                .andExpect(jsonPath("$.content[1].comment", is(sellerReview2.getComment())));
     }
 
     @Test

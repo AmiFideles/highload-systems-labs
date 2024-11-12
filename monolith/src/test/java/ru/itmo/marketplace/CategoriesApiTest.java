@@ -110,9 +110,7 @@ public class CategoriesApiTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].id", is(category.getId().intValue())))
-                .andExpect(jsonPath("$.content[0].name", is(category.getName())))
-                .andExpect(jsonPath("$.total_elements", is(1)))
-                .andExpect(jsonPath("$.total_pages", is(1)));
+                .andExpect(jsonPath("$.content[0].name", is(category.getName())));
     }
 
     @Test

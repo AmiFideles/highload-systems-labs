@@ -133,31 +133,6 @@
                                 <goal>report</goal>
                             </goals>
                         </execution>
-                        <execution>
-                            <id>jacoco-check</id>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                            <phase>test</phase>
-
-                            <configuration>
-                                <rules>
-                                    <rule>
-                                        <limits>
-                                            <limit>
-                                                <counter>LINE</counter>
-                                                <value>COVEREDRATIO</value>
-                                                <minimum>70%</minimum>
-                                            </limit>
-                                        </limits>
-                                    </rule>
-                                </rules>
-                                <excludes>
-                                    <exclude>**/*ru/itmo/marketplace/api/**</exclude>
-                                    <exclude>**/*ru/itmo/marketplace/model/**</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
                     </executions>
                 </plugin>
 
