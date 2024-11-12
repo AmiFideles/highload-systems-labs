@@ -3,8 +3,8 @@ package ru.itmo.marketplace;
 import lombok.experimental.UtilityClass;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.Listing;
-import ru.itmo.marketplace.model.DealResponseDto;
-import ru.itmo.marketplace.model.ListingResponseDto;
+import ru.itmo.marketplace.dto.DealResponseDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.itmo.marketplace.model.ApiErrorDto;
+import ru.itmo.marketplace.dto.ApiErrorDto;
 import ru.itmo.marketplace.service.exceptions.AccessDeniedException;
 import ru.itmo.marketplace.service.exceptions.DuplicateException;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;

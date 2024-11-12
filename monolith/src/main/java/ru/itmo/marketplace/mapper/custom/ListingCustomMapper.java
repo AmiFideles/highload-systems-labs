@@ -3,12 +3,16 @@ package ru.itmo.marketplace.mapper.custom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import ru.itmo.marketplace.dto.ListingPageableResponseDto;
+import ru.itmo.marketplace.dto.ListingRequestDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
+import ru.itmo.marketplace.dto.ListingStatusDto;
+import ru.itmo.marketplace.dto.ModeratedListingResponseDto;
 import ru.itmo.marketplace.entity.Category;
 import ru.itmo.marketplace.entity.Listing;
 import ru.itmo.marketplace.entity.ListingStatus;
 import ru.itmo.marketplace.mapper.mapstruct.CategoryMapper;
 import ru.itmo.marketplace.mapper.mapstruct.ListingMapper;
-import ru.itmo.marketplace.model.*;
 import ru.itmo.marketplace.repository.CategoryRepository;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 

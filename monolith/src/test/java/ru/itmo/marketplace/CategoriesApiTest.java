@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.marketplace.entity.Category;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.model.CategoryRequestDto;
-import ru.itmo.marketplace.model.CategoryResponseDto;
+import ru.itmo.marketplace.dto.CategoryRequestDto;
+import ru.itmo.marketplace.dto.CategoryResponseDto;
 import ru.itmo.marketplace.repository.CategoryRepository;
 
 import java.util.Optional;

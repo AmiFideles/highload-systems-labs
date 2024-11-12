@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.DealReview;
 import ru.itmo.marketplace.mapper.mapstruct.DealReviewMapper;
-import ru.itmo.marketplace.model.DealReviewPageableResponseDto;
-import ru.itmo.marketplace.model.DealReviewRequestDto;
-import ru.itmo.marketplace.model.DealReviewResponseDto;
+import ru.itmo.marketplace.dto.DealReviewPageableResponseDto;
+import ru.itmo.marketplace.dto.DealReviewRequestDto;
+import ru.itmo.marketplace.dto.DealReviewResponseDto;
 import ru.itmo.marketplace.repository.DealRepository;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 

@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.marketplace.entity.Listing;
 import ru.itmo.marketplace.entity.SavedListing;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.model.SavedListingRequestDto;
-import ru.itmo.marketplace.model.SavedListingResponseDto;
+import ru.itmo.marketplace.dto.SavedListingRequestDto;
+import ru.itmo.marketplace.dto.SavedListingResponseDto;
 import ru.itmo.marketplace.service.SavedListingService;
 
 import static org.assertj.core.api.Assertions.assertThat;

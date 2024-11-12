@@ -3,10 +3,10 @@ package ru.itmo.marketplace.mapper.mapstruct;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import ru.itmo.marketplace.entity.SellerReview;
-import ru.itmo.marketplace.model.SellerReviewCreateRequestDto;
-import ru.itmo.marketplace.model.SellerReviewPageableResponseDto;
-import ru.itmo.marketplace.model.SellerReviewResponseDto;
-import ru.itmo.marketplace.model.SellerReviewUpdateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewCreateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewPageableResponseDto;
+import ru.itmo.marketplace.dto.SellerReviewResponseDto;
+import ru.itmo.marketplace.dto.SellerReviewUpdateRequestDto;
 
 @Mapper(
         componentModel = "spring",

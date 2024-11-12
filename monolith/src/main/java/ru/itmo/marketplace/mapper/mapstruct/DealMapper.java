@@ -5,10 +5,10 @@ import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.DealStatus;
-import ru.itmo.marketplace.model.DealCreateRequestDto;
-import ru.itmo.marketplace.model.DealPageableResponseDto;
-import ru.itmo.marketplace.model.DealResponseDto;
-import ru.itmo.marketplace.model.DealStatusDto;
+import ru.itmo.marketplace.dto.DealCreateRequestDto;
+import ru.itmo.marketplace.dto.DealPageableResponseDto;
+import ru.itmo.marketplace.dto.DealResponseDto;
+import ru.itmo.marketplace.dto.DealStatusDto;
 
 @Mapper(
         componentModel = "spring",

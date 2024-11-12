@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.Listing;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.model.DealResponseDto;
-import ru.itmo.marketplace.model.ListingResponseDto;
+import ru.itmo.marketplace.dto.DealResponseDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
 import ru.itmo.marketplace.service.UserService;
 
 import java.util.List;

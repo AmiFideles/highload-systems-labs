@@ -3,9 +3,9 @@ package ru.itmo.marketplace.mapper.mapstruct;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import ru.itmo.marketplace.entity.Category;
-import ru.itmo.marketplace.model.CategoryPageableResponseDto;
-import ru.itmo.marketplace.model.CategoryRequestDto;
-import ru.itmo.marketplace.model.CategoryResponseDto;
+import ru.itmo.marketplace.dto.CategoryPageableResponseDto;
+import ru.itmo.marketplace.dto.CategoryRequestDto;
+import ru.itmo.marketplace.dto.CategoryResponseDto;
 
 @Mapper(
         componentModel = "spring"

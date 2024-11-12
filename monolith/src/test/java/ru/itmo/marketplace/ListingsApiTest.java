@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.marketplace.entity.Listing;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.model.ListingRequestDto;
-import ru.itmo.marketplace.model.ListingResponseDto;
+import ru.itmo.marketplace.dto.ListingRequestDto;
+import ru.itmo.marketplace.dto.ListingResponseDto;
 import ru.itmo.marketplace.service.ListingService;
 
 import java.math.BigDecimal;

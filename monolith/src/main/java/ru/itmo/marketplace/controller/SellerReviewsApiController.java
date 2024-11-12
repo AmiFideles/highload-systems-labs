@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itmo.marketplace.api.SellerReviewsApi;
 import ru.itmo.marketplace.entity.SellerReview;
 import ru.itmo.marketplace.mapper.mapstruct.SellerReviewMapper;
-import ru.itmo.marketplace.model.SellerReviewCreateRequestDto;
-import ru.itmo.marketplace.model.SellerReviewPageableResponseDto;
-import ru.itmo.marketplace.model.SellerReviewResponseDto;
-import ru.itmo.marketplace.model.SellerReviewUpdateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewCreateRequestDto;
+import ru.itmo.marketplace.dto.SellerReviewPageableResponseDto;
+import ru.itmo.marketplace.dto.SellerReviewResponseDto;
+import ru.itmo.marketplace.dto.SellerReviewUpdateRequestDto;
 import ru.itmo.marketplace.service.SellerReviewService;
 import ru.itmo.marketplace.service.exceptions.NotFoundException;
 
@@ -21,12 +21,17 @@ import ru.itmo.marketplace.service.exceptions.NotFoundException;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
-public class SellerReviewsApiController implements SellerReviewsApi {
+public class SellerReviewsApiController {
     private final SellerReviewService sellerReviewService;
     private final SellerReviewMapper mapper;
 
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/seller-reviews",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<SellerReviewResponseDto> createSellerReview(
             Long userId, SellerReviewCreateRequestDto sellerReviewCreateRequestDto
     ) {
@@ -38,7 +43,11 @@ public class SellerReviewsApiController implements SellerReviewsApi {
         return ResponseEntity.ok(mapper.toDto(sellerReview));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/seller-reviews/{seller_id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<Void> deleteSellerReview(Long sellerId, Long userId) {
         if (!sellerReviewService.deleteById(userId, sellerId)) {
             throw new NotFoundException("Seller review with id seller %s not found".formatted(sellerId));
@@ -46,13 +55,21 @@ public class SellerReviewsApiController implements SellerReviewsApi {
         return ResponseEntity.ok().build();
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/seller-reviews",
+            produces = { "application/json" }
+    )
     public ResponseEntity<SellerReviewPageableResponseDto> getMySellerReviews(Long userId, Pageable pageable) {
         Page<SellerReview> sellerReviews = sellerReviewService.findByAuthorId(userId, pageable);
         return ResponseEntity.ok(mapper.toDto(sellerReviews));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/seller-reviews/{seller_id}",
+            produces = { "application/json" }
+    )
     public ResponseEntity<SellerReviewPageableResponseDto> getSellerReviewsBySellerId(
             Long sellerId, Pageable pageable
     ) {
@@ -60,7 +77,12 @@ public class SellerReviewsApiController implements SellerReviewsApi {
         return ResponseEntity.ok(mapper.toDto(sellerReviews));
     }
 
-    @Override
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/seller-reviews/{seller_id}",
+            produces = { "application/json" },
+            consumes = { "application/json" }
+    )
     public ResponseEntity<SellerReviewResponseDto> updateSellerReview(
             Long sellerId, Long userId, SellerReviewUpdateRequestDto sellerReviewUpdateRequestDto
     ) {
