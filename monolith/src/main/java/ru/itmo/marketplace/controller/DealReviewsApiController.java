@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.entity.DealReview;
 import ru.itmo.marketplace.mapper.custom.DealReviewCustomMapper;
-import ru.itmo.marketplace.dto.DealReviewPageableResponseDto;
 import ru.itmo.marketplace.dto.DealReviewRequestDto;
 import ru.itmo.marketplace.dto.DealReviewResponseDto;
 import ru.itmo.marketplace.service.DealReviewService;
@@ -82,13 +81,13 @@ public class DealReviewsApiController {
             value = "/deal-reviews",
             produces = {"application/json"}
     )
-    public ResponseEntity<DealReviewPageableResponseDto> getDealReviewList(
+    public ResponseEntity<Page<DealReviewResponseDto>> getDealReviewList(
             @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             Pageable pageable
     ) {
         Page<DealReview> reviewsPage = dealReviewService.findAll(xUserId, pageable);
         return ResponseEntity.ok(
-                dealReviewMapper.toDto(reviewsPage)
+                reviewsPage.map(dealReviewMapper::toDto)
         );
     }
 

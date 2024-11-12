@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.entity.SellerReview;
 import ru.itmo.marketplace.mapper.mapstruct.SellerReviewMapper;
 import ru.itmo.marketplace.dto.SellerReviewCreateRequestDto;
-import ru.itmo.marketplace.dto.SellerReviewPageableResponseDto;
 import ru.itmo.marketplace.dto.SellerReviewResponseDto;
 import ru.itmo.marketplace.dto.SellerReviewUpdateRequestDto;
 import ru.itmo.marketplace.service.SellerReviewService;
@@ -69,12 +68,14 @@ public class SellerReviewsApiController {
             value = "/seller-reviews",
             produces = {"application/json"}
     )
-    public ResponseEntity<SellerReviewPageableResponseDto> getMySellerReviews(
+    public ResponseEntity<Page<SellerReviewResponseDto>> getMySellerReviews(
             @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             Pageable pageable
     ) {
         Page<SellerReview> sellerReviews = sellerReviewService.findByAuthorId(xUserId, pageable);
-        return ResponseEntity.ok(mapper.toDto(sellerReviews));
+        return ResponseEntity.ok(
+                sellerReviews.map(mapper::toDto)
+        );
     }
 
     @RequestMapping(
@@ -82,12 +83,14 @@ public class SellerReviewsApiController {
             value = "/seller-reviews/{seller_id}",
             produces = {"application/json"}
     )
-    public ResponseEntity<SellerReviewPageableResponseDto> getSellerReviewsBySellerId(
+    public ResponseEntity<Page<SellerReviewResponseDto>> getSellerReviewsBySellerId(
             @PathVariable("seller_id") Long sellerId,
             Pageable pageable
     ) {
         Page<SellerReview> sellerReviews = sellerReviewService.findAll(sellerId, pageable);
-        return ResponseEntity.ok(mapper.toDto(sellerReviews));
+        return ResponseEntity.ok(
+                sellerReviews.map(mapper::toDto)
+        );
     }
 
     @RequestMapping(

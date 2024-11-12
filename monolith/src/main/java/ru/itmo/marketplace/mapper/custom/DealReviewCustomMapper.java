@@ -1,12 +1,10 @@
 package ru.itmo.marketplace.mapper.custom;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.DealReview;
 import ru.itmo.marketplace.mapper.mapstruct.DealReviewMapper;
-import ru.itmo.marketplace.dto.DealReviewPageableResponseDto;
 import ru.itmo.marketplace.dto.DealReviewRequestDto;
 import ru.itmo.marketplace.dto.DealReviewResponseDto;
 import ru.itmo.marketplace.repository.DealRepository;
@@ -32,12 +30,6 @@ public class DealReviewCustomMapper {
     public DealReviewResponseDto toDto(DealReview dealReview) {
         DealReviewResponseDto dto = dealReviewMapper.toDto(dealReview);
         dto.setDeal(dealCustomMapper.toDto(dealReview.getDeal()));
-        return dto;
-    }
-
-    public DealReviewPageableResponseDto toDto(Page<DealReview> dealReviews) {
-        DealReviewPageableResponseDto dto = dealReviewMapper.toDto(dealReviews);
-        dto.setContent(dealReviews.getContent().stream().map(this::toDto).toList());
         return dto;
     }
 }

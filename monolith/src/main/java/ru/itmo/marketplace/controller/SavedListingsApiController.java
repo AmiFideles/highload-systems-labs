@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.entity.SavedListing;
 import ru.itmo.marketplace.mapper.custom.SavedListingCustomMapper;
-import ru.itmo.marketplace.dto.SavedListingPageableResponseDto;
 import ru.itmo.marketplace.dto.SavedListingRequestDto;
 import ru.itmo.marketplace.dto.SavedListingResponseDto;
 import ru.itmo.marketplace.service.SavedListingService;
@@ -71,12 +70,14 @@ public class SavedListingsApiController {
             value = "/saved-listings",
             produces = {"application/json"}
     )
-    public ResponseEntity<SavedListingPageableResponseDto> getSavedListings(
+    public ResponseEntity<Page<SavedListingResponseDto>> getSavedListings(
             @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             Pageable pageable
     ) {
         Page<SavedListing> savedListings = savedListingService.findAll(xUserId, pageable);
-        return ResponseEntity.ok(savedListingMapper.toDto(savedListings));
+        return ResponseEntity.ok(
+                savedListings.map(savedListingMapper::toDto)
+        );
     }
 
     @RequestMapping(
