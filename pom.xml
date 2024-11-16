@@ -11,6 +11,9 @@
     <modules>
         <module>monolith</module>
         <module>config-server</module>
+        <module>user-service</module>
+        <module>gateway</module>
+        <module>common</module>
     </modules>
 
     <properties>
