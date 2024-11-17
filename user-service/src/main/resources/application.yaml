@@ -1,5 +1,8 @@
 server.port: 8081
 
+jwt:
+  secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="
+
 spring:
   application:
     name: users-service
