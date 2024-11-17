@@ -15,7 +15,7 @@ import ru.itmo.service.user.client.AuthServiceClient;
 
 @Component
 public class JwtUtil {
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     @Lazy
@@ -28,7 +28,7 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        Long userId = claims.get("userId", Long.class);
+        Long userId = claims.get("user_id", Long.class);
         return authServiceClient.getAuthUserById(userId);
     }
 
