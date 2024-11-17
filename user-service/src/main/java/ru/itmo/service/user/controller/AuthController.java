@@ -3,6 +3,7 @@ package ru.itmo.service.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +25,18 @@ import ru.itmo.service.user.service.JwtService;
 import ru.itmo.service.user.service.UserService;
 
 @Slf4j
-@RestController("/api/v1/auth")
+@RestController
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtService authService;
-    private final UserService userService;
-    private final UserMapper mapper;
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtService authService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserMapper mapper;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @RequestMapping(
             method = RequestMethod.GET,
@@ -49,6 +55,7 @@ public class AuthController {
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/login",
+            consumes = {"application/json"},
             produces = {"application/json"}
     )
     public ResponseEntity<AuthTokenResponseDto> login(

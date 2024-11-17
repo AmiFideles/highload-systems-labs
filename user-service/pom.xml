@@ -36,12 +36,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-<!--            <optional>true</optional>-->
+            <optional>true</optional>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -109,6 +110,28 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.2</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -120,6 +143,7 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
     </build>
 

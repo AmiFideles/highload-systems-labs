@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import ru.itmo.service.user.client.UserServiceClient;
+import ru.itmo.service.user.client.AuthServiceClient;
 
 @EnableFeignClients(clients = {
-        UserServiceClient.class
+        AuthServiceClient.class
 })
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
