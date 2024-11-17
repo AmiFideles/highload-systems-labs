@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd">
+    <changeSet id="itmo-hs-v1-start" author="${author}">
+        <tagDatabase tag="itmo-hs-v1"/>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-users" author="${author}">
+        <sqlFile path="changes/01.users.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/01.users.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-category" author="${author}">
+        <sqlFile path="changes/02.category.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/02.category.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-listing" author="${author}">
+        <sqlFile path="changes/03.listing.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/03.listing.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-deal" author="${author}">
+        <sqlFile path="changes/04.deal.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/04.deal.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-review" author="${author}">
+        <sqlFile path="changes/05.review.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/05.review.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-saved_listing" author="${author}">
+        <sqlFile path="changes/06.saved_listing.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <rollback>
+            <sqlFile path="changes/06.saved_listing.rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-end" author="${author}">
+        <tagDatabase tag="itmo-hs-v1-end"/>
+    </changeSet>
+
+</databaseChangeLog>

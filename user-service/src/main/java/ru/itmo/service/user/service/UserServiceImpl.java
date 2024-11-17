@@ -1,4 +1,4 @@
-package ru.itmo.marketplace.service.impl;
+package ru.itmo.service.user.service;
 
 import java.util.Optional;
 
@@ -6,18 +6,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.repository.UserRepository;
-import ru.itmo.marketplace.service.UserService;
-import ru.itmo.marketplace.service.exceptions.DuplicateException;
+import ru.itmo.common.exception.DuplicateException;
+import ru.itmo.service.user.entity.User;
+import ru.itmo.service.user.repository.UserRepository;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         if (repository.existsByName(user.getName())) {
             throw new DuplicateException("User with username " + user.getName() + " already exists");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repository.save(user);
     }
 

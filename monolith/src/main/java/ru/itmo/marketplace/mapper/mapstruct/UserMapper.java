@@ -1,9 +1,9 @@
 package ru.itmo.marketplace.mapper.mapstruct;
 
 import org.mapstruct.Mapper;
+import ru.itmo.common.dto.user.UserRequestDto;
+import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.marketplace.entity.User;
-import ru.itmo.marketplace.dto.UserRequestDto;
-import ru.itmo.marketplace.dto.UserResponseDto;
 
 @Mapper(
         componentModel = "spring"
