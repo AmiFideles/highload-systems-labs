@@ -1,0 +1,13 @@
+server:
+    port: 8761
+
+spring:
+    application:
+        name: eureka-server
+eureka:
+    renewalPercentThreshold: 0.85
+    instance:
+        hostname: localhost
+    client:
+        registerWithEureka: false
+        fetchRegistry: false

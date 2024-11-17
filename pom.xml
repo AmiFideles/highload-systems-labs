@@ -17,6 +17,7 @@
         <module>user-service-client</module>
         <module>category-service</module>
         <module>security-module</module>
+        <module>eureka-server</module>
     </modules>
 
     <properties>
