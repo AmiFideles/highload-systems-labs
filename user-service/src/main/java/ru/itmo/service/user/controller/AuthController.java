@@ -73,7 +73,8 @@ public class AuthController {
                     "Invalid credentials"
             );
         }
-        String token = authService.generateToken(authTokenRequestDto.getUsername());
+        User user = (User) authenticate.getPrincipal();
+        String token = authService.generateToken(user);
         return ResponseEntity.ok(
                 AuthTokenResponseDto.builder()
                         .token(token)

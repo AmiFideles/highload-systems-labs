@@ -5,7 +5,7 @@ jwt:
 
 logging:
   level:
-    root: debug
+    web: debug
 
 spring:
   application:
@@ -17,6 +17,6 @@ spring:
         - id: users-service
           uri: http://localhost:8081
           predicates:
-            - Path=/api/v1/**
+            - Path=/api/v1/auth/login, /api/v1/users/**
           filters:
             - AuthenticationFilter

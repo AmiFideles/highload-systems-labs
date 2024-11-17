@@ -1,8 +1,8 @@
 package ru.itmo.service.user.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +21,15 @@ import ru.itmo.service.user.service.UserService;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
-@RequiredArgsConstructor
 public class UsersApiController {
-    private final UserMapper mapper;
-    private final UserService userService;
+    @Autowired
+    private UserMapper mapper;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/",
+            value = "",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -56,7 +57,7 @@ public class UsersApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/",
+            value = "",
             produces = {"application/json"}
     )
     public ResponseEntity<Page<UserResponseDto>> getUserList(
