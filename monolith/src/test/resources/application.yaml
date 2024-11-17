@@ -1,0 +1,10 @@
+spring:
+  liquibase:
+    change-log: classpath:db/cumulative.xml
+    enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
