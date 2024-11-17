@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<User> update(User user) {
         if (existsById(user.getId())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return Optional.of(repository.save(user));
         }
         return Optional.empty();

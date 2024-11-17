@@ -3,4 +3,27 @@
 mvn -f monolith spring-boot:run
 ```
 
-2,123@123,$2a$10$CODrLe69blsrOAh9RN6BjeIgM9YGtSpCfdL/aNbU8IzZL1IjVpHh6,123,BUYER
+### Авторизация
+```
+http://localhost:8080/api/v1/auth/login
+{
+    "username": "admin",
+    "password": "admin"
+}
+```
+
+### Пересоздание базы
+```shell
+docker compose down -v
+docker compose up -d
+cd monolith && mvn liquibase:update
+```
+
+
+###
+```shell
+mvn clean
+cd gateway && mvn compile && cd ..
+cd user-service && mvn compile && cd ..
+cd category-service && mvn compile && cd ..
+```
