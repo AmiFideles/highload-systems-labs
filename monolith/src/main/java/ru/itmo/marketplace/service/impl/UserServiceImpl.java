@@ -1,5 +1,7 @@
 package ru.itmo.marketplace.service.impl;
 
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,8 +12,6 @@ import ru.itmo.marketplace.entity.User;
 import ru.itmo.marketplace.repository.UserRepository;
 import ru.itmo.marketplace.service.UserService;
 import ru.itmo.marketplace.service.exceptions.DuplicateException;
-
-import java.util.Optional;
 
 @Slf4j
 @Service

@@ -2,7 +2,7 @@ server.port: 8081
 
 spring:
   application:
-    name: user-service
+    name: users-service
 
   jackson:
     property-naming-strategy: SNAKE_CASE

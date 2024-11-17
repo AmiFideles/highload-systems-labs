@@ -14,6 +14,7 @@
         <module>user-service</module>
         <module>gateway</module>
         <module>common</module>
+        <module>user-service-client</module>
     </modules>
 
     <properties>
@@ -43,6 +44,11 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.6.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

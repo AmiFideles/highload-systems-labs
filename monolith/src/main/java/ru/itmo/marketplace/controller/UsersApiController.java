@@ -1,5 +1,7 @@
 package ru.itmo.marketplace.controller;
 
+import java.util.Optional;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -14,25 +16,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itmo.common.dto.user.UserRequestDto;
+import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.marketplace.dto.DealResponseDto;
+import ru.itmo.marketplace.dto.DealStatusDto;
 import ru.itmo.marketplace.dto.ListingResponseDto;
+import ru.itmo.marketplace.dto.ListingStatusDto;
 import ru.itmo.marketplace.entity.Deal;
 import ru.itmo.marketplace.entity.DealStatus;
 import ru.itmo.marketplace.entity.Listing;
-import ru.itmo.marketplace.entity.User;
 import ru.itmo.marketplace.mapper.custom.DealCustomMapper;
 import ru.itmo.marketplace.mapper.custom.ListingCustomMapper;
 import ru.itmo.marketplace.mapper.mapstruct.UserMapper;
-import ru.itmo.marketplace.dto.DealStatusDto;
-import ru.itmo.marketplace.dto.ListingStatusDto;
-import ru.itmo.marketplace.dto.UserRequestDto;
-import ru.itmo.marketplace.dto.UserResponseDto;
 import ru.itmo.marketplace.service.DealService;
 import ru.itmo.marketplace.service.ListingService;
 import ru.itmo.marketplace.service.UserService;
-import ru.itmo.marketplace.service.exceptions.NotFoundException;
-
-import java.util.Optional;
+import ru.itmo.service.user.client.UserServiceClient;
 
 @Slf4j
 @RestController
@@ -45,6 +44,7 @@ public class UsersApiController {
     private final ListingCustomMapper listingCustomMapper;
     private final DealCustomMapper dealCustomMapper;
     private final ListingService listingService;
+    private final UserServiceClient userServiceClient;
 
     @RequestMapping(
             method = RequestMethod.POST,
@@ -55,9 +55,9 @@ public class UsersApiController {
     public ResponseEntity<UserResponseDto> createUser(
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
-        User user = mapper.fromDto(userRequestDto);
-        userService.create(user);
-        return ResponseEntity.ok(mapper.toDto(user));
+        return ResponseEntity.ok(
+                userServiceClient.createUser(userRequestDto)
+        );
     }
 
     @RequestMapping(
@@ -68,10 +68,7 @@ public class UsersApiController {
     public ResponseEntity<UserResponseDto> getUserById(
             @PathVariable("id") Long id
     ) {
-        User user = userService.findById(id).orElseThrow(
-                () -> new NotFoundException("User with id %s not found".formatted(id))
-        );
-        return ResponseEntity.ok(mapper.toDto(user));
+        return ResponseEntity.ok(userServiceClient.getUserById(id));
     }
 
     @RequestMapping(
@@ -82,10 +79,7 @@ public class UsersApiController {
     public ResponseEntity<Page<UserResponseDto>> getUserList(
             Pageable pageable
     ) {
-        Page<User> users = userService.findAll(pageable);
-        return ResponseEntity.ok(
-                users.map(mapper::toDto)
-        );
+        return ResponseEntity.ok(userServiceClient.getUserList(pageable));
     }
 
     @RequestMapping(
@@ -98,14 +92,7 @@ public class UsersApiController {
             @PathVariable("id") Long id,
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
-        User user = mapper.fromDto(userRequestDto);
-        user.setId(id);
-
-        user = userService.update(user).orElseThrow(
-                () -> new NotFoundException("User with id %s not found".formatted(id))
-        );
-
-        return ResponseEntity.ok(mapper.toDto(user));
+        return ResponseEntity.ok(userServiceClient.updateUser(id, userRequestDto));
     }
 
     @RequestMapping(
@@ -116,9 +103,7 @@ public class UsersApiController {
     public ResponseEntity<Void> deleteUser(
             @PathVariable("id") Long id
     ) {
-        if (!userService.deleteById(id)) {
-            throw new NotFoundException("User with id %s not found".formatted(id));
-        }
+        userServiceClient.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 

@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
-import ru.itmo.common.service.exceptions.NotFoundException;
-import ru.itmo.service.user.entity.UserEntity;
+import ru.itmo.common.exception.NotFoundException;
+import ru.itmo.service.user.entity.User;
 import ru.itmo.service.user.mapper.UserMapper;
 import ru.itmo.service.user.service.UserService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UsersApiController {
     private final UserMapper mapper;
@@ -28,27 +28,27 @@ public class UsersApiController {
 
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/users",
+            value = "/",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
     public ResponseEntity<UserResponseDto> createUser(
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
-        UserEntity user = mapper.fromDto(userRequestDto);
+        User user = mapper.fromDto(userRequestDto);
         userService.create(user);
         return ResponseEntity.ok(mapper.toDto(user));
     }
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/users/{id}",
+            value = "/{id}",
             produces = {"application/json"}
     )
     public ResponseEntity<UserResponseDto> getUserById(
             @PathVariable("id") Long id
     ) {
-        UserEntity user = userService.findById(id).orElseThrow(
+        User user = userService.findById(id).orElseThrow(
                 () -> new NotFoundException("User with id %s not found".formatted(id))
         );
         return ResponseEntity.ok(mapper.toDto(user));
@@ -56,13 +56,13 @@ public class UsersApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/users",
+            value = "/",
             produces = {"application/json"}
     )
     public ResponseEntity<Page<UserResponseDto>> getUserList(
             Pageable pageable
     ) {
-        Page<UserEntity> users = userService.findAll(pageable);
+        Page<User> users = userService.findAll(pageable);
         return ResponseEntity.ok(
                 users.map(mapper::toDto)
         );
@@ -70,7 +70,7 @@ public class UsersApiController {
 
     @RequestMapping(
             method = RequestMethod.PUT,
-            value = "/users/{id}",
+            value = "/{id}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -78,7 +78,7 @@ public class UsersApiController {
             @PathVariable("id") Long id,
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
-        UserEntity user = mapper.fromDto(userRequestDto);
+        User user = mapper.fromDto(userRequestDto);
         user.setId(id);
 
         user = userService.update(user).orElseThrow(
@@ -90,7 +90,7 @@ public class UsersApiController {
 
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/users/{id}",
+            value = "/{id}",
             produces = {"application/json"}
     )
     public ResponseEntity<Void> deleteUser(

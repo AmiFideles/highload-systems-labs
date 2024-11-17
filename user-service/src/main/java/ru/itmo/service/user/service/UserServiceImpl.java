@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmo.common.service.exceptions.DuplicateException;
-import ru.itmo.service.user.entity.UserEntity;
+import ru.itmo.common.exception.DuplicateException;
+import ru.itmo.service.user.entity.User;
 import ru.itmo.service.user.repository.UserRepository;
 
 @Slf4j
@@ -20,13 +20,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<UserEntity> findById(Long id) {
+    public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<UserEntity> findAll(Pageable pageable) {
+    public Page<User> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserEntity create(UserEntity user)   {
+    public User create(User user)   {
         if (repository.existsByName(user.getName())) {
             throw new DuplicateException("User with username " + user.getName() + " already exists");
         }
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<UserEntity> update(UserEntity user) {
+    public Optional<User> update(User user) {
         if (existsById(user.getId())) {
             return Optional.of(repository.save(user));
         }
