@@ -11,7 +11,7 @@ spring:
       server:
         native:
           search-locations:
-            - file:./config/
+            - file:/home/asus/IdeaProjects/hs/config-server/src/main/resources/config
 
 eureka:
   instance:

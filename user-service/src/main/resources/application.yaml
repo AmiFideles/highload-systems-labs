@@ -1,8 +1,5 @@
 server.port: 8081
 
-jwt:
-  secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="
-
 logging:
   level:
     web: DEBUG
@@ -36,6 +33,19 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  config:
+    import: 'configserver:'
+
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 2000
+        max-interval: 10000
+        multiplier: 2
+        max-attempts: 5
 
 eureka:
   instance:
