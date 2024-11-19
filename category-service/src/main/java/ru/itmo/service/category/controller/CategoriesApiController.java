@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmo.common.dto.category.CategoryRequestDto;
 import ru.itmo.common.dto.category.CategoryResponseDto;
+import ru.itmo.common.dto.user.UserAuthDto;
 import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.service.category.entity.Category;
 import ru.itmo.service.category.mapper.CategoryMapper;
 import ru.itmo.service.category.service.CategoryService;
+import ru.itmo.service.user.client.AuthServiceClient;
 
 @Slf4j
 @RestController
@@ -21,6 +23,21 @@ import ru.itmo.service.category.service.CategoryService;
 public class CategoriesApiController {
     private final CategoryMapper mapper;
     private final CategoryService service;
+    private final AuthServiceClient authServiceClient;
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "categories/test-user",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<UserAuthDto> foo(
+
+    ) {
+        return ResponseEntity.ok(
+                authServiceClient.getAuthUserById(1L)
+        );
+    }
+
 
     @RequestMapping(
             method = RequestMethod.GET,

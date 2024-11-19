@@ -10,7 +10,7 @@ import ru.itmo.common.dto.user.UserAuthDto;
 public interface AuthServiceClient {
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/auth/user/{id}",
+            value = "api/v1/auth/user/{id}",
             produces = {"application/json"}
     )
     UserAuthDto getAuthUserById(

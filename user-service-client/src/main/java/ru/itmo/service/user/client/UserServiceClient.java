@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
-
-@FeignClient(name = "users-service")
+//TODO была ошибка при старте с инжектом бинов. Параметр name у feign client должен быть уникальным кажется?
+@FeignClient(name = "user-service")
 public interface UserServiceClient {
     @RequestMapping(
             method = RequestMethod.POST,
