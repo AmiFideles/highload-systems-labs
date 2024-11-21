@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
 
-@FeignClient(name = "users-service")
+@FeignClient(name = "users-service", path = "/api/v1")
 public interface UserServiceClient {
     @RequestMapping(
             method = RequestMethod.POST,

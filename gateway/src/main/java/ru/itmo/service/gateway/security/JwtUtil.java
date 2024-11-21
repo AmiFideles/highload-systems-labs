@@ -29,7 +29,8 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         Long userId = claims.get("user_id", Long.class);
-        return authServiceClient.getAuthUserById(userId);
+        UserAuthDto authUserById = authServiceClient.getAuthUserById(userId);
+        return authUserById;
     }
 
     private Key getSignKey() {

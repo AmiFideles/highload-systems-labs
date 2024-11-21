@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.itmo.common.dto.user.UserAuthDto;
 
-@FeignClient(name = "users-service")
+@FeignClient(name = "users-service", path = "/api/v1")
 public interface AuthServiceClient {
     @RequestMapping(
             method = RequestMethod.GET,
