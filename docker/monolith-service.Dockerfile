@@ -1,11 +1,11 @@
 FROM maven:3.9.9-amazoncorretto-21-alpine AS build
 WORKDIR /app
-COPY config-server/pom.xml config-server/pom.xml
+COPY monolith/pom.xml monolith/pom.xml
 COPY pom.xml .
 
-WORKDIR /app/config-server
+WORKDIR /app/monolith
 RUN --mount=type=cache,target=/root/.m2 mvn verify clean --fail-never
-COPY config-server/src ./src
+COPY monolith/src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 FROM amazoncorretto:21-alpine
@@ -13,7 +13,6 @@ FROM amazoncorretto:21-alpine
 RUN apk --no-cache add curl
 
 WORKDIR /app
-COPY --from=build /app/config-server/target/*.jar app.jar
-COPY config-server/config ./config
-EXPOSE 8800
+COPY --from=build /app/monolith/target/*.jar app.jar
+EXPOSE 8099
 ENTRYPOINT ["java", "-jar", "app.jar"]

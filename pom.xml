@@ -18,6 +18,8 @@
         <module>category-service</module>
         <module>security-module</module>
         <module>eureka-server</module>
+        <module>listing-service</module>
+        <module>reactive-security-module</module>
     </modules>
 
     <properties>

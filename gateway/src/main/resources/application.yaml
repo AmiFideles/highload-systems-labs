@@ -35,6 +35,21 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: listings-service
+          uri: lb://listings-service
+          predicates:
+            - Path=/api/v1/listings/**
+          filters:
+            - AuthenticationFilter
+
+        - id: monolith-service
+          uri: lb://monolith-service
+          predicates:
+            - Path=/monolith/api/v1/listings/**
+          filters:
+            - RewritePath=/monolith/(?<segment>.*), /$\{segment}
+            - AuthenticationFilter
+
 eureka:
   instance:
     hostname: localhost

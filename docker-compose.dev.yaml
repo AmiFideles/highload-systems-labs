@@ -29,3 +29,12 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  monolith-service:
+    build:
+      context: .
+      dockerfile: docker/monolith-service.Dockerfile
+    ports:
+      - "8099:8099"
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
