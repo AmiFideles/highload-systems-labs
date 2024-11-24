@@ -1,8 +1,5 @@
 package ru.itmo.service.listing.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +9,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Data
 @Table("listing")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListingEntity {
+public class Listing {
     @Id
     private Long id;
 
