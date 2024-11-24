@@ -38,3 +38,24 @@ services:
       - "8099:8099"
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
+
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/gateway.Dockerfile
+    ports:
+      - "8095:8095"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+    healthcheck:
+      test: "curl --silent --fail gateway:8080/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+      start_period: 10s
