@@ -1,18 +1,25 @@
 package ru.itmo.modules.security;
 
-import feign.RequestInterceptor;
-import feign.RequestTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import reactivefeign.client.ReactiveHttpRequest;
+import reactivefeign.client.ReactiveHttpRequestInterceptor;
+import reactor.core.publisher.Mono;
 
-public class UserFeignClientInterceptor implements RequestInterceptor {
+import java.util.Collections;
+
+public class UserFeignClientInterceptor implements ReactiveHttpRequestInterceptor {
     @Override
-    public void apply(RequestTemplate template) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            InternalAuthentication internalAuthentication = (InternalAuthentication) authentication;
-            template.header("X-User-Id", internalAuthentication.getUserId().toString());
-            template.header("X-User-Role", internalAuthentication.getUserRole());
-        }
+    public Mono<ReactiveHttpRequest> apply(ReactiveHttpRequest request) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication)
+                .filter(authentication -> authentication != null && authentication.isAuthenticated())
+                .cast(InternalAuthentication.class)
+                .map(authentication -> {
+                    request.headers().put("X-User-Id", Collections.singletonList(authentication.getUserId().toString()));
+                    request.headers().put("X-User-Role", Collections.singletonList(authentication.getUserRole()));
+                    return request;
+                })
+                .switchIfEmpty(Mono.just(request));
     }
 }

@@ -20,6 +20,7 @@
         <module>eureka-server</module>
         <module>listing-service</module>
         <module>reactive-security-module</module>
+        <module>deal-service</module>
     </modules>
 
     <properties>
