@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.*;
 import ru.itmo.common.dto.category.CategoryRequestDto;
 import ru.itmo.common.dto.category.CategoryResponseDto;
 import ru.itmo.common.exception.NotFoundException;
@@ -22,6 +20,7 @@ import ru.itmo.service.category.service.CategoryService;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class CategoriesApiController {
     private final CategoryMapper mapper;
     private final CategoryService service;
@@ -62,6 +61,7 @@ public class CategoriesApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CategoryResponseDto> create(
             @Valid @RequestBody CategoryRequestDto categoryRequestDto
     ) {
@@ -78,6 +78,7 @@ public class CategoriesApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CategoryResponseDto> update(
             @PathVariable("id") Long id,
             @Valid @RequestBody CategoryRequestDto categoryRequestDto
@@ -97,6 +98,7 @@ public class CategoriesApiController {
             value = "/categories/{id}",
             produces = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> delete(
             @PathVariable("id") Long id
     ) {
