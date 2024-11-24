@@ -3,10 +3,11 @@ package ru.itmo.service.listing.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.exception.AccessDeniedException;
 import ru.itmo.common.exception.NotFoundException;
@@ -30,8 +31,15 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public Flux<Listing> findAll(ListingFilter listingFilter, Pageable pageable) {
-        return null;
+    public Mono<Page<Listing>> findAll(ListingFilter listingFilter, Pageable pageable) {
+        return listingRepository.findFilteredListings(
+                listingFilter.getMinPrice(),
+                listingFilter.getMaxPrice(),
+                listingFilter.getIsUsed(),
+                pageable)
+                .collectList()
+                .zipWith(listingRepository.count())
+                .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
     }
 
 
@@ -73,21 +81,27 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public Flux<Listing> findOpenListings() {
-        return listingRepository.findByStatus(ListingStatus.OPEN);
+    public Mono<Page<Listing>> findOpenListings(Pageable pageable) {
+        return listingRepository.findByStatus(ListingStatus.OPEN, pageable)
+                .collectList()
+                .zipWith(listingRepository.count())
+                .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
     }
 
     @Override
-    public Flux<Listing> findByUserIdAndStatus(Long userId, @Nullable ListingStatus status) {
+    public Mono<Page<Listing>> findByUserIdAndStatus(Long userId, @Nullable ListingStatus status, Pageable pageable) {
         return userClient.getUserById(userId)
                 .switchIfEmpty(Mono.error(new NotFoundException("User with id %s not found".formatted(userId))))
                 .flatMapMany(user -> {
                     if (status == null) {
-                        return listingRepository.findByCreatorId(userId);
+                        return listingRepository.findByCreatorId(userId, pageable);
                     } else {
-                        return listingRepository.findByStatusAndCreatorId(status, userId);
+                        return listingRepository.findByStatusAndCreatorId(status, userId, pageable);
                     }
-                });
+                })
+                .collectList()
+                .zipWith(listingRepository.count())
+                .map(t -> new PageImpl<>(t.getT1(), pageable, t.getT2()));
     }
 
     @Override
@@ -98,10 +112,5 @@ public class ListingServiceImpl implements ListingService {
                     listing.setStatus(listingStatus);
                     return listingRepository.save(listing);
                 });
-    }
-
-    private boolean filterByCriteria(Listing listing, ListingFilter filter) {
-        // Простая фильтрация данных
-        return true; // Дополнительно добавить логику фильтрации
     }
 }
