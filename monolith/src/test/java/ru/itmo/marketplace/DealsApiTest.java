@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DealsApiTest extends IntegrationTest {
+public class DealsApiTest extends IntegrationEnvironment {
 
     @Autowired
     private ObjectMapper objectMapper;

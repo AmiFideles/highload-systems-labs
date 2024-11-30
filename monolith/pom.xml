@@ -91,6 +91,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- local -->
         <dependency>
             <groupId>ru.itmo.service.user.client</groupId>
             <artifactId>user-service-client</artifactId>
