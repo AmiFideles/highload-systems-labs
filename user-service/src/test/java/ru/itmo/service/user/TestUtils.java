@@ -20,7 +20,8 @@ public class TestUtils {
                 .password(createRandomString())
                 .name(createRandomString())
                 .role(UserRole.SELLER)
-                .build());
+                .build())
+                .block();
     }
 
     public User createBuyer() {
@@ -29,7 +30,8 @@ public class TestUtils {
                 .password(createRandomString())
                 .name(createRandomString())
                 .role(UserRole.BUYER)
-                .build());
+                .build())
+                .block();
     }
 
     public User createModerator() {
@@ -38,7 +40,8 @@ public class TestUtils {
                 .password(createRandomString())
                 .name(createRandomString())
                 .role(UserRole.MODERATOR)
-                .build());
+                .build())
+                .block();
     }
 
     public User createAdmin() {
@@ -47,7 +50,8 @@ public class TestUtils {
                 .password(createRandomString())
                 .name(createRandomString())
                 .role(UserRole.ADMIN)
-                .build());
+                .build())
+                .block();
     }
     
     public String createRandomString() {

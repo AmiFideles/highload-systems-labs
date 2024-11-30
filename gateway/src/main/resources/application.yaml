@@ -1,4 +1,4 @@
-server.port: 8095
+server.port: 8080
 
 logging:
   level:
@@ -12,7 +12,7 @@ spring:
 
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
       fail-fast: true
       retry:
         initial-interval: 2000
