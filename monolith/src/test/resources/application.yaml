@@ -1,7 +1,4 @@
 spring:
-  liquibase:
-    change-log: classpath:db/cumulative.xml
-    enabled: true
   jpa:
     show-sql: true
     properties:
