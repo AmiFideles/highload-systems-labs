@@ -1,4 +1,4 @@
-package ru.itmo.marketplace;
+package ru.itmo.service.user;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
