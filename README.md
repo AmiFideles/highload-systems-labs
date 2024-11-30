@@ -16,9 +16,7 @@ http://localhost:8080/api/v1/auth/login
 ```shell
 docker compose down -v
 docker compose up -d
-cd monolith && mvn liquibase:update
 ```
-
 
 ###
 ```shell

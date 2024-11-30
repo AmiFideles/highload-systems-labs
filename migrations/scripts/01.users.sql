@@ -7,6 +7,3 @@ CREATE TABLE users
     name     VARCHAR(255)        NOT NULL,
     role     VARCHAR(50)         NOT NULL
 );
-
-INSERT INTO users (email, password, name, role)
-VALUES ('admin@admin', '$2a$10$kDEwumd0A3EBbMm3wRyUSOBq1uFgR/nHoIXD/i3m1.NtQ4LemZ5gO', 'admin', 'ADMIN')

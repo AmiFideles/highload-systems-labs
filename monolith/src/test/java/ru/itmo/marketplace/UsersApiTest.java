@@ -31,7 +31,7 @@ import static ru.itmo.marketplace.TestCheckUtils.UNKNOWN_ID;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UsersApiTest extends IntegrationTest {
+public class UsersApiTest extends IntegrationEnvironment {
 
     @Autowired
     private ObjectMapper objectMapper;
