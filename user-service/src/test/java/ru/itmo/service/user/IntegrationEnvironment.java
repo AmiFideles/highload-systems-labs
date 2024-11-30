@@ -64,5 +64,12 @@ public abstract class IntegrationEnvironment {
         registry.add("spring.datasource.username", DB_CONTAINER::getUsername);
         registry.add("spring.datasource.password", DB_CONTAINER::getPassword);
         registry.add("spring.liquibase.enabled", () -> false);
+
+        String r2dbcUrl = "r2dbc:postgresql://%s:%s/%s".formatted(
+                DB_CONTAINER.getHost(), DB_CONTAINER.getFirstMappedPort(), DB_CONTAINER.getDatabaseName()
+        );
+        registry.add("spring.r2dbc.url", () -> r2dbcUrl);
+        registry.add("spring.r2dbc.username", DB_CONTAINER::getUsername);
+        registry.add("spring.r2dbc.password", DB_CONTAINER::getPassword);
     }
 }
