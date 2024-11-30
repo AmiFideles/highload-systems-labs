@@ -20,12 +20,12 @@ import ru.itmo.common.dto.review.seller.SellerReviewUpdateRequestDto;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/reviews/seller")
 @RequiredArgsConstructor
 public class SellerReviewsApiController {
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/seller-reviews",
+            value = "",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -38,7 +38,7 @@ public class SellerReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/seller-reviews/{seller_id}",
+            value = "/{seller_id}",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Void>> deleteSellerReview(
@@ -50,7 +50,7 @@ public class SellerReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/seller-reviews",
+            value = "",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Page<SellerReviewResponseDto>>> getMySellerReviews(
@@ -62,7 +62,7 @@ public class SellerReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/seller-reviews/{seller_id}",
+            value = "/{seller_id}",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Page<SellerReviewResponseDto>>> getSellerReviewsBySellerId(
@@ -74,7 +74,7 @@ public class SellerReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.PUT,
-            value = "/seller-reviews/{seller_id}",
+            value = "/{seller_id}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )

@@ -22,7 +22,6 @@
         <module>reactive-security-module</module>
         <module>deal-service</module>
         <module>review-service</module>
-        <module>review-service</module>
     </modules>
 
     <properties>

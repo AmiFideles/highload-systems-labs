@@ -31,6 +31,7 @@ public class SecurityConfig {
 
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
                         .pathMatchers("/error").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/api/v1/auth/**").permitAll()
                         .pathMatchers("/api/v1/reviews/**").authenticated()
                 )

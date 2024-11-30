@@ -19,12 +19,12 @@ import ru.itmo.common.dto.review.deal.DealReviewResponseDto;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/reviews/deal")
 @RequiredArgsConstructor
 public class DealReviewsApiController {
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/deal-reviews",
+            value = "",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -37,7 +37,7 @@ public class DealReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/deal-reviews/{id}",
+            value = "/{id}",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Void>> deleteDealReview(
@@ -49,7 +49,7 @@ public class DealReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/deal-reviews/{id}",
+            value = "/{id}",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<DealReviewResponseDto>> getDealReviewById(
@@ -60,7 +60,7 @@ public class DealReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/deal-reviews",
+            value = "",
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Page<DealReviewResponseDto>>> getDealReviewList(
@@ -72,7 +72,7 @@ public class DealReviewsApiController {
 
     @RequestMapping(
             method = RequestMethod.PUT,
-            value = "/deal-reviews/{id}",
+            value = "/{id}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
