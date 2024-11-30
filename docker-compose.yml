@@ -47,6 +47,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - backend
 
   config-server:
     build:
@@ -65,6 +67,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - backend
 
   gateway:
     build:
@@ -86,6 +90,57 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - backend
+
+  monolith-service:
+    build:
+      context: .
+      dockerfile: docker/monolith-service.Dockerfile
+    ports:
+      - "8099:8099"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail monolith-service:8081/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  user-service:
+    build:
+      context: .
+      dockerfile: docker/user-service.Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: r2dbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail user-service:8081/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
 
 volumes:
   pgdata:
