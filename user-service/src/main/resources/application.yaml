@@ -6,6 +6,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+        r2dbc: DEBUG
 
 spring:
   application:
@@ -14,11 +15,10 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
-  datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DATASOURCE_USERNAME:postgres}
+  r2dbc:
+    url: ${DATASOURCE_URL:r2dbc:postgresql://localhost:5432/postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
+    username: ${DATASOURCE_USERNAME:postgres}
 
   liquibase:
     enabled: false

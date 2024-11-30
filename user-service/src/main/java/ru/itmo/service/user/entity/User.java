@@ -1,18 +1,14 @@
 package ru.itmo.service.user.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Table(name = "users")
 @Getter
 @Setter
@@ -29,20 +24,24 @@ import java.util.List;
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    @NotNull
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column
+    @NotNull
     private String email;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String password;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column("role")
+    @NotNull
     private UserRole role;
 
     @Override

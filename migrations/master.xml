@@ -53,7 +53,7 @@
     </changeSet>
 
     <changeSet id="itmo-hs-v1-insert" author="${author}">
-        <sqlFile path="changes/07.insert.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+        <sqlFile path="scripts/07.insert.sql" relativeToChangelogFile="true" dbms="postgresql"/>
     </changeSet>
 
     <changeSet id="itmo-hs-v1-end" author="${author}">
