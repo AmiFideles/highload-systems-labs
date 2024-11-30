@@ -1,4 +1,4 @@
-package ru.itmo.marketplace.config;
+package ru.itmo.marketplace.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package ru.itmo.marketplace.entity;
+package ru.itmo.marketplace.service.review.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -7,10 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,16 +28,6 @@ public class SellerReview {
     @Id
     private Long sellerId;
 
-    @ManyToOne
-    @MapsId("authorId")
-    @JoinColumn(name = "author_id")
-    private User author;
-
-    @ManyToOne
-    @MapsId("sellerId")
-    @JoinColumn(name = "seller_id")
-    private User seller;
-
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
@@ -52,19 +38,14 @@ public class SellerReview {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SellerReviewId implements Serializable {
         @Column(name = "author_id")
-        Long authorId;
+        private Long authorId;
         @Column(name = "seller_id")
-        Long sellerId;
+        private Long sellerId;
     }
 }
