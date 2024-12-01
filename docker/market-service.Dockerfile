@@ -13,5 +13,5 @@ FROM amazoncorretto:21-alpine
 
 WORKDIR /app
 COPY --from=build /app/market-service/target/*.jar app.jar
-EXPOSE 8081
+EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "app.jar"]
