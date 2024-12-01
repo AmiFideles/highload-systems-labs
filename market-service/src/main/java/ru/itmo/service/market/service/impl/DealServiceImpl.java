@@ -14,7 +14,7 @@ import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
 import ru.itmo.service.market.repository.DealRepository;
 import ru.itmo.service.market.service.DealService;
-import ru.itmo.service.user.client.UserServiceClient;
+import ru.itmo.service.user.client.UserApiClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DealServiceImpl implements DealService {
     private final DealRepository dealRepository;
-    private final UserServiceClient userClient;
+    private final UserApiClient userClient;
 
     @Override
     @Transactional(readOnly = true)

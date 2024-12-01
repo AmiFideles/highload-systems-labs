@@ -18,7 +18,7 @@ import ru.itmo.service.market.repository.ListingRepository;
 import ru.itmo.service.market.service.ListingFilter;
 import ru.itmo.service.market.service.ListingService;
 import ru.itmo.service.market.service.ListingSpecification;
-import ru.itmo.service.user.client.UserServiceClient;
+import ru.itmo.service.user.client.UserApiClient;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ListingServiceImpl implements ListingService {
     private final ListingRepository listingRepository;
-    private final UserServiceClient userClient;
+    private final UserApiClient userClient;
 
     @Override
     @Transactional(readOnly = true)

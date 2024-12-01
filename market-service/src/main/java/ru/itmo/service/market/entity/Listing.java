@@ -2,7 +2,6 @@ package ru.itmo.service.market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,7 +38,6 @@ public class Listing {
     )
     private Set<Category> categories = new HashSet<>();
 
-    @NotNull
     @Column(name = "creator_id")
     private Long creatorId;
 

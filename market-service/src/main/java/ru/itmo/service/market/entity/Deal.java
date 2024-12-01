@@ -2,7 +2,6 @@ package ru.itmo.service.market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +19,6 @@ public class Deal {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
     @Column(name = "buyer_id")
     private Long buyerId;
 

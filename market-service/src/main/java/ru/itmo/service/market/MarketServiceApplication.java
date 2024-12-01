@@ -3,10 +3,10 @@ package ru.itmo.service.market;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import ru.itmo.service.user.client.UserServiceClient;
+import ru.itmo.service.user.client.UserApiClient;
 
 @EnableFeignClients(clients = {
-        UserServiceClient.class,
+        UserApiClient.class,
 })
 @SpringBootApplication
 public class MarketServiceApplication {

@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component;
 import ru.itmo.common.dto.deal.DealCreateRequestDto;
 import ru.itmo.common.dto.deal.DealResponseDto;
 import ru.itmo.common.dto.deal.DealStatusDto;
+import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.service.market.entity.Deal;
 import ru.itmo.service.market.entity.DealStatus;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.mapper.mapstruct.DealMapper;
 import ru.itmo.service.market.repository.ListingRepository;
+import ru.itmo.service.user.client.UserApiClient;
 
 
 @Component
@@ -19,6 +21,7 @@ public class DealCustomMapper {
     private final DealMapper dealMapper;
     private final ListingCustomMapper listingCustomMapper;
     private final ListingRepository listingRepository;
+    private final UserApiClient userApiClient;
 
 
     public Deal fromDto(DealCreateRequestDto dealRequestDto) {
@@ -34,6 +37,8 @@ public class DealCustomMapper {
     public DealResponseDto toDto(Deal deal) {
         DealResponseDto dto = dealMapper.toDto(deal);
         dto.setListing(listingCustomMapper.toDto(deal.getListing()));
+        UserResponseDto buyer = userApiClient.getUserById(deal.getBuyerId());
+        dto.setBuyer(buyer);
         return dto;
     }
 
