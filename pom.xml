@@ -18,9 +18,8 @@
         <module>category-service</module>
         <module>security-module</module>
         <module>eureka-server</module>
-        <module>listing-service</module>
         <module>reactive-security-module</module>
-        <module>deal-service</module>
+        <module>market-service</module>
         <module>review-service</module>
         <module>reactive-user-service-client</module>
         <module>market-service-reactive-client</module>
@@ -58,11 +57,6 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>1.6.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>${org.liquibase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

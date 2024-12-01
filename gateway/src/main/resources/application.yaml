@@ -28,17 +28,10 @@ spring:
           filters:
             - AuthenticationFilter
 
-        - id: categories-service
-          uri: lb://categories-service
+        - id: market-service
+          uri: lb://market-service
           predicates:
-            - Path=/api/v1/categories/**
-          filters:
-            - AuthenticationFilter
-
-        - id: listings-service
-          uri: lb://listings-service
-          predicates:
-            - Path=/api/v1/listings/**
+            - Path=/api/v1/deals/**, /api/v1/listings/**, /api/v1/categories/**, /api/v1/saved-listings/**
           filters:
             - AuthenticationFilter
 
