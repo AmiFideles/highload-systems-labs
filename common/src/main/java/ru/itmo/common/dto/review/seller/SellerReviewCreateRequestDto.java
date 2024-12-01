@@ -29,4 +29,3 @@ public class SellerReviewCreateRequestDto {
     private String comment;
 
 }
-

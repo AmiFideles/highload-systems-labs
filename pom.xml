@@ -21,6 +21,9 @@
         <module>listing-service</module>
         <module>reactive-security-module</module>
         <module>deal-service</module>
+        <module>review-service</module>
+        <module>reactive-user-service-client</module>
+        <module>market-service-reactive-client</module>
     </modules>
 
     <properties>
@@ -55,6 +58,11 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${org.liquibase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

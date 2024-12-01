@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.itmo.common.dto.category.CategoryResponseDto;
+import ru.itmo.common.dto.user.UserResponseDto;
 
 @Data
 @Builder
@@ -42,8 +43,8 @@ public class ListingResponseDto {
     private List<@Valid CategoryResponseDto> categories = new ArrayList<>();
 
     @NotNull
-    @JsonProperty("creator_id")
-    private Long creatorId;
+    @JsonProperty("creator")
+    private UserResponseDto creator;
 
     @Valid
     @JsonProperty("created_at")

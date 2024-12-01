@@ -16,6 +16,8 @@ import ru.itmo.service.user.entity.User;
 import ru.itmo.service.user.mapper.UserMapper;
 import ru.itmo.service.user.service.UserService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
@@ -48,6 +50,20 @@ public class UsersApiController {
         return userService.findById(id)
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .map(user -> ResponseEntity.ok(mapper.toDto(user)));
+    }
+
+    @GetMapping(
+            value = "/in",
+            produces = {"application/json"}
+    )
+    public Mono<ResponseEntity<List<UserResponseDto>>> getUserByIds(
+            @RequestParam("ids") List<Long> ids
+    ) {
+        return userService.findByIds(ids)
+                .collectList()
+                .map(users -> users.stream().map(mapper::toDto).toList())
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                .map(ResponseEntity::ok);
     }
 
     @RequestMapping(

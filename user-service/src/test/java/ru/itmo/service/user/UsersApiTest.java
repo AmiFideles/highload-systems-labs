@@ -34,7 +34,7 @@ public class UsersApiTest extends IntegrationEnvironment {
 
     @Test
     @SneakyThrows
-    public void getUsers__adminCallEmptyUsers_emptyReturned() {
+    void getUsers__adminCallEmptyUsers_emptyReturned() {
         User admin = testUtils.createAdmin();
 
         String response = webTestClient.get()

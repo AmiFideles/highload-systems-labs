@@ -104,12 +104,18 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      gateway:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8888
       DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
     healthcheck:
-      test: "curl --silent --fail monolith-service:8081/actuator/health | grep UP || exit 1"
+      test: "curl --silent --fail monolith-service:8099/actuator/health | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 5
@@ -128,12 +134,46 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      gateway:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8888
       DATASOURCE_URL: r2dbc:postgresql://db:5432/postgres
     healthcheck:
       test: "curl --silent --fail user-service:8081/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  review-service:
+    build:
+      context: .
+      dockerfile: docker/review-service.Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail review-service:8082/actuator/health | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 5

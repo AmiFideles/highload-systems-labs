@@ -1,6 +1,12 @@
-### Run Monolith Application
+### ReRun
 ```bash
-mvn -f monolith spring-boot:run
+docker compose down -v
+docker compose up -d --build
+```
+
+### Stop
+```bash
+docker compose down -v
 ```
 
 ### Авторизация

@@ -50,6 +50,13 @@ spring:
             - RewritePath=/monolith/(?<segment>.*), /$\{segment}
             - AuthenticationFilter
 
+        - id: reviews-service
+          uri: lb://reviews-service
+          predicates:
+            - Path=/api/v1/reviews/**
+          filters:
+            - AuthenticationFilter
+
 eureka:
   instance:
     hostname: localhost

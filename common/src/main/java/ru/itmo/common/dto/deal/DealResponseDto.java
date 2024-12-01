@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.itmo.common.dto.listing.ListingResponseDto;
+import ru.itmo.common.dto.user.UserResponseDto;
 
 @Data
 @Builder
@@ -24,8 +25,8 @@ public class DealResponseDto {
     private Long id;
 
     @NotNull
-    @JsonProperty("buyer_id")
-    private Long buyerId;
+    @JsonProperty("buyer")
+    private UserResponseDto buyer;
 
     @NotNull
     @Valid

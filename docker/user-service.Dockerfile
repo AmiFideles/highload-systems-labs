@@ -11,6 +11,8 @@ RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 FROM amazoncorretto:21-alpine
 
+RUN apk --no-cache add curl
+
 WORKDIR /app
 COPY --from=build /app/user-service/target/*.jar app.jar
 EXPOSE 8081
