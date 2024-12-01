@@ -3,20 +3,24 @@ package ru.itmo.service.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.common.exception.AccessDeniedException;
 import ru.itmo.common.exception.NotFoundException;
+import ru.itmo.modules.security.InternalAuthentication;
 import ru.itmo.service.user.entity.User;
+import ru.itmo.service.user.entity.UserRole;
 import ru.itmo.service.user.mapper.UserMapper;
 import ru.itmo.service.user.service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -33,8 +37,12 @@ public class UsersApiController {
             consumes = {"application/json"}
     )
     public Mono<ResponseEntity<UserResponseDto>> createUser(
+            @AuthenticationPrincipal InternalAuthentication authentication,
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
+        if (!Objects.equals(authentication.getUserRole(), UserRole.ADMIN.name())) {
+            return Mono.error(new AccessDeniedException("Only admins can create users"));
+        }
         return userService.create(mapper.fromDto(userRequestDto))
                 .map(user -> ResponseEntity.ok(mapper.toDto(user)));
     }
@@ -61,7 +69,12 @@ public class UsersApiController {
     ) {
         return userService.findByIds(ids)
                 .collectList()
-                .map(users -> users.stream().map(mapper::toDto).toList())
+                .flatMap(users -> {
+                    if (users.size() != ids.size()) {
+                        return Mono.error(new NotFoundException("Some users were not found"));
+                    }
+                    return Mono.just(users.stream().map(mapper::toDto).toList());
+                })
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .map(ResponseEntity::ok);
     }
@@ -85,14 +98,16 @@ public class UsersApiController {
             consumes = {"application/json"}
     )
     public Mono<ResponseEntity<UserResponseDto>> updateUser(
+            @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("id") Long id,
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
         User user = mapper.fromDto(userRequestDto);
         user.setId(id);
 
-        return userService.update(user)
+        return userService.update(authentication.getUserId(), user)
                 .switchIfEmpty(Mono.error(new NotFoundException("User with id %s not found".formatted(id))))
                 .map(updatedUser -> ResponseEntity.ok(mapper.toDto(updatedUser)));
     }
+
 }

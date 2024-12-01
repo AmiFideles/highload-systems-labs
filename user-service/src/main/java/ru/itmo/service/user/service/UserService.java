@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.itmo.common.exception.AccessDeniedException;
 import ru.itmo.common.exception.DuplicateException;
 import ru.itmo.service.user.entity.User;
+import ru.itmo.service.user.entity.UserRole;
 import ru.itmo.service.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -67,14 +70,23 @@ public class UserService {
     }
 
     @Transactional
-    public Mono<User> update(User user) {
-        return existsById(user.getId()).flatMap(exists -> {
-                    if (exists) {
-                        user.setPassword(passwordEncoder.encode(user.getPassword()));
-                        return repository.save(user);
+    public Mono<User> update(Long authorId, User user) {
+        return findById(authorId).flatMap(authorUser -> {
+            if (isAllowedToUpdate(user, authorUser)) {
+                return Mono.error(new AccessDeniedException("Only admin and owner can change account"));
+            }
+            return existsById(user.getId()).flatMap(exists -> {
+                        if (exists) {
+                            user.setPassword(passwordEncoder.encode(user.getPassword()));
+                            return repository.save(user);
+                        }
+                        return Mono.empty();
                     }
-                    return Mono.empty();
-                }
-        );
+            );
+        });
+    }
+
+    private static boolean isAllowedToUpdate(User user, User authorUser) {
+        return !Objects.equals(authorUser.getId(), user.getId()) && authorUser.getRole() != UserRole.ADMIN;
     }
 }

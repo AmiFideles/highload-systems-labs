@@ -1,6 +1,7 @@
 package ru.itmo.service.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.itmo.service.user.entity.User;
 import ru.itmo.service.user.entity.UserRole;
@@ -13,6 +14,17 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 public class TestUtils {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public User createUserWithPassword(String username, String password) {
+        return userRepository.save(User.builder()
+                        .email(createRandomString())
+                        .password(passwordEncoder.encode(password))
+                        .name(username)
+                        .role(UserRole.SELLER)
+                        .build())
+                .block();
+    }
 
     public User createSeller() {
         return userRepository.save(User.builder()
