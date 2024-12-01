@@ -23,7 +23,7 @@ public interface DealApiReactiveClient {
     );
 
     @GetMapping(
-            value = "",
+            value = "/in",
             produces = {"application/json"}
     )
     @CollectionFormat(feign.CollectionFormat.CSV)

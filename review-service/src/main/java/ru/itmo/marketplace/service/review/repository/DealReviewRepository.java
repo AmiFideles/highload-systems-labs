@@ -16,7 +16,7 @@ public interface DealReviewRepository extends JpaRepository<DealReviewEntity, Lo
     Integer removeById(Long id);
 
     @Query(value = """
-                SELECT dr FROM deal_review dr
+                SELECT dr.* FROM deal_review dr
                     JOIN deal ON dr.deal_id = deal.id
                     JOIN users ON users.id = deal.buyer_id
                     WHERE deal.buyer_id = :buyerId

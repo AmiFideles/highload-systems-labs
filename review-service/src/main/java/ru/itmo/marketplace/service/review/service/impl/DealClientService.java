@@ -17,7 +17,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DealClientService implements DealService {
-
     private final DealApiReactiveClient dealApiReactiveClient;
 
     @Override
@@ -27,7 +26,9 @@ public class DealClientService implements DealService {
 
     @Override
     public Flux<DealResponseDto> getAllDealsByIds(List<Long> dealsIds) {
+        if (dealsIds == null || dealsIds.isEmpty()) {
+            return Flux.empty();
+        }
         return dealApiReactiveClient.getDealsByIds(dealsIds);
     }
-
 }

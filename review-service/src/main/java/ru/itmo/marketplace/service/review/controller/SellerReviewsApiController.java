@@ -17,7 +17,7 @@ import ru.itmo.modules.security.InternalAuthentication;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/reviews/seller")
+@RequestMapping("/api/v1/reviews/sellers")
 @RequiredArgsConstructor
 public class SellerReviewsApiController {
     private final SellerReviewService sellerReviewService;

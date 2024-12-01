@@ -29,6 +29,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers("/error").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/v1/categories/**").authenticated()
                 .requestMatchers("/api/v1/deals/**").authenticated()
                 .requestMatchers("/api/v1/listings/**").authenticated()
