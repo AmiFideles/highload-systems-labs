@@ -1,28 +1,27 @@
 package ru.itmo.marketplace.service.review.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.review.seller.SellerReviewCreateRequestDto;
 import ru.itmo.common.dto.review.seller.SellerReviewResponseDto;
 import ru.itmo.common.dto.review.seller.SellerReviewUpdateRequestDto;
+import ru.itmo.marketplace.service.review.service.SellerReviewService;
+import ru.itmo.modules.security.InternalAuthentication;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/reviews/seller")
 @RequiredArgsConstructor
 public class SellerReviewsApiController {
+    private final SellerReviewService sellerReviewService;
+
     @RequestMapping(
             method = RequestMethod.POST,
             value = "",
@@ -30,10 +29,11 @@ public class SellerReviewsApiController {
             consumes = {"application/json"}
     )
     public Mono<ResponseEntity<SellerReviewResponseDto>> createSellerReview(
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            @AuthenticationPrincipal InternalAuthentication authentication,
             @Valid @RequestBody SellerReviewCreateRequestDto sellerReviewCreateRequestDto
     ) {
-        return Mono.empty();
+        return sellerReviewService.create(authentication.getUserId(), sellerReviewCreateRequestDto)
+                .map(ResponseEntity::ok);
     }
 
     @RequestMapping(
@@ -42,10 +42,11 @@ public class SellerReviewsApiController {
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Void>> deleteSellerReview(
-            @PathVariable("seller_id") Long sellerId,
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId
+            @AuthenticationPrincipal InternalAuthentication authentication,
+            @PathVariable("seller_id") Long sellerId
     ) {
-        return Mono.empty();
+        return sellerReviewService.deleteByIds(authentication.getUserId(), sellerId)
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     @RequestMapping(
@@ -54,10 +55,11 @@ public class SellerReviewsApiController {
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Page<SellerReviewResponseDto>>> getMySellerReviews(
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
+            @AuthenticationPrincipal InternalAuthentication authentication,
             Pageable pageable
     ) {
-        return Mono.empty();
+        return sellerReviewService.findByAuthorId(authentication.getUserId(), pageable)
+                .map(ResponseEntity::ok);
     }
 
     @RequestMapping(
@@ -69,7 +71,8 @@ public class SellerReviewsApiController {
             @PathVariable("seller_id") Long sellerId,
             Pageable pageable
     ) {
-        return Mono.empty();
+        return sellerReviewService.findByAuthorId(sellerId, pageable)
+                .map(ResponseEntity::ok);
     }
 
     @RequestMapping(
@@ -79,11 +82,12 @@ public class SellerReviewsApiController {
             consumes = {"application/json"}
     )
     public Mono<ResponseEntity<SellerReviewResponseDto>> updateSellerReview(
+            @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("seller_id") Long sellerId,
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             @Valid @RequestBody SellerReviewUpdateRequestDto sellerReviewUpdateRequestDto
     ) {
-        return Mono.empty();
+        return sellerReviewService.update(authentication.getUserId(), sellerId, sellerReviewUpdateRequestDto)
+                .map(ResponseEntity::ok);
     }
 }
 

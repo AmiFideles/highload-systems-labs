@@ -8,7 +8,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.common.exception.DuplicateException;
-import ru.itmo.common.service.CrudService;
 import ru.itmo.service.category.entity.Category;
 import ru.itmo.service.category.repository.CategoryRepository;
 
@@ -17,22 +16,19 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements CrudService<Category, Long> {
+public class CategoryService {
     private final CategoryRepository repository;
 
-    @Override
     @Transactional(readOnly = true)
     public Optional<Category> findById(Long id) {
         return repository.findById(id);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Page<Category> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    @Override
     @Transactional
     public Category create(Category category) {
         if (existsByName(category.getName())) {
@@ -41,7 +37,6 @@ public class CategoryService implements CrudService<Category, Long> {
         return repository.save(category);
     }
 
-    @Override
     @Transactional
     public Optional<Category> update(Category category) {
         if (existsById(category.getId())) {
@@ -50,13 +45,11 @@ public class CategoryService implements CrudService<Category, Long> {
         return Optional.empty();
     }
 
-    @Override
     @Transactional
     public boolean deleteById(Long id) {
         return repository.removeById(id) > 0;
     }
 
-    @Override
     public boolean existsById(@Nullable Long id) {
         if (id == null) {
             return false;

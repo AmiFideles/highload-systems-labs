@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.itmo.marketplace.service.review.entity.DealReview;
+import ru.itmo.marketplace.service.review.entity.DealReviewEntity;
 
 @Repository
-public interface DealReviewRepository extends JpaRepository<DealReview, Long> {
+public interface DealReviewRepository extends JpaRepository<DealReviewEntity, Long> {
     @Modifying
     Integer removeById(Long id);
 
@@ -20,5 +20,5 @@ public interface DealReviewRepository extends JpaRepository<DealReview, Long> {
             JOIN users ON users.id = deal.buyer_id
             WHERE deal.buyer_id = :buyerId
     """, nativeQuery = true)
-    Page<DealReview> findAllByBuyerId(@Param("buyerId") Long buyerId, Pageable pageable);
+    Page<DealReviewEntity> findAllByBuyerId(@Param("buyerId") Long buyerId, Pageable pageable);
 }

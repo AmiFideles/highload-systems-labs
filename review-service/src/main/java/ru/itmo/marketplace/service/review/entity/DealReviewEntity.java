@@ -19,7 +19,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DealReview {
+public class DealReviewEntity {
     @Id
     @Column(name = "deal_id")
     private Long id;

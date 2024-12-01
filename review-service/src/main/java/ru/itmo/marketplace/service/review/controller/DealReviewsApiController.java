@@ -1,7 +1,6 @@
 package ru.itmo.marketplace.service.review.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +27,6 @@ public class DealReviewsApiController {
             consumes = {"application/json"}
     )
     public Mono<ResponseEntity<DealReviewResponseDto>> createDealReview(
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             @Valid @RequestBody DealReviewRequestDto dealReviewRequestDto
     ) {
         return Mono.empty();
@@ -41,8 +38,7 @@ public class DealReviewsApiController {
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Void>> deleteDealReview(
-            @PathVariable("id") Long id,
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId
+            @PathVariable("id") Long id
     ) {
         return Mono.empty();
     }
@@ -64,7 +60,6 @@ public class DealReviewsApiController {
             produces = {"application/json"}
     )
     public Mono<ResponseEntity<Page<DealReviewResponseDto>>> getDealReviewList(
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             Pageable pageable
     ) {
         return Mono.empty();
@@ -78,7 +73,6 @@ public class DealReviewsApiController {
     )
     public Mono<ResponseEntity<DealReviewResponseDto>> updateDealReview(
             @PathVariable("id") Long id,
-            @NotNull @RequestHeader(value = "X-User-Id") Long xUserId,
             @Valid @RequestBody DealReviewRequestDto dealReviewRequestDto
     ) {
         return Mono.empty();

@@ -6,6 +6,8 @@ logging:
     org:
       springframework:
         security: DEBUG
+    ru.itmo.service.user.client:
+      UserServiceReactiveClient: DEBUG
 
 spring:
   application:

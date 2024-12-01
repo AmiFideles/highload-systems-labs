@@ -8,24 +8,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@IdClass(SellerReview.SellerReviewId.class)
+@IdClass(SellerReviewEntity.SellerReviewId.class)
 @Table(name = "seller_review")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SellerReview {
+public class SellerReviewEntity {
     @Id
+    @With
     private Long authorId;
+
     @Id
+    @With
     private Long sellerId;
 
     @Column(name = "rating", nullable = false)

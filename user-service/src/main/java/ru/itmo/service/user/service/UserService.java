@@ -8,10 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.exception.DuplicateException;
 import ru.itmo.service.user.entity.User;
 import ru.itmo.service.user.repository.UserRepository;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,6 +26,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public Mono<User> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Flux<User> findByIds(List<Long> ids) {
+        return repository.findAllById(ids);
     }
 
     @Transactional(readOnly = true)

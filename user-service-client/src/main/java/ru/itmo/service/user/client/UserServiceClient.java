@@ -4,12 +4,11 @@ import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+
+import java.util.List;
 
 @FeignClient(name = "users-service", path = "/api/v1")
 public interface UserServiceClient {
@@ -31,6 +30,9 @@ public interface UserServiceClient {
     UserResponseDto getUserById(
             @PathVariable("id") Long id
     );
+
+    @GetMapping(value = "/users/in", produces = "application/json")
+    List<UserResponseDto> getUsersByIds(@RequestParam("ids") List<Long> ids);
 
     @RequestMapping(
             method = RequestMethod.GET,
