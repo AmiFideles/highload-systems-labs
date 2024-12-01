@@ -20,7 +20,6 @@
         <module>eureka-server</module>
         <module>reactive-security-module</module>
         <module>market-service</module>
-        <module>deal-service</module>
         <module>review-service</module>
         <module>reactive-user-service-client</module>
         <module>market-service-reactive-client</module>

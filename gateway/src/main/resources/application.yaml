@@ -28,13 +28,6 @@ spring:
           filters:
             - AuthenticationFilter
 
-        - id: categories-service
-          uri: lb://categories-service
-          predicates:
-            - Path=/api/v1/categories/**
-          filters:
-            - AuthenticationFilter
-
         - id: market-service
           uri: lb://market-service
           predicates:
