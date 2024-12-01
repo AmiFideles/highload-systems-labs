@@ -3,10 +3,12 @@ package ru.itmo.marketplace.service.review;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactivefeign.spring.config.EnableReactiveFeignClients;
-import ru.itmo.service.user.client.UserServiceReactiveClient;
+import ru.itmo.service.market.client.DealApiReactiveClient;
+import ru.itmo.service.user.client.UserApiReactiveClient;
 
 @EnableReactiveFeignClients(clients = {
-        UserServiceReactiveClient.class
+        UserApiReactiveClient.class,
+        DealApiReactiveClient.class,
 })
 @SpringBootApplication
 public class ReviewServiceApplication {

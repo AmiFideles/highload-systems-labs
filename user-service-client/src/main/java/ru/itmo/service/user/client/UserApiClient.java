@@ -10,11 +10,11 @@ import ru.itmo.common.dto.user.UserResponseDto;
 
 import java.util.List;
 
-@FeignClient(name = "users-service", path = "/api/v1")
-public interface UserServiceClient {
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/users",
+@FeignClient(name = "users-service", path = "/api/v1/users")
+public interface UserApiClient {
+
+    @PostMapping(
+            value = "",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -22,30 +22,32 @@ public interface UserServiceClient {
             @Valid @RequestBody UserRequestDto userRequestDto
     );
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/users/{id}",
+    @GetMapping(
+            value = "/{id}",
             produces = {"application/json"}
     )
     UserResponseDto getUserById(
             @PathVariable("id") Long id
     );
 
-    @GetMapping(value = "/users/in", produces = "application/json")
-    List<UserResponseDto> getUsersByIds(@RequestParam("ids") List<Long> ids);
+    @GetMapping(
+            value = "/in",
+            produces = "application/json"
+    )
+    List<UserResponseDto> getUsersByIds(
+            @RequestParam("ids") List<Long> ids
+    );
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/users",
+    @GetMapping(
+            value = "",
             produces = {"application/json"}
     )
     Page<UserResponseDto> getUserList(
             Pageable pageable
     );
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = "/users/{id}",
+    @PutMapping(
+            value = "/{id}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
@@ -54,13 +56,13 @@ public interface UserServiceClient {
             @Valid @RequestBody UserRequestDto userRequestDto
     );
 
-    @RequestMapping(
-            method = RequestMethod.DELETE,
-            value = "/users/{id}",
+    @DeleteMapping(
+            value = "/{id}",
             produces = {"application/json"}
     )
     Void deleteUser(
             @PathVariable("id") Long id
     );
+
 }
 

@@ -31,7 +31,7 @@ import ru.itmo.marketplace.mapper.mapstruct.UserMapper;
 import ru.itmo.marketplace.service.DealService;
 import ru.itmo.marketplace.service.ListingService;
 import ru.itmo.marketplace.service.UserService;
-import ru.itmo.service.user.client.UserServiceClient;
+import ru.itmo.service.user.client.UserApiClient;
 
 @Slf4j
 @RestController
@@ -44,7 +44,7 @@ public class UsersApiController {
     private final ListingCustomMapper listingCustomMapper;
     private final DealCustomMapper dealCustomMapper;
     private final ListingService listingService;
-    private final UserServiceClient userServiceClient;
+    private final UserApiClient userApiClient;
 
     @RequestMapping(
             method = RequestMethod.POST,
@@ -56,7 +56,7 @@ public class UsersApiController {
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
         return ResponseEntity.ok(
-                userServiceClient.createUser(userRequestDto)
+                userApiClient.createUser(userRequestDto)
         );
     }
 
@@ -68,7 +68,7 @@ public class UsersApiController {
     public ResponseEntity<UserResponseDto> getUserById(
             @PathVariable("id") Long id
     ) {
-        return ResponseEntity.ok(userServiceClient.getUserById(id));
+        return ResponseEntity.ok(userApiClient.getUserById(id));
     }
 
     @RequestMapping(
@@ -79,7 +79,7 @@ public class UsersApiController {
     public ResponseEntity<Page<UserResponseDto>> getUserList(
             Pageable pageable
     ) {
-        return ResponseEntity.ok(userServiceClient.getUserList(pageable));
+        return ResponseEntity.ok(userApiClient.getUserList(pageable));
     }
 
     @RequestMapping(
@@ -92,7 +92,7 @@ public class UsersApiController {
             @PathVariable("id") Long id,
             @Valid @RequestBody UserRequestDto userRequestDto
     ) {
-        return ResponseEntity.ok(userServiceClient.updateUser(id, userRequestDto));
+        return ResponseEntity.ok(userApiClient.updateUser(id, userRequestDto));
     }
 
     @RequestMapping(
@@ -103,7 +103,7 @@ public class UsersApiController {
     public ResponseEntity<Void> deleteUser(
             @PathVariable("id") Long id
     ) {
-        userServiceClient.deleteUser(id);
+        userApiClient.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 

@@ -23,6 +23,7 @@
         <module>deal-service</module>
         <module>review-service</module>
         <module>reactive-user-service-client</module>
+        <module>market-service-reactive-client</module>
     </modules>
 
     <properties>

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-class ReviewApiTest extends IntegrationEnvironment {
+class SellerReviewApiTest extends IntegrationEnvironment {
 
     @Test
     void startUpTest() {

@@ -20,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DealReviewEntity {
+
     @Id
     @Column(name = "deal_id")
     private Long id;
@@ -30,6 +31,8 @@ public class DealReviewEntity {
     @Column(name = "comment")
     private String comment;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
 }

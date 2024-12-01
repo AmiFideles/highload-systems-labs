@@ -11,14 +11,16 @@ import ru.itmo.marketplace.service.review.entity.DealReviewEntity;
 
 @Repository
 public interface DealReviewRepository extends JpaRepository<DealReviewEntity, Long> {
+
     @Modifying
     Integer removeById(Long id);
 
     @Query(value = """
-        SELECT dr FROM deal_review dr
-            JOIN deal ON dr.deal_id = deal.id
-            JOIN users ON users.id = deal.buyer_id
-            WHERE deal.buyer_id = :buyerId
-    """, nativeQuery = true)
+                SELECT dr FROM deal_review dr
+                    JOIN deal ON dr.deal_id = deal.id
+                    JOIN users ON users.id = deal.buyer_id
+                    WHERE deal.buyer_id = :buyerId
+            """, nativeQuery = true)
     Page<DealReviewEntity> findAllByBuyerId(@Param("buyerId") Long buyerId, Pageable pageable);
+
 }

@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.itmo.common.dto.user.UserAuthDto;
-import ru.itmo.service.user.client.AuthServiceClient;
+import ru.itmo.service.user.client.AuthApiClient;
 
 @Component
 public class JwtUtil {
@@ -20,7 +20,7 @@ public class JwtUtil {
 
     @Lazy
     @Autowired
-    private AuthServiceClient authServiceClient;
+    private AuthApiClient authApiClient;
 
     public UserAuthDto extractUserAndValidate(final String token) {
         Claims claims = Jwts.parserBuilder()
@@ -29,7 +29,7 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         Long userId = claims.get("user_id", Long.class);
-        UserAuthDto authUserById = authServiceClient.getAuthUserById(userId);
+        UserAuthDto authUserById = authApiClient.getAuthUserById(userId);
         return authUserById;
     }
 

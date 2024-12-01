@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @ReactiveFeignClient(name = "users-service", path = "/api/v1")
-public interface UserServiceReactiveClient {
+public interface UserApiReactiveClient {
 
     @PostMapping(value = "/users", produces = "application/json", consumes = "application/json")
     Mono<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto);

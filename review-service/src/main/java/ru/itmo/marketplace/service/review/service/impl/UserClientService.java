@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.marketplace.service.review.service.UserService;
-import ru.itmo.service.user.client.UserServiceReactiveClient;
+import ru.itmo.service.user.client.UserApiReactiveClient;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 public class UserClientService implements UserService {
-    private final UserServiceReactiveClient userServiceClient;
+    private final UserApiReactiveClient userServiceClient;
 
     @Override
     public Mono<UserResponseDto> findById(Long id) {
