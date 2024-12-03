@@ -9,3 +9,9 @@ VALUES ('buyer@email.com', '$2a$10$kDEwumd0A3EBbMm3wRyUSOBq1uFgR/nHoIXD/i3m1.NtQ
 
 INSERT INTO users (email, password, name, role)
 VALUES ('seller@email.com', '$2a$10$kDEwumd0A3EBbMm3wRyUSOBq1uFgR/nHoIXD/i3m1.NtQ4LemZ5gO', 'seller', 'SELLER');
+
+INSERT INTO users (email, password, name, role)
+VALUES ('buyer2@email.com', '$2a$10$kDEwumd0A3EBbMm3wRyUSOBq1uFgR/nHoIXD/i3m1.NtQ4LemZ5gO', 'buyer2', 'BUYER');
+
+INSERT INTO users (email, password, name, role)
+VALUES ('seller2@email.com', '$2a$10$kDEwumd0A3EBbMm3wRyUSOBq1uFgR/nHoIXD/i3m1.NtQ4LemZ5gO', 'seller2', 'SELLER');

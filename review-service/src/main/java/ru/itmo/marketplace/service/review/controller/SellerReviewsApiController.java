@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -28,6 +29,7 @@ public class SellerReviewsApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<SellerReviewResponseDto>> createSellerReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @Valid @RequestBody SellerReviewCreateRequestDto sellerReviewCreateRequestDto
@@ -41,6 +43,7 @@ public class SellerReviewsApiController {
             value = "/{seller_id}",
             produces = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER') or hasAuthority('ADMIN')")
     public Mono<ResponseEntity<Void>> deleteSellerReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("seller_id") Long sellerId
@@ -54,6 +57,7 @@ public class SellerReviewsApiController {
             value = "",
             produces = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<Page<SellerReviewResponseDto>>> getMySellerReviews(
             @AuthenticationPrincipal InternalAuthentication authentication,
             Pageable pageable
@@ -81,6 +85,7 @@ public class SellerReviewsApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<SellerReviewResponseDto>> updateSellerReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("seller_id") Long sellerId,

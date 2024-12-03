@@ -3,17 +3,21 @@ package ru.itmo.marketplace.service.review.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import ru.itmo.common.exception.ControllerAdvice;
 import ru.itmo.modules.security.ReactiveInternalAuthenticationFilter;
 import ru.itmo.modules.security.ReactiveSecurityModuleConfig;
 
 @Import({
-        ReactiveSecurityModuleConfig.class
+        ReactiveSecurityModuleConfig.class,
+        ControllerAdvice.class,
 })
+@EnableReactiveMethodSecurity
 @EnableWebFluxSecurity
 @Configuration
 public class SecurityConfig {
