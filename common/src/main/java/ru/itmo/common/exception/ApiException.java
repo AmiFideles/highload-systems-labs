@@ -1,19 +1,18 @@
 package ru.itmo.common.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ApiException extends RuntimeException {
-    public ApiException() {
+    private final ApiErrorCode errorCode;
+
+    public ApiException(ApiErrorCode errorCode) {
         super();
+        this.errorCode = errorCode;
     }
 
-    public ApiException(String message) {
-        super(message);
-    }
-
-    public ApiException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ApiException(Throwable cause) {
+    public ApiException(ApiErrorCode errorCode, Throwable cause) {
         super(cause);
+        this.errorCode = errorCode;
     }
 }

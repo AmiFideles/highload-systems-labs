@@ -123,6 +123,34 @@ services:
     networks:
       - backend
 
+  authentication-service:
+    build:
+      context: .
+      dockerfile: docker/authentication-service.Dockerfile
+    ports:
+      - "8084:8084"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: r2dbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail authentication-service:8084/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
   user-service:
     build:
       context: .

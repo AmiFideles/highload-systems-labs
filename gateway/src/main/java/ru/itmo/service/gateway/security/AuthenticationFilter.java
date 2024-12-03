@@ -1,9 +1,11 @@
 package ru.itmo.service.gateway.security;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -12,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import ru.itmo.common.dto.user.ValidateTokenRequestDto;
+import ru.itmo.marketplace.service.authentication.client.AuthenticationServiceClient;
 
 @Slf4j
 @Component
@@ -20,8 +24,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Autowired
     private RouteValidator validator;
 
+    @Lazy
     @Autowired
-    private JwtUtil jwtUtil;
+    private AuthenticationServiceClient authenticationServiceClient;
 
     public AuthenticationFilter() {
         super(Config.class);
@@ -45,14 +50,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     authHeader = authHeader.substring(7);
                 }
 
-                String finalAuthHeader = authHeader;
-                return Mono.fromCallable(() -> jwtUtil.extractUserAndValidate(finalAuthHeader))
+                String token = authHeader;
+                return Mono.fromCallable(() -> authenticationServiceClient.validate(
+                                new ValidateTokenRequestDto(token)
+                        ))
                         .subscribeOn(Schedulers.boundedElastic())
                         .flatMap(user -> {
                             ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                                    .header("X-User-Id", user.getId().toString())
-                                    .header("X-User-Name", user.getUsername())
-                                    .header("X-User-Role", user.getRole())
+                                    .header("X-User-Id", user.getUserId().toString())
+                                    .header("X-User-Role", user.getUserRoleDto())
                                     .build();
 
                             ServerWebExchange modifiedExchange = exchange;
@@ -64,14 +70,21 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         })
                         .onErrorResume(e -> {
                             log.error("Invalid token", e);
-                            return Mono.error(new ResponseStatusException(
-                                    HttpStatus.UNAUTHORIZED,
-                                    "Provided authentication token is invalid or expired"
-                            ));
+                            if (e instanceof FeignException.FeignClientException ex && is4xx(ex)) {
+                                return Mono.error(new ResponseStatusException(
+                                        HttpStatus.UNAUTHORIZED,
+                                        "Provided authentication token is invalid or expired"
+                                ));
+                            }
+                            return Mono.error(e);
                         });
             }
             return chain.filter(exchange);
         };
+    }
+
+    private static boolean is4xx(FeignException.FeignClientException ex) {
+        return ex.status() >= 400 && ex.status() <= 499;
     }
 
     public static class Config {
