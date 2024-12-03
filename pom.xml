@@ -15,7 +15,6 @@
         <module>gateway</module>
         <module>common</module>
         <module>user-service-client</module>
-        <module>category-service</module>
         <module>security-module</module>
         <module>eureka-server</module>
         <module>reactive-security-module</module>
@@ -23,6 +22,8 @@
         <module>review-service</module>
         <module>reactive-user-service-client</module>
         <module>market-service-reactive-client</module>
+        <module>authentication-service</module>
+        <module>authentication-service-client</module>
     </modules>
 
     <properties>

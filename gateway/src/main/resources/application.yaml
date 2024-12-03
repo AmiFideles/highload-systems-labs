@@ -4,6 +4,7 @@ logging:
   level:
     web: debug
 
+
 spring:
   application:
     name: gateway
@@ -24,7 +25,14 @@ spring:
         - id: users-service
           uri: lb://users-service
           predicates:
-            - Path=/api/v1/auth/login, /api/v1/users/**
+            - Path=/api/v1/users/**
+          filters:
+            - AuthenticationFilter
+
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/api/v1/auth/login
           filters:
             - AuthenticationFilter
 

@@ -1,3 +1,6 @@
+jwt:
+  secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="
+
 # disable external services
 spring:
   cloud:
