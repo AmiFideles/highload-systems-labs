@@ -6,6 +6,8 @@ import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.marketplace.service.review.entity.SellerReviewEntity;
 import ru.itmo.marketplace.service.review.repository.SellerReviewRepository;
 
+import java.util.List;
+
 @Component
 public class TestUtils {
     @Autowired
@@ -25,48 +27,32 @@ public class TestUtils {
         );
     }
 
-    public UserResponseDto getAdmin() {
-        return UserResponseDto.builder()
-                .id(1L)
-                .role("ADMIN")
-                .email("admin@admin")
-                .name("admin")
-                .build();
-    }
+    public UserResponseDto ADMIN = UserResponseDto.builder().id(1L).role("ADMIN").build();
+    public UserResponseDto MODERATOR = UserResponseDto.builder().id(2L).role("MODERATOR").build();
 
-    public UserResponseDto getBuyer() {
-        return UserResponseDto.builder()
-                .id(3L)
-                .role("BUYER")
-                .email("buyer@email.com")
-                .name("buyer")
-                .build();
-    }
+    public UserResponseDto BUYER = UserResponseDto.builder().id(3L).role("BUYER").build();
+    public UserResponseDto SELLER = UserResponseDto.builder().id(4L).role("SELLER").build();
 
-    public UserResponseDto getBuyer2() {
-        return UserResponseDto.builder()
-                .id(5L)
-                .role("BUYER")
-                .email("buyer@email.com")
-                .name("buyer")
-                .build();
-    }
+    public UserResponseDto BUYER2 = UserResponseDto.builder().id(5L).role("BUYER").build();
+    public UserResponseDto SELLER2 = UserResponseDto.builder().id(6L).role("SELLER").build();
 
-    public UserResponseDto getSeller2() {
-        return UserResponseDto.builder()
-                .id(6L)
-                .role("SELLER")
-                .email("seller@email.com")
-                .name("seller")
-                .build();
-    }
+    public UserResponseDto BUYER3 = UserResponseDto.builder().id(7L).role("BUYER").build();
+    public UserResponseDto SELLER3 = UserResponseDto.builder().id(8L).role("SELLER").build();
 
-    public UserResponseDto getSeller() {
-        return UserResponseDto.builder()
-                .id(4L)
-                .role("SELLER")
-                .email("seller@email.com")
-                .name("seller")
-                .build();
-    }
+    public UserResponseDto BUYER4 = UserResponseDto.builder().id(9L).role("BUYER").build();
+    public UserResponseDto SELLER4 = UserResponseDto.builder().id(10L).role("SELLER").build();
+
+    public List<UserResponseDto> USERS = List.of(
+            ADMIN,
+            MODERATOR,
+            BUYER,
+            SELLER,
+            BUYER2,
+            SELLER2,
+            BUYER3,
+            SELLER3,
+            BUYER4,
+            SELLER4
+    );
+
 }

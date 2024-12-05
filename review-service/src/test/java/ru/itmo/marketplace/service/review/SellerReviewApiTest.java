@@ -21,7 +21,8 @@ import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.service.user.client.UserApiReactiveClient;
 
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
@@ -42,32 +43,18 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @MockBean
     UserApiReactiveClient userApiReactiveClient;
 
-    UserResponseDto buyer;
-    UserResponseDto buyer2;
-    UserResponseDto seller;
-    UserResponseDto seller2;
-    UserResponseDto admin;
-
     @BeforeEach
     void setup() {
-        buyer = testUtils.getBuyer();
-        when(userApiReactiveClient.getUserById(buyer.getId())).thenReturn(Mono.just(buyer));
-        buyer2 = testUtils.getBuyer2();
-        when(userApiReactiveClient.getUserById(buyer2.getId())).thenReturn(Mono.just(buyer2));
-        seller = testUtils.getSeller();
-        when(userApiReactiveClient.getUserById(seller.getId())).thenReturn(Mono.just(seller));
-        seller2 = testUtils.getSeller2();
-        when(userApiReactiveClient.getUserById(seller2.getId())).thenReturn(Mono.just(seller2));
-        admin = testUtils.getAdmin();
-        when(userApiReactiveClient.getUserById(admin.getId())).thenReturn(Mono.just(admin));
+        testUtils.USERS.forEach(user ->
+                when(userApiReactiveClient.getUserById(user.getId())).thenReturn(Mono.just(user))
+        );
 
         when(userApiReactiveClient.getUserById(UNKNOWN_USER_ID)).thenReturn(Mono.empty());
 
-        var usersMap = Map.of(
-                buyer.getId(), buyer,
-                seller.getId(), seller,
-                admin.getId(), admin
-        );
+        var usersMap = testUtils.USERS.stream().collect(Collectors.toMap(
+                UserResponseDto::getId,
+                Function.identity()
+        ));
 
         when(userApiReactiveClient.getUsersByIds(anyList())).thenAnswer(invocation -> {
             List<Long> ids = (List<Long>) invocation.getArguments()[0];
@@ -84,14 +71,14 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @Transactional
     void createSellerReview__validRequest_reviewCreatedSuccessfully() {
         SellerReviewCreateRequestDto request = new SellerReviewCreateRequestDto();
-        request.setSellerId(seller.getId());
+        request.setSellerId(testUtils.SELLER.getId());
         request.setRating(5);
         request.setComment("Great seller!");
 
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk();
@@ -101,17 +88,15 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @SneakyThrows
     @Transactional
     void createSellerReview__duplicateReview_badRequestReturned() {
-        testUtils.createSellerReview(buyer, seller);
-
         SellerReviewCreateRequestDto request = new SellerReviewCreateRequestDto();
-        request.setSellerId(seller.getId());
+        request.setSellerId(testUtils.SELLER3.getId());
         request.setRating(5);
         request.setComment("Another review!");
 
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .header("X-User-Id", testUtils.BUYER3.getId().toString())
+                .header("X-User-Role", testUtils.BUYER3.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -122,14 +107,14 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @Transactional
     void createSellerReview__notBuyer_forbiddenReturned() {
         SellerReviewCreateRequestDto request = new SellerReviewCreateRequestDto();
-        request.setSellerId(seller.getId());
+        request.setSellerId(testUtils.SELLER.getId());
         request.setRating(4);
         request.setComment("Good seller.");
 
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", seller.getId().toString())
-                .header("X-User-Role", seller.getRole())
+                .header("X-User-Id", testUtils.SELLER.getId().toString())
+                .header("X-User-Role", testUtils.SELLER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isForbidden();
@@ -146,8 +131,8 @@ class SellerReviewApiTest extends IntegrationEnvironment {
 
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -160,12 +145,12 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @SneakyThrows
     @Transactional
     void getBuyerReviews__validRequest_reviewsReturned() {
-        testUtils.createSellerReview(buyer, seller);
+        testUtils.createSellerReview(testUtils.BUYER, testUtils.SELLER);
 
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole().toString())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(SellerReviewResponseDto.class)
@@ -178,8 +163,8 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     void getBuyerReviews__notBuyer_forbiddenReturned() {
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers")
-                .header("X-User-Id", seller.getId().toString())
-                .header("X-User-Role", seller.getRole())
+                .header("X-User-Id", testUtils.SELLER.getId().toString())
+                .header("X-User-Role", testUtils.SELLER.getRole())
                 .exchange()
                 .expectStatus().isForbidden();
     }
@@ -191,12 +176,12 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @SneakyThrows
     @Transactional
     void getSellerReviews__validRequest_reviewsReturned() {
-        testUtils.createSellerReview(buyer, seller);
+        testUtils.createSellerReview(testUtils.BUYER, testUtils.SELLER);
 
         webTestClient.get()
-                .uri("/api/v1/reviews/sellers/" + seller.getId())
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(SellerReviewResponseDto.class)
@@ -209,8 +194,8 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     void getSellerReviews__sellerNotFound_notFoundReturned() {
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -222,16 +207,14 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @SneakyThrows
     @Transactional
     void updateReview__validRequest_reviewUpdatedSuccessfully() {
-        testUtils.createSellerReview(buyer, seller);
-
         SellerReviewUpdateRequestDto request = new SellerReviewUpdateRequestDto();
         request.setRating(4);
         request.setComment("Updated comment.");
 
         webTestClient.put()
-                .uri("/api/v1/reviews/sellers/" + seller.getId())
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER4.getId())
+                .header("X-User-Id", testUtils.BUYER4.getId().toString())
+                .header("X-User-Role", testUtils.BUYER4.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk();
@@ -246,9 +229,9 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         request.setComment("Another update.");
 
         webTestClient.put()
-                .uri("/api/v1/reviews/sellers/" + seller.getId())
-                .header("X-User-Id", seller.getId().toString())
-                .header("X-User-Role", seller.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
+                .header("X-User-Id", testUtils.SELLER.getId().toString())
+                .header("X-User-Role", testUtils.SELLER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isForbidden();
@@ -264,8 +247,8 @@ class SellerReviewApiTest extends IntegrationEnvironment {
 
         webTestClient.put()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -280,9 +263,9 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         request.setComment("Review does not exist.");
 
         webTestClient.put()
-                .uri("/api/v1/reviews/sellers/" + seller.getId())
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -295,12 +278,12 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @SneakyThrows
     @Transactional
     void deleteReview__validRequest_reviewDeletedSuccessfully() {
-        testUtils.createSellerReview(buyer, seller);
+        testUtils.createSellerReview(testUtils.BUYER, testUtils.SELLER);
 
         webTestClient.delete()
-                .uri("/api/v1/reviews/sellers/" + seller.getId())
-                .header("X-User-Id", buyer.getId().toString())
-                .header("X-User-Role", buyer.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
+                .header("X-User-Id", testUtils.BUYER.getId().toString())
+                .header("X-User-Role", testUtils.BUYER.getRole())
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -310,9 +293,9 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @Transactional
     void deleteReview__notBuyer_forbiddenReturned() {
         webTestClient.delete()
-                .uri("/api/v1/reviews/sellers/" + seller2.getId())
-                .header("X-User-Id", seller2.getId().toString())
-                .header("X-User-Role", seller2.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER2.getId())
+                .header("X-User-Id", testUtils.SELLER2.getId().toString())
+                .header("X-User-Role", testUtils.SELLER2.getRole())
                 .exchange()
                 .expectStatus().isForbidden();
     }
@@ -322,9 +305,9 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     @Transactional
     void deleteReview__reviewNotFound_notFoundReturned() {
         webTestClient.delete()
-                .uri("/api/v1/reviews/sellers/" + seller2.getId())
-                .header("X-User-Id", buyer2.getId().toString())
-                .header("X-User-Role", buyer2.getRole())
+                .uri("/api/v1/reviews/sellers/" + testUtils.SELLER2.getId())
+                .header("X-User-Id", testUtils.BUYER2.getId().toString())
+                .header("X-User-Role", testUtils.BUYER2.getRole())
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -335,8 +318,8 @@ class SellerReviewApiTest extends IntegrationEnvironment {
     void deleteReview__sellerNotFound_notFoundReturned() {
         webTestClient.delete()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
-                .header("X-User-Id", buyer2.getId().toString())
-                .header("X-User-Role", buyer2.getRole())
+                .header("X-User-Id", testUtils.BUYER2.getId().toString())
+                .header("X-User-Role", testUtils.BUYER2.getRole())
                 .exchange()
                 .expectStatus().isNotFound();
     }
