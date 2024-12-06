@@ -29,7 +29,7 @@ public class UserResponseDto {
 
     @NotNull
     @JsonProperty("role")
-    private String role;
+    private UserRoleDto role;
 
 }
 

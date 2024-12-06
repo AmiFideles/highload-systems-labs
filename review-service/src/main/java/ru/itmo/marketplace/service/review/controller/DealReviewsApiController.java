@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ public class DealReviewsApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<DealReviewResponseDto>> createDealReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @Valid @RequestBody DealReviewRequestDto dealReviewRequestDto
@@ -44,6 +46,7 @@ public class DealReviewsApiController {
             value = "/{id}",
             produces = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER') or hasAuthority('ADMIN')")
     public Mono<ResponseEntity<Void>> deleteDealReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("id") Long id
@@ -70,6 +73,7 @@ public class DealReviewsApiController {
             value = "",
             produces = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<Page<DealReviewResponseDto>>> getDealReviewList(
             @AuthenticationPrincipal InternalAuthentication authentication,
             Pageable pageable
@@ -84,6 +88,7 @@ public class DealReviewsApiController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
+    @PreAuthorize("hasAuthority('BUYER')")
     public Mono<ResponseEntity<DealReviewResponseDto>> updateDealReview(
             @AuthenticationPrincipal InternalAuthentication authentication,
             @PathVariable("id") Long id,

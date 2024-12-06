@@ -5,7 +5,3 @@ spring:
       enabled: false
     discovery:
       enabled: false
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data/*

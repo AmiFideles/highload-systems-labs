@@ -78,7 +78,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk();
@@ -96,7 +96,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
                 .header("X-User-Id", testUtils.BUYER3.getId().toString())
-                .header("X-User-Role", testUtils.BUYER3.getRole())
+                .header("X-User-Role", testUtils.BUYER3.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -114,7 +114,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
                 .header("X-User-Id", testUtils.SELLER.getId().toString())
-                .header("X-User-Role", testUtils.SELLER.getRole())
+                .header("X-User-Role", testUtils.SELLER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isForbidden();
@@ -132,7 +132,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.post()
                 .uri("/api/v1/reviews/sellers")
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -164,7 +164,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers")
                 .header("X-User-Id", testUtils.SELLER.getId().toString())
-                .header("X-User-Role", testUtils.SELLER.getRole())
+                .header("X-User-Role", testUtils.SELLER.getRole().toString())
                 .exchange()
                 .expectStatus().isForbidden();
     }
@@ -181,7 +181,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(SellerReviewResponseDto.class)
@@ -195,7 +195,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.get()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -214,7 +214,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.put()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER4.getId())
                 .header("X-User-Id", testUtils.BUYER4.getId().toString())
-                .header("X-User-Role", testUtils.BUYER4.getRole())
+                .header("X-User-Role", testUtils.BUYER4.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk();
@@ -231,7 +231,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.put()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
                 .header("X-User-Id", testUtils.SELLER.getId().toString())
-                .header("X-User-Role", testUtils.SELLER.getRole())
+                .header("X-User-Role", testUtils.SELLER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isForbidden();
@@ -248,7 +248,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.put()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -265,7 +265,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.put()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isNotFound();
@@ -283,7 +283,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.delete()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER.getId())
                 .header("X-User-Id", testUtils.BUYER.getId().toString())
-                .header("X-User-Role", testUtils.BUYER.getRole())
+                .header("X-User-Role", testUtils.BUYER.getRole().toString())
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -295,7 +295,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.delete()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER2.getId())
                 .header("X-User-Id", testUtils.SELLER2.getId().toString())
-                .header("X-User-Role", testUtils.SELLER2.getRole())
+                .header("X-User-Role", testUtils.SELLER2.getRole().toString())
                 .exchange()
                 .expectStatus().isForbidden();
     }
@@ -307,7 +307,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.delete()
                 .uri("/api/v1/reviews/sellers/" + testUtils.SELLER2.getId())
                 .header("X-User-Id", testUtils.BUYER2.getId().toString())
-                .header("X-User-Role", testUtils.BUYER2.getRole())
+                .header("X-User-Role", testUtils.BUYER2.getRole().toString())
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -319,7 +319,7 @@ class SellerReviewApiTest extends IntegrationEnvironment {
         webTestClient.delete()
                 .uri("/api/v1/reviews/sellers/" + UNKNOWN_USER_ID)
                 .header("X-User-Id", testUtils.BUYER2.getId().toString())
-                .header("X-User-Role", testUtils.BUYER2.getRole())
+                .header("X-User-Role", testUtils.BUYER2.getRole().toString())
                 .exchange()
                 .expectStatus().isNotFound();
     }

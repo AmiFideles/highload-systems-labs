@@ -11,6 +11,8 @@ public interface DealReviewDataService {
 
     Mono<DealReviewEntity> getDealReview(Long dealId);
 
+    Mono<Boolean> existsDealReview(Long dealId);
+
     Flux<DealReviewEntity> getAllDealReviews(Long userId, Pageable pageable);
 
     Mono<DealReviewEntity> updateDealReview(DealReviewEntity dealReview);
