@@ -79,7 +79,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0</version>
                     <configuration>
-                        <argLine>@{argLine} --enable-preview</argLine>
+                        <forkCount>0</forkCount>
+                        <reuseForks>true</reuseForks>
+                        <argLine>@{argLine} --enable-preview -Xmx8024m -XX:MaxPermSize=512m</argLine>
                     </configuration>
                 </plugin>
 
@@ -87,17 +89,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-<!--                    <configuration>-->
-<!--                        <layers>-->
-<!--                            <enabled>true</enabled>-->
-<!--                        </layers>-->
-<!--                        <excludes>-->
-<!--                            <exclude>-->
-<!--                                <groupId>org.projectlombok</groupId>-->
-<!--                                <artifactId>lombok</artifactId>-->
-<!--                            </exclude>-->
-<!--                        </excludes>-->
-<!--                    </configuration>-->
                     <executions>
                         <execution>
                             <goals>

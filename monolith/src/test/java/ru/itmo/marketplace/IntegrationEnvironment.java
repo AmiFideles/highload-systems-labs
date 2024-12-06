@@ -40,7 +40,7 @@ public abstract class IntegrationEnvironment {
             DATA_SOURCE = dataSource;
 
             Connection connection = getConnection();
-            Path path = new File("../").toPath().toAbsolutePath().normalize();
+            Path path = new File("./").toPath().toAbsolutePath().normalize();
             Database database =
                     DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
             Liquibase liquibase = new liquibase.Liquibase(MASTER_PATH,
