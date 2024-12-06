@@ -27,6 +27,11 @@ public class DealReviewDataServiceImpl implements DealReviewDataService {
     }
 
     @Override
+    public Mono<Boolean> existsDealReview(Long dealId) {
+        return Mono.justOrEmpty(dealReviewRepository.existsById(dealId));
+    }
+
+    @Override
     public Flux<DealReviewEntity> getAllDealReviews(Long userId, Pageable pageable) {
         return Flux.fromIterable(dealReviewRepository.findAllByBuyerId(userId, pageable));
     }

@@ -15,7 +15,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.common.dto.user.UserRoleDto;
 import ru.itmo.service.user.entity.User;
+import ru.itmo.service.user.entity.UserRole;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -165,7 +167,7 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "newuser@example.com",
                 "securePassword",
                 "New User",
-                "BUYER"
+                UserRoleDto.BUYER
         );
 
         UserResponseDto response = webTestClient.post()
@@ -191,7 +193,7 @@ public class UsersApiTest extends IntegrationEnvironment {
     @SneakyThrows
     void createUser__whenInvalidInput_thenBadRequest() {
         User admin = testUtils.createAdmin();
-        UserRequestDto invalidUser = new UserRequestDto(null, "password", "Name", "USER");
+        UserRequestDto invalidUser = new UserRequestDto(null, "password", "Name", UserRoleDto.BUYER);
 
         webTestClient.post()
                 .uri("/api/v1/users")
@@ -208,7 +210,7 @@ public class UsersApiTest extends IntegrationEnvironment {
     @SneakyThrows
     void createUser__whenUserNameAlreadyExists_thenBadRequest() {
         User admin = testUtils.createAdmin();
-        UserRequestDto invalidUser = new UserRequestDto(null, "password", admin.getName(), "BUYER");
+        UserRequestDto invalidUser = new UserRequestDto(null, "password", admin.getName(), UserRoleDto.BUYER);
 
         webTestClient.post()
                 .uri("/api/v1/users")
@@ -229,7 +231,7 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "test@example.com",
                 "password",
                 "Name",
-                "BUYER"
+                UserRoleDto.BUYER
         );
 
         webTestClient.post()
@@ -251,7 +253,7 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "updateduser@example.com",
                 "newSecurePassword",
                 "Updated User",
-                "BUYER"
+                UserRoleDto.BUYER
         );
 
         UserResponseDto response = webTestClient.put()
@@ -278,10 +280,10 @@ public class UsersApiTest extends IntegrationEnvironment {
     void updateUser__whenInvalidInput_thenBadRequest() {
         User admin = testUtils.createAdmin();
         UserRequestDto invalidUpdate = new UserRequestDto(
-                "",
-                "newPassword",
-                "New Name",
-                "USER"
+                null,
+                null,
+                null,
+                UserRoleDto.BUYER
         );
 
         webTestClient.put()
@@ -303,7 +305,7 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "updated@example.com",
                 "newPassword",
                 "Updated Name",
-                "BUYER"
+                UserRoleDto.BUYER
         );
 
         webTestClient.put()

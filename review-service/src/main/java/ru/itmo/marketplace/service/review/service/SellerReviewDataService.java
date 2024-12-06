@@ -10,6 +10,8 @@ public interface SellerReviewDataService {
 
     Flux<SellerReviewEntity> findByAuthorId(Long id, Pageable pageable);
 
+    Mono<Boolean> existsByAuthorId(Long authorId, Long sellerId);
+
     Flux<SellerReviewEntity> findAll(Pageable pageable);
 
     Mono<SellerReviewEntity> update(SellerReviewEntity sellerReviewEntity);

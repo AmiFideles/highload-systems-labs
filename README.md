@@ -17,17 +17,3 @@ http://localhost:8080/api/v1/auth/login
     "password": "admin"
 }
 ```
-
-### Пересоздание базы
-```shell
-docker compose down -v
-docker compose up -d
-```
-
-###
-```shell
-mvn clean
-cd gateway && mvn compile && cd ..
-cd user-service && mvn compile && cd ..
-cd category-service && mvn compile && cd ..
-```

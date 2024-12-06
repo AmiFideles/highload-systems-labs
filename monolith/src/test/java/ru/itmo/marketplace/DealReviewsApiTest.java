@@ -109,7 +109,7 @@ public class DealReviewsApiTest extends IntegrationEnvironment {
         User buyer = testUtils.createBuyer();
 
         DealReviewRequestDto requestDto = getDealReviewRequestDto();
-        requestDto.setDealId(1L);
+        requestDto.setDealId(999L);
         mockMvc.perform(
                         post("/api/v1/deal-reviews")
                                 .contentType(MediaType.APPLICATION_JSON)

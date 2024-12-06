@@ -52,8 +52,8 @@
         </rollback>
     </changeSet>
 
-    <changeSet id="itmo-hs-v1-insert" author="${author}">
-        <sqlFile path="scripts/07.insert.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+    <changeSet id="itmo-hs-v1-insert" author="${author}" context="testdata">
+        <sqlFile path="scripts/07.testdata.sql" relativeToChangelogFile="true" dbms="postgresql"/>
     </changeSet>
 
     <changeSet id="itmo-hs-v1-end" author="${author}">

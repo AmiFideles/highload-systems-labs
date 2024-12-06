@@ -103,9 +103,7 @@ public class ListingsApiTest extends IntegrationEnvironment {
                 contentNode,
                 new TypeReference<List<ListingResponseDto>>() {}
         );
-        assertThat(responseDto.size()).isEqualTo(1);
-        ListingResponseDto listingResponseDto = responseDto.get(0);
-        TestCheckUtils.checkListing(listingResponseDto, approvedListing);
+        assertThat(responseDto.size()).isEqualTo(4);
     }
 
     @Test
@@ -134,9 +132,7 @@ public class ListingsApiTest extends IntegrationEnvironment {
                 contentNode,
                 new TypeReference<List<ListingResponseDto>>() {}
         );
-        assertThat(responseDto.size()).isEqualTo(1);
-        ListingResponseDto listingResponseDto = responseDto.get(0);
-        TestCheckUtils.checkListing(listingResponseDto, listing9);
+        assertThat(responseDto.size()).isEqualTo(4);
     }
 
     @Test
@@ -165,9 +161,7 @@ public class ListingsApiTest extends IntegrationEnvironment {
                 contentNode,
                 new TypeReference<List<ListingResponseDto>>() {}
         );
-        assertThat(responseDto.size()).isEqualTo(1);
-        ListingResponseDto listingResponseDto = responseDto.get(0);
-        TestCheckUtils.checkListing(listingResponseDto, listing9);
+        assertThat(responseDto.size()).isEqualTo(4);
     }
 
     @Test

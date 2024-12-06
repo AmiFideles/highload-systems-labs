@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.deal.DealResponseDto;
 import ru.itmo.common.dto.review.deal.DealReviewRequestDto;
 import ru.itmo.common.dto.review.deal.DealReviewResponseDto;
+import ru.itmo.common.exception.DuplicateException;
+import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.marketplace.service.review.entity.DealReviewEntity;
 import ru.itmo.marketplace.service.review.mapper.DealReviewMapper;
 import ru.itmo.marketplace.service.review.service.DealReviewDataService;
@@ -30,44 +32,57 @@ public class DealReviewServiceImpl implements DealReviewService {
 
     @Override
     public Mono<DealReviewResponseDto> createDealReview(Long authorId, DealReviewRequestDto dealReviewRequestDto) {
-        // TODO: check if author is deal buyer
         DealReviewEntity entity = dealReviewMapper.toEntity(dealReviewRequestDto);
-        return dealReviewDataService.createDealReview(entity)
-                .zipWith(dealService.getDeal(entity.getId()))
-                .map(t -> {
-                    DealReviewEntity dealReview = t.getT1();
-                    DealResponseDto deal = t.getT2();
-                    return DealReviewResponseDto.builder()
-                            .id(dealReview.getId())
-                            .comment(dealReview.getComment())
-                            .rating(dealReview.getRating())
-                            .createdAt(dealReview.getCreatedAt())
-                            .deal(deal)
-                            .build();
-                });
+        Mono<DealResponseDto> dealMono = dealService.getDeal(entity.getId()).switchIfEmpty(
+                Mono.error(() -> new NotFoundException("Deal with id=%s not found".formatted(entity.getId())))
+        );
+        return dealReviewDataService.existsDealReview(entity.getId()).flatMap(exists -> {
+            if (exists) {
+                return Mono.error(new DuplicateException("Deal with id=%s already exists".formatted(entity.getId())));
+            }
+            return dealMono.flatMap(deal ->
+                    dealReviewDataService.createDealReview(entity).map(dealReview ->
+                            DealReviewResponseDto.builder()
+                                    .id(dealReview.getId())
+                                    .comment(dealReview.getComment())
+                                    .rating(dealReview.getRating())
+                                    .createdAt(dealReview.getCreatedAt())
+                                    .deal(deal)
+                                    .build()
+                    )
+            );
+        });
     }
 
     @Override
     public Mono<Boolean> deleteDealReview(Long authorId, Long dealId) {
-        // TODO: check if author is deal buyer
-        return dealReviewDataService.deleteDealReview(authorId);
+        return dealReviewDataService.existsDealReview(dealId).flatMap(exists -> {
+            if (!exists) {
+                return Mono.error(new NotFoundException("Deal review with id=%s not found".formatted(dealId)));
+            }
+            return dealReviewDataService.deleteDealReview(authorId);
+        });
     }
 
     @Override
     public Mono<DealReviewResponseDto> getDealReview(Long authorId, Long dealId) {
-        return dealReviewDataService.getDealReview(authorId)
-                .zipWith(dealService.getDeal(dealId))
-                .map(t -> {
-                    DealReviewEntity dealReview = t.getT1();
-                    DealResponseDto deal = t.getT2();
-                    return DealReviewResponseDto.builder()
-                            .id(dealReview.getId())
-                            .comment(dealReview.getComment())
-                            .rating(dealReview.getRating())
-                            .createdAt(dealReview.getCreatedAt())
-                            .deal(deal)
-                            .build();
-                });
+        Mono<DealResponseDto> dealMono = dealService.getDeal(dealId).switchIfEmpty(
+                Mono.error(() -> new NotFoundException("Deal with id=%s not found".formatted(dealId)))
+        );
+        return dealReviewDataService.existsDealReview(dealId).flatMap(exists -> {
+            if (!exists) {
+                return Mono.error(new NotFoundException("Deal review with id=%s not found".formatted(dealId)));
+            }
+            return dealMono.flatMap(deal ->
+                    dealReviewDataService.getDealReview(authorId).map(dealReview ->
+                            DealReviewResponseDto.builder()
+                                    .id(dealReview.getId())
+                                    .comment(dealReview.getComment())
+                                    .rating(dealReview.getRating())
+                                    .createdAt(dealReview.getCreatedAt())
+                                    .deal(deal)
+                                    .build()));
+        });
     }
 
     @Override
@@ -100,21 +115,24 @@ public class DealReviewServiceImpl implements DealReviewService {
             Long dealId,
             DealReviewRequestDto dealReviewRequestDto
     ) {
-        // TODO: check if author is deal buyer
         DealReviewEntity entity = dealReviewMapper.toEntity(dealReviewRequestDto);
-        return dealReviewDataService.updateDealReview(entity)
-                .zipWith(dealService.getDeal(dealId))
-                .map(t -> {
-                    DealReviewEntity dealReview = t.getT1();
-                    DealResponseDto deal = t.getT2();
-                    return DealReviewResponseDto.builder()
-                            .id(dealReview.getId())
-                            .comment(dealReview.getComment())
-                            .rating(dealReview.getRating())
-                            .createdAt(dealReview.getCreatedAt())
-                            .deal(deal)
-                            .build();
-                });
+        Mono<DealResponseDto> dealMono = dealService.getDeal(dealId).switchIfEmpty(
+                Mono.error(() -> new NotFoundException("Deal with id=%s not found".formatted(dealId)))
+        );
+        return dealReviewDataService.existsDealReview(dealId).flatMap(exists -> {
+            if (!exists) {
+                return Mono.error(new NotFoundException("Deal review with id=%s not found".formatted(dealId)));
+            }
+            return dealMono.flatMap(deal ->
+                    dealReviewDataService.updateDealReview(entity).map(dealReview ->
+                            DealReviewResponseDto.builder()
+                                    .id(dealReview.getId())
+                                    .comment(dealReview.getComment())
+                                    .rating(dealReview.getRating())
+                                    .createdAt(dealReview.getCreatedAt())
+                                    .deal(deal)
+                                    .build()));
+        });
     }
 
 }

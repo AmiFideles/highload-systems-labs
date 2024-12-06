@@ -13,6 +13,8 @@ import ru.itmo.common.dto.review.seller.SellerReviewCreateRequestDto;
 import ru.itmo.common.dto.review.seller.SellerReviewResponseDto;
 import ru.itmo.common.dto.review.seller.SellerReviewUpdateRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.common.exception.DuplicateException;
+import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.marketplace.service.review.entity.SellerReviewEntity;
 import ru.itmo.marketplace.service.review.mapper.SellerReviewMapper;
 import ru.itmo.marketplace.service.review.service.SellerReviewDataService;
@@ -35,21 +37,32 @@ public class SellerReviewServiceImpl implements SellerReviewService {
     @Override
     @Transactional
     public Mono<SellerReviewResponseDto> create(Long authorId, SellerReviewCreateRequestDto createRequestDto) {
-        // TODO: handle duplication
-        Mono<UserResponseDto> sellerMono = userService.findById(createRequestDto.getSellerId());
-        Mono<UserResponseDto> authorMono = userService.findById(authorId);
-        SellerReviewEntity entity = sellerReviewMapper.toEntity(createRequestDto).withAuthorId(authorId);
-        Mono<SellerReviewEntity> sellerReviewMono = sellerReviewDataService.create(entity);
-        return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono);
+        Mono<UserResponseDto> sellerMono = userService.findById(createRequestDto.getSellerId())
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + createRequestDto.getSellerId())));
+        Mono<UserResponseDto> authorMono = userService.findById(authorId)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + authorId)));
+        return sellerReviewDataService.existsByAuthorId(authorId, createRequestDto.getSellerId()).flatMap(exists -> {
+            if (exists) {
+                return Mono.error(new DuplicateException("Review by user with id=%s already exists"));
+            }
+            SellerReviewEntity entity = sellerReviewMapper.toEntity(createRequestDto).withAuthorId(authorId);
+            Mono<SellerReviewEntity> sellerReviewMono = sellerReviewDataService.create(entity);
+            return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono);
+        });
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Mono<Page<SellerReviewResponseDto>> findByAuthorId(Long id, Pageable pageable) {
-        return mapFluxToDto(sellerReviewDataService.findByAuthorId(id, pageable))
-                .map(sellerReviews ->
-                        new PageImpl<>(sellerReviews, pageable, sellerReviews.size())
-                );
+    public Mono<Page<SellerReviewResponseDto>> findByAuthorId(Long userId, Pageable pageable) {
+        Mono<UserResponseDto> sellerMono = userService.findById(userId).switchIfEmpty(
+                Mono.error(new NotFoundException("Seller not found with id: " + userId))
+        );
+        return sellerMono.then(
+                mapFluxToDto(sellerReviewDataService.findByAuthorId(userId, pageable))
+                        .map(sellerReviews ->
+                                new PageImpl<>(sellerReviews, pageable, sellerReviews.size())
+                        )
+        );
     }
 
     @Override
@@ -68,20 +81,37 @@ public class SellerReviewServiceImpl implements SellerReviewService {
             Long sellerId,
             SellerReviewUpdateRequestDto updateRequestDto
     ) {
-        // TODO: handle does not exists
-        Mono<UserResponseDto> sellerMono = userService.findById(sellerId);
-        Mono<UserResponseDto> authorMono = userService.findById(authorId);
-        SellerReviewEntity entity = sellerReviewMapper.toEntity(updateRequestDto)
-                .withAuthorId(authorId)
-                .withSellerId(sellerId);
-        Mono<SellerReviewEntity> sellerReviewMono = sellerReviewDataService.update(entity);
-        return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono);
+        Mono<UserResponseDto> sellerMono = userService.findById(sellerId)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + sellerId)));
+        Mono<UserResponseDto> authorMono = userService.findById(authorId)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + authorId)));
+        return sellerReviewDataService.existsByAuthorId(authorId, sellerId).flatMap(exists -> {
+            if (!exists) {
+                return Mono.error(new NotFoundException("Seller review not found"));
+            }
+            SellerReviewEntity entity = sellerReviewMapper.toEntity(updateRequestDto)
+                    .withAuthorId(authorId)
+                    .withSellerId(sellerId);
+            Mono<SellerReviewEntity> sellerReviewMono = sellerReviewDataService.update(entity);
+            return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono);
+        });
     }
 
     @Override
     @Transactional
     public Mono<Boolean> deleteByIds(Long authorId, Long sellerId) {
-        return sellerReviewDataService.deleteByIds(authorId, sellerId);
+        Mono<UserResponseDto> sellerMono = userService.findById(sellerId).switchIfEmpty(
+                Mono.error(new NotFoundException("Seller not found with id: " + sellerId))
+        );
+        Mono<Boolean> reviewExistsMono = sellerReviewDataService.existsByAuthorId(authorId, sellerId);
+        return Mono.zip(reviewExistsMono, sellerMono).flatMap(t -> {
+            Boolean reviewExists = t.getT1();
+            if (!reviewExists) {
+                return Mono.error(new NotFoundException("Seller review not found"));
+            }
+
+            return sellerReviewDataService.deleteByIds(authorId, sellerId);
+        });
     }
 
     private Mono<SellerReviewResponseDto> mapToSellerReviewDto(
