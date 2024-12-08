@@ -3,6 +3,7 @@ package ru.itmo.service.market.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,6 +15,7 @@ import ru.itmo.modules.security.InternalAuthenticationFilter;
 import ru.itmo.modules.security.SecurityModuleConfig;
 
 @EnableWebSecurity
+@EnableMethodSecurity
 @Import({
         SecurityModuleConfig.class,
         ControllerAdvice.class,

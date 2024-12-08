@@ -1,9 +1,10 @@
-package ru.itmo.service.market.service;
+package ru.itmo.service.market.service.impl;
 
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
+import ru.itmo.service.market.service.ListingFilter;
 
 import java.math.BigDecimal;
 import java.util.List;
