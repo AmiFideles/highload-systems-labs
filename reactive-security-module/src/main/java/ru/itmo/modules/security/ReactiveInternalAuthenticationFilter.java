@@ -1,6 +1,5 @@
 package ru.itmo.modules.security;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -11,7 +10,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 public class ReactiveInternalAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -20,8 +18,6 @@ public class ReactiveInternalAuthenticationFilter implements WebFilter {
 
         String userId = headers.getFirst("X-User-Id");
         String userRole = headers.getFirst("X-User-Role");
-
-        log.info("Got request role: %s, id: %s".formatted(userRole, userId));
 
         if (StringUtils.hasText(userId)) {
             InternalAuthentication authentication = new InternalAuthentication(Long.valueOf(userId), userRole);
