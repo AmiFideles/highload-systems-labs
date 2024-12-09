@@ -7,7 +7,6 @@ import ru.itmo.common.dto.deal.DealStatusDto;
 import ru.itmo.service.market.entity.Deal;
 import ru.itmo.service.market.entity.DealStatus;
 
-
 @Mapper(
         componentModel = "spring",
         uses = {ListingMapper.class}

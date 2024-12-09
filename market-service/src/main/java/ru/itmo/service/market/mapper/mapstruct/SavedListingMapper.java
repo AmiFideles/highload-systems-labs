@@ -5,7 +5,6 @@ import ru.itmo.common.dto.saved.SavedListingRequestDto;
 import ru.itmo.common.dto.saved.SavedListingResponseDto;
 import ru.itmo.service.market.entity.SavedListing;
 
-
 @Mapper(
         componentModel = "spring",
         uses = {ListingMapper.class}

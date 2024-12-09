@@ -7,6 +7,7 @@ import ru.itmo.common.dto.deal.DealResponseDto;
 import ru.itmo.common.dto.deal.DealStatusDto;
 import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.common.exception.NotFoundException;
+import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Deal;
 import ru.itmo.service.market.entity.DealStatus;
 import ru.itmo.service.market.entity.Listing;
@@ -22,7 +23,7 @@ public class DealCustomMapper {
     private final ListingCustomMapper listingCustomMapper;
     private final ListingRepository listingRepository;
     private final UserApiClient userApiClient;
-
+    private final UserSecurityContextHolder contextHolder;
 
     public Deal fromDto(DealCreateRequestDto dealRequestDto) {
         Deal deal = dealMapper.fromDto(dealRequestDto);
@@ -37,7 +38,11 @@ public class DealCustomMapper {
     public DealResponseDto toDto(Deal deal) {
         DealResponseDto dto = dealMapper.toDto(deal);
         dto.setListing(listingCustomMapper.toDto(deal.getListing()));
-        UserResponseDto buyer = userApiClient.getUserById(deal.getBuyerId());
+        UserResponseDto buyer = userApiClient.getUserById(
+                deal.getBuyerId(),
+                contextHolder.getUserId(),
+                contextHolder.getUserRole()
+        );
         dto.setBuyer(buyer);
         return dto;
     }

@@ -11,7 +11,7 @@ public class SecurityModuleConfig {
     }
 
     @Bean
-    public UserFeignClientInterceptor userFeignClientInterceptor() {
-        return new UserFeignClientInterceptor();
+    public UserSecurityContextHolder userFeignClientInterceptor() {
+        return new UserSecurityContextHolder();
     }
 }

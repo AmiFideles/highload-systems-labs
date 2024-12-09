@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.itmo.common.dto.category.CategoryRequestDto;
 import ru.itmo.common.dto.category.CategoryResponseDto;
 import ru.itmo.common.exception.NotFoundException;
-import ru.itmo.modules.security.InternalAuthentication;
 import ru.itmo.service.market.entity.Category;
 import ru.itmo.service.market.mapper.mapstruct.CategoryMapper;
 import ru.itmo.service.market.service.CategoryService;
-
 
 @Slf4j
 @RestController
@@ -31,10 +29,8 @@ public class CategoriesApiController {
             produces = {"application/json"}
     )
     public ResponseEntity<Page<CategoryResponseDto>> getList(
-            Pageable pageable,
-            InternalAuthentication currentUser
+            Pageable pageable
     ) {
-        log.info("Current user: {}", currentUser);
         Page<Category> categories = service.findAll(pageable);
         return ResponseEntity.ok(
                 categories.map(mapper::toDto)

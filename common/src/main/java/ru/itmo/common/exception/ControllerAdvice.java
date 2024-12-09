@@ -1,7 +1,6 @@
 package ru.itmo.common.exception;
 
 import feign.FeignException;
-import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import lombok.SneakyThrows;
 import org.springframework.cloud.client.circuitbreaker.NoFallbackAvailableException;
 import org.springframework.http.HttpStatus;
@@ -9,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import ru.itmo.common.dto.ApiErrorDto;
 
-import java.sql.Time;
 import java.util.concurrent.TimeoutException;
 
 @RestControllerAdvice
@@ -95,7 +94,7 @@ public class ControllerAdvice {
                 );
     }
 
-    @ExceptionHandler({CallNotPermittedException.class, TimeoutException.class})
+    @ExceptionHandler({TimeoutException.class})
     public ResponseEntity<ApiErrorDto> handleGlobalException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
@@ -124,6 +123,17 @@ public class ControllerAdvice {
                 .body(
                         ApiErrorDto.builder()
                                 .code(ApiErrorCode.of(ex.status()).toString())
+                                .message(ex.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiErrorDto> handleResponseStatusException(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode())
+                .body(
+                        ApiErrorDto.builder()
+                                .code(ApiErrorCode.of(ex.getStatusCode().value()).toString())
                                 .message(ex.getMessage())
                                 .build()
                 );
