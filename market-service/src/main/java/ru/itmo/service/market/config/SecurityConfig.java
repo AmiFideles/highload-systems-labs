@@ -9,11 +9,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.itmo.common.exception.ControllerAdvice;
 import ru.itmo.modules.security.InternalAuthenticationFilter;
 import ru.itmo.modules.security.SecurityModuleConfig;
 
 @EnableWebSecurity
-@Import(SecurityModuleConfig.class)
+@Import({
+        SecurityModuleConfig.class,
+        ControllerAdvice.class,
+})
 @Configuration
 public class SecurityConfig {
     @Bean

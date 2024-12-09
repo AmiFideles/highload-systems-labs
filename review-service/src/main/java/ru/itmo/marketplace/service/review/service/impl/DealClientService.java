@@ -2,14 +2,14 @@ package ru.itmo.marketplace.service.review.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.deal.DealResponseDto;
-import ru.itmo.common.dto.listing.ListingResponseDto;
 import ru.itmo.marketplace.service.review.service.DealService;
 import ru.itmo.service.market.client.DealApiReactiveClient;
-import ru.itmo.service.market.client.ListingApiReactiveClient;
 
 import java.util.List;
 
@@ -21,7 +21,16 @@ public class DealClientService implements DealService {
 
     @Override
     public Mono<DealResponseDto> getDeal(Long dealId) {
-        return dealApiReactiveClient.getDealById(dealId);
+        return dealApiReactiveClient.getDealById(dealId)
+                .onErrorMap(originalError -> {
+                    if (originalError.getCause() instanceof IllegalArgumentException) {
+                        return new ResponseStatusException(
+                                HttpStatus.SERVICE_UNAVAILABLE,
+                                "Unable to find deal-service"
+                        );
+                    }
+                    return originalError;
+                });
     }
 
     @Override
@@ -29,6 +38,15 @@ public class DealClientService implements DealService {
         if (dealsIds == null || dealsIds.isEmpty()) {
             return Flux.empty();
         }
-        return dealApiReactiveClient.getDealsByIds(dealsIds);
+        return dealApiReactiveClient.getDealsByIds(dealsIds)
+                .onErrorMap(originalError -> {
+                    if (originalError.getCause() instanceof IllegalArgumentException) {
+                        return new ResponseStatusException(
+                                HttpStatus.SERVICE_UNAVAILABLE,
+                                "Unable to find deal-service"
+                        );
+                    }
+                    return originalError;
+                });
     }
 }

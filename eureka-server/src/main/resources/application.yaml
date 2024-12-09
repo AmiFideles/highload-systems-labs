@@ -6,10 +6,12 @@ spring:
     name: eureka-server
 
 eureka:
-  renewalPercentThreshold: 0.85
   instance:
     hostname: localhost
 
   client:
     registerWithEureka: false
     fetchRegistry: false
+
+  server:
+    renewal-percent-threshold: 0.85

@@ -8,6 +8,7 @@ import ru.itmo.common.dto.listing.ListingStatusDto;
 import ru.itmo.common.dto.listing.ModeratedListingResponseDto;
 import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.common.exception.NotFoundException;
+import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Category;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
@@ -26,6 +27,7 @@ public class ListingCustomMapper {
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
     private final UserApiClient userApiClient;
+    private final UserSecurityContextHolder contextHolder;
 
     public Listing fromDto(ListingRequestDto listingRequestDto) {
         Listing listing = listingMapper.fromDto(listingRequestDto);
@@ -42,7 +44,11 @@ public class ListingCustomMapper {
 
     public ListingResponseDto toDto(Listing listing) {
         ListingResponseDto dto = listingMapper.toDto(listing);
-        UserResponseDto creator = userApiClient.getUserById(listing.getCreatorId());
+        UserResponseDto creator = userApiClient.getUserById(
+                listing.getCreatorId(),
+                contextHolder.getUserId(),
+                contextHolder.getUserRole()
+        );
         dto.setCreator(creator);
         dto.setCategories(listing.getCategories().stream().map(categoryMapper::toDto).toList());
         return dto;

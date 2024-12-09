@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.common.exception.AccessDeniedException;
 import ru.itmo.common.exception.NotFoundException;
+import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
 import ru.itmo.service.market.repository.ListingRepository;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class ListingServiceImpl implements ListingService {
     private final ListingRepository listingRepository;
     private final UserApiClient userClient;
+    private final UserSecurityContextHolder contextHolder;
 
     @Override
     @Transactional(readOnly = true)
@@ -99,8 +101,11 @@ public class ListingServiceImpl implements ListingService {
     @Transactional
     public Page<Listing> findByUserIdAndStatus(Long userId, @Nullable ListingStatus status, Pageable pageable) {
         try {
-
-            UserResponseDto user = userClient.getUserById(userId);
+            UserResponseDto user = userClient.getUserById(
+                    userId,
+                    contextHolder.getUserId(),
+                    contextHolder.getUserRole()
+            );
         } catch (FeignException.NotFound e) {
             throw new NotFoundException("User with id %s not found".formatted(userId));
         }

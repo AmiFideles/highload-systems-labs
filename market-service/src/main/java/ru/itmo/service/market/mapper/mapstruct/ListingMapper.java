@@ -8,7 +8,6 @@ import ru.itmo.common.dto.listing.ModeratedListingResponseDto;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
 
-
 @Mapper(
         componentModel = "spring"
 )

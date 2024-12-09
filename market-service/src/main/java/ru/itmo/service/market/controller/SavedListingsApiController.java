@@ -15,7 +15,6 @@ import ru.itmo.service.market.entity.SavedListing;
 import ru.itmo.service.market.mapper.custom.SavedListingCustomMapper;
 import ru.itmo.service.market.service.SavedListingService;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/")

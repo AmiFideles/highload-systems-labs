@@ -15,7 +15,6 @@ import ru.itmo.service.market.entity.Category;
 import ru.itmo.service.market.mapper.mapstruct.CategoryMapper;
 import ru.itmo.service.market.service.CategoryService;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/")

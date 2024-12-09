@@ -9,7 +9,6 @@
     <name>marketplace</name>
 
     <modules>
-        <module>monolith</module>
         <module>config-server</module>
         <module>user-service</module>
         <module>gateway</module>
@@ -74,6 +73,7 @@
                         <argLine>@{argLine} --enable-preview</argLine>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -86,30 +86,9 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                                <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${org.jacoco.version}</version>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/*ru/itmo/marketplace/api/**</exclude>
-                            <exclude>**/*ru/itmo/marketplace/model/**</exclude>
-                            <exclude>**/*ru/itmo/marketplace/mapper/**</exclude>
-                        </excludes>
-                    </configuration>
                     <executions>
                         <execution>
                             <goals>
@@ -121,6 +100,20 @@
                             <phase>verify</phase>
                             <goals>
                                 <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                                <goal>build-info</goal>
                             </goals>
                         </execution>
                     </executions>

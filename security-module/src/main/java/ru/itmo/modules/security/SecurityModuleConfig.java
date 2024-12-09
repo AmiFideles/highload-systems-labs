@@ -1,7 +1,9 @@
 package ru.itmo.modules.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class SecurityModuleConfig {
     @Bean
     public InternalAuthenticationFilter internalAuthenticationFilter() {
@@ -9,7 +11,7 @@ public class SecurityModuleConfig {
     }
 
     @Bean
-    public UserFeignClientInterceptor userFeignClientInterceptor() {
-        return new UserFeignClientInterceptor();
+    public UserSecurityContextHolder userFeignClientInterceptor() {
+        return new UserSecurityContextHolder();
     }
 }

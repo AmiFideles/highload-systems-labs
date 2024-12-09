@@ -21,6 +21,9 @@ spring:
         multiplier: 2
         max-attempts: 5
     gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
       routes:
         - id: users-service
           uri: lb://users-service
@@ -41,14 +44,6 @@ spring:
           predicates:
             - Path=/api/v1/deals/**, /api/v1/listings/**, /api/v1/categories/**, /api/v1/saved-listings/**
           filters:
-            - AuthenticationFilter
-
-        - id: monolith-service
-          uri: lb://monolith-service
-          predicates:
-            - Path=/monolith/api/v1/listings/**
-          filters:
-            - RewritePath=/monolith/(?<segment>.*), /$\{segment}
             - AuthenticationFilter
 
         - id: reviews-service
