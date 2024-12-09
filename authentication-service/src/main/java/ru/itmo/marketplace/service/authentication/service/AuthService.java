@@ -35,8 +35,6 @@ public class AuthService {
             return userService.findById(userId).switchIfEmpty(
                     Mono.error(new ApiException(ApiErrorCode.TOKEN_INVALID))
             );
-        } catch (ExpiredJwtException e) {
-            throw new ApiException(ApiErrorCode.TOKEN_EXPIRED, e);
         } catch (JwtException e) {
             throw new ApiException(ApiErrorCode.TOKEN_INVALID, e);
         } catch (Exception e) {

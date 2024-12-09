@@ -39,6 +39,7 @@ public class ListingsApiController {
             @Valid @RequestBody ListingRequestDto listingRequestDto,
             InternalAuthentication currentUser
     ) {
+        log.info("Current user: {}", currentUser);
         Listing listing = listingMapper.fromDto(listingRequestDto);
         listing = listingService.create(listing, currentUser.getUserId());
         return ResponseEntity.ok(

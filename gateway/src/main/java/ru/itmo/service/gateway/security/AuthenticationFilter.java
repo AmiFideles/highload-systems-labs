@@ -15,6 +15,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import ru.itmo.common.dto.user.ValidateTokenRequestDto;
+import ru.itmo.common.exception.InvalidTokenException;
 import ru.itmo.marketplace.service.authentication.client.AuthenticationServiceClient;
 
 @Slf4j
@@ -70,9 +71,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         })
                         .onErrorResume(e -> {
                             log.error("Invalid token", e);
-                            if (e instanceof FeignException.FeignClientException ex && is4xx(ex)) {
-                                return Mono.error(new ResponseStatusException(
-                                        HttpStatus.UNAUTHORIZED,
+                            if (e.getCause() instanceof FeignException.FeignClientException ex && is4xx(ex)) {
+                                return Mono.error(new InvalidTokenException(
                                         "Provided authentication token is invalid or expired"
                                 ));
                             }
