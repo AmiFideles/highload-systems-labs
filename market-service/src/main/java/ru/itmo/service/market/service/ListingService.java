@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.ListingStatus;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ListingService {
@@ -23,8 +22,6 @@ public interface ListingService {
     boolean deleteById(Long listingId, Long userId);
 
     Page<Listing> findOpenListings(Pageable pageable);
-
-    List<Listing> findByIds(List<Long> ids);
 
     Page<Listing> findByUserIdAndStatus(Long userId, ListingStatus status, Pageable pageable);
 }

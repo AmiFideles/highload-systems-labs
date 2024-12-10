@@ -161,21 +161,6 @@ public class ListingsApiController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/listings/in",
-            produces = {"application/json"}
-    )
-    public ResponseEntity<List<ListingResponseDto>> getListingsByIds(
-            @RequestParam("ids") List<Long> ids
-    ) {
-        List<Listing> listings = listingService.findByIds(ids);
-        List<ListingResponseDto> listingResponses = listings.stream()
-                .map(listingMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(listingResponses);
-    }
-
-    @RequestMapping(
-            method = RequestMethod.GET,
             value = "/listings/seller",
             produces = {"application/json"}
     )

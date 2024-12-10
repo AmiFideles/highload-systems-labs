@@ -18,11 +18,9 @@ import ru.itmo.service.market.entity.ListingStatus;
 import ru.itmo.service.market.repository.ListingRepository;
 import ru.itmo.service.market.service.ListingFilter;
 import ru.itmo.service.market.service.ListingService;
-import ru.itmo.service.market.service.ListingSpecification;
 import ru.itmo.service.user.client.UserApiClient;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -127,11 +125,5 @@ public class ListingServiceImpl implements ListingService {
         } else {
             return Optional.empty();
         }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Listing> findByIds(List<Long> ids) {
-        return listingRepository.findAllById(ids);
     }
 }
