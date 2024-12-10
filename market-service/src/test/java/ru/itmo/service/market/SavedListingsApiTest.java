@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.common.dto.saved.SavedListingRequestDto;
 import ru.itmo.common.dto.saved.SavedListingResponseDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Listing;
 import ru.itmo.service.market.entity.SavedListing;
 import ru.itmo.service.market.service.SavedListingService;
@@ -50,17 +51,25 @@ public class SavedListingsApiTest extends IntegrationEnvironment {
     @MockBean
     private UserApiClient userApiClient;
 
+    @Autowired
+    private UserSecurityContextHolder contextHolder;
+
+
     private static final long UNKNOWN_ID = 9999999L;
 
     @BeforeEach
     void setup() {
         // Мокируем ответ для существующих пользователей
         testUtils.USERS.forEach(user ->
-                when(userApiClient.getUserById(user.getId())).thenReturn(user) // Мокируем getUserById
+                when(userApiClient.getUserById(user.getId(),
+                        contextHolder.getUserId(),
+                        contextHolder.getUserRole())).thenReturn(user)
         );
 
         // Мокируем ответ для несуществующего пользователя
-        when(userApiClient.getUserById(UNKNOWN_ID)).thenReturn(null);
+        when(userApiClient.getUserById(UNKNOWN_ID,
+                contextHolder.getUserId(),
+                contextHolder.getUserRole())).thenReturn(null);
     }
 
     @Test

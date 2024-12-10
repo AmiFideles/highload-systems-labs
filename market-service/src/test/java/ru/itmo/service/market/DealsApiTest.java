@@ -21,6 +21,7 @@ import ru.itmo.common.dto.deal.DealResponseDto;
 import ru.itmo.common.dto.deal.DealStatusDto;
 import ru.itmo.common.dto.deal.DealStatusUpdateRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Deal;
 import ru.itmo.service.market.entity.DealStatus;
 import ru.itmo.service.market.entity.Listing;
@@ -58,17 +59,24 @@ public class DealsApiTest extends IntegrationEnvironment {
     @MockBean
     private UserApiClient userApiClient;
 
+    @Autowired
+    private UserSecurityContextHolder contextHolder;
+
     private static final long UNKNOWN_ID = 9999999L;
 
     @BeforeEach
     void setup() {
-        // Мокируем ответ для существующих пользователей
         testUtils.USERS.forEach(user ->
-                when(userApiClient.getUserById(user.getId())).thenReturn(user) // Мокируем getUserById
+                when(userApiClient.getUserById(
+                        user.getId(),
+                        contextHolder.getUserId(),
+                        contextHolder.getUserRole())).thenReturn(user) // Мокируем getUserById
         );
 
         // Мокируем ответ для несуществующего пользователя
-        when(userApiClient.getUserById(UNKNOWN_ID)).thenReturn(null);
+        when(userApiClient.getUserById(UNKNOWN_ID,
+                contextHolder.getUserId(),
+                contextHolder.getUserRole())).thenReturn(null);
     }
 
 
