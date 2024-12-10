@@ -21,16 +21,7 @@ public class DealClientService implements DealService {
 
     @Override
     public Mono<DealResponseDto> getDeal(Long dealId) {
-        return dealApiReactiveClient.getDealById(dealId)
-                .onErrorMap(originalError -> {
-                    if (originalError.getCause() instanceof IllegalArgumentException) {
-                        return new ResponseStatusException(
-                                HttpStatus.SERVICE_UNAVAILABLE,
-                                "Unable to find deal-service"
-                        );
-                    }
-                    return originalError;
-                });
+        return dealApiReactiveClient.getDealById(dealId);
     }
 
     @Override
@@ -38,15 +29,6 @@ public class DealClientService implements DealService {
         if (dealsIds == null || dealsIds.isEmpty()) {
             return Flux.empty();
         }
-        return dealApiReactiveClient.getDealsByIds(dealsIds)
-                .onErrorMap(originalError -> {
-                    if (originalError.getCause() instanceof IllegalArgumentException) {
-                        return new ResponseStatusException(
-                                HttpStatus.SERVICE_UNAVAILABLE,
-                                "Unable to find deal-service"
-                        );
-                    }
-                    return originalError;
-                });
+        return dealApiReactiveClient.getDealsByIds(dealsIds);
     }
 }

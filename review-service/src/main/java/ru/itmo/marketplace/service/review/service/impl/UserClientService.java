@@ -22,16 +22,7 @@ public class UserClientService implements UserService {
 
     @Override
     public Mono<UserResponseDto> findById(Long id) {
-        return userServiceClient.getUserById(id)
-                .onErrorMap(originalError -> {
-                    if (originalError.getCause() instanceof IllegalArgumentException) {
-                        return new ResponseStatusException(
-                                HttpStatus.SERVICE_UNAVAILABLE,
-                                "Unable to find user-service"
-                        );
-                    }
-                    return originalError;
-                });
+        return userServiceClient.getUserById(id);
     }
 
     @Override
@@ -39,15 +30,6 @@ public class UserClientService implements UserService {
         if (ids == null || ids.isEmpty()) {
             return Flux.empty();
         }
-        return userServiceClient.getUsersByIds(new ArrayList<>(ids))
-                .onErrorMap(originalError -> {
-                    if (originalError.getCause() instanceof IllegalArgumentException) {
-                        return new ResponseStatusException(
-                                HttpStatus.SERVICE_UNAVAILABLE,
-                                "Unable to find user-service"
-                        );
-                    }
-                    return originalError;
-                });
+        return userServiceClient.getUsersByIds(new ArrayList<>(ids));
     }
 }

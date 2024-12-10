@@ -155,20 +155,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <argLine>@{argLine}</argLine>
+                </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <argLine>@{argLine}</argLine>
+                </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${org.jacoco.version}</version>
+                <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/mapper/**</exclude>-->
+                        <exclude>**/mapper/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -179,7 +185,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -190,6 +196,7 @@
                             <goal>check</goal>
                         </goals>
                         <phase>test</phase>
+
                         <configuration>
                             <rules>
                                 <rule>
@@ -197,18 +204,19 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>60%</minimum>
+                                            <minimum>70%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
                             </rules>
                             <excludes>
-                                <exclude>**/mapper/**</exclude>-->
+                                <exclude>**/mapper/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
