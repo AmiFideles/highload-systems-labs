@@ -13,9 +13,12 @@ import ru.itmo.service.market.service.SavedListingService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -52,6 +55,9 @@ public class TestUtils {
             BUYER4,
             SELLER4
     );
+
+    public Map<Long, UserResponseDto> USERS_MAP = USERS.stream()
+            .collect(Collectors.toMap(UserResponseDto::getId, Function.identity()));
 
     public SavedListing createSavedListing(long userId) {
         Listing listing = createReviewListing();

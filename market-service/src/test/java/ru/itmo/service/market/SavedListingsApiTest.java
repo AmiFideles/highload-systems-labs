@@ -27,6 +27,8 @@ import ru.itmo.service.user.client.UserApiClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -59,17 +61,14 @@ public class SavedListingsApiTest extends IntegrationEnvironment {
 
     @BeforeEach
     void setup() {
-        // Мокируем ответ для существующих пользователей
-        testUtils.USERS.forEach(user ->
-                when(userApiClient.getUserById(user.getId(),
-                        contextHolder.getUserId(),
-                        contextHolder.getUserRole())).thenReturn(user)
-        );
-
-        // Мокируем ответ для несуществующего пользователя
-        when(userApiClient.getUserById(UNKNOWN_ID,
-                contextHolder.getUserId(),
-                contextHolder.getUserRole())).thenReturn(null);
+        when(userApiClient.getUserById(
+                anyLong(),
+                anyString(),
+                anyString()
+        )).thenAnswer(invocationOnMock -> {
+            Long uid = invocationOnMock.getArgument(0);
+            return testUtils.USERS_MAP.get(uid);
+        });
     }
 
     @Test

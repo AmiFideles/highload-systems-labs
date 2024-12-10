@@ -32,6 +32,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -64,17 +66,14 @@ public class ListingsApiTest extends IntegrationEnvironment {
 
     @BeforeEach
     void setup() {
-        // Мокируем ответ для существующих пользователей
-        testUtils.USERS.forEach(user ->
-                when(userApiClient.getUserById(user.getId(),
-                        contextHolder.getUserId(),
-                        contextHolder.getUserRole())).thenReturn(user) // Мокируем getUserById
-        );
-
-        // Мокируем ответ для несуществующего пользователя
-        when(userApiClient.getUserById(UNKNOWN_ID,
-                contextHolder.getUserId(),
-                contextHolder.getUserRole())).thenReturn(null);
+        when(userApiClient.getUserById(
+                anyLong(),
+                anyString(),
+                anyString()
+        )).thenAnswer(invocationOnMock -> {
+            Long uid = invocationOnMock.getArgument(0);
+            return testUtils.USERS_MAP.get(uid);
+        });
     }
 
     @Test
