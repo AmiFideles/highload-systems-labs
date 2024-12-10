@@ -2,74 +2,46 @@ package ru.itmo.service.user.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.itmo.service.user.security.InternalAuthenticationFilter;
-import ru.itmo.service.user.service.CustomUserDetailsService;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import ru.itmo.common.exception.ControllerAdvice;
+import ru.itmo.modules.security.ReactiveInternalAuthenticationFilter;
+import ru.itmo.modules.security.ReactiveSecurityModuleConfig;
 
-@EnableWebSecurity
+@Import({
+        ReactiveSecurityModuleConfig.class,
+        ControllerAdvice.class,
+})
+@EnableWebFluxSecurity
 @Configuration
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            InternalAuthenticationFilter authenticationFilter
-    ) throws Exception {
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    public SecurityWebFilterChain securityWebFilterChain(
+            ServerHttpSecurity http,
+            ReactiveInternalAuthenticationFilter reactiveInternalAuthenticationFilter
+    ) {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
 
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/error").permitAll()
-                .and()
+                .addFilterAt(reactiveInternalAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/users/**")
-                .authenticated()
-                .and()
-
+                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
+                        .pathMatchers("/error").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
+                        .pathMatchers("/api/v1/users/**").authenticated()
+                )
                 .build();
-    }
-
-    @Bean
-    public InternalAuthenticationFilter internalAuthenticationFilter() {
-        return new InternalAuthenticationFilter();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
     }
 }

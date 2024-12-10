@@ -9,17 +9,20 @@
     <name>marketplace</name>
 
     <modules>
-        <module>monolith</module>
         <module>config-server</module>
         <module>user-service</module>
         <module>gateway</module>
         <module>common</module>
         <module>user-service-client</module>
-        <module>category-service</module>
         <module>security-module</module>
         <module>eureka-server</module>
-        <module>listing-service</module>
         <module>reactive-security-module</module>
+        <module>market-service</module>
+        <module>review-service</module>
+        <module>reactive-user-service-client</module>
+        <module>market-service-reactive-client</module>
+        <module>authentication-service</module>
+        <module>authentication-service-client</module>
     </modules>
 
     <properties>
@@ -61,63 +64,16 @@
     <build>
         <pluginManagement>
             <plugins>
+
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-<!--                    <configuration>-->
-<!--                        <layers>-->
-<!--                            <enabled>true</enabled>-->
-<!--                        </layers>-->
-<!--                        <excludes>-->
-<!--                            <exclude>-->
-<!--                                <groupId>org.projectlombok</groupId>-->
-<!--                                <artifactId>lombok</artifactId>-->
-<!--                            </exclude>-->
-<!--                        </excludes>-->
-<!--                    </configuration>-->
                     <executions>
                         <execution>
                             <goals>
                                 <goal>repackage</goal>
                                 <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.liquibase</groupId>
-                    <artifactId>liquibase-maven-plugin</artifactId>
-                    <version>${org.liquibase.version}</version>
-                    <configuration>
-                        <propertyFile>db/liquibase.properties</propertyFile>
-                        <searchPath>target/classes</searchPath>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${org.jacoco.version}</version>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/*ru/itmo/marketplace/api/**</exclude>
-                            <exclude>**/*ru/itmo/marketplace/model/**</exclude>
-                            <exclude>**/*ru/itmo/marketplace/mapper/**</exclude>
-                        </excludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>report</goal>
                             </goals>
                         </execution>
                     </executions>

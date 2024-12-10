@@ -1,0 +1,1 @@
+cd user-service && mvn clean verify && cd .. &&  cd authentication-service && mvn clean verify && cd .. && cd market-service && mvn clean verify && cd .. && cd review-service && mvn clean verify && cd ..

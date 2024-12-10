@@ -1,45 +1,15 @@
 server.port: 8081
 
-logging:
-  level:
-    web: DEBUG
-    org:
-      springframework:
-        security: DEBUG
-
 spring:
   application:
     name: users-service
-
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
-  datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
-
-  liquibase:
-    enabled: false
-
-  data:
-    web:
-      pageable:
-        max-page-size: 50
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   config:
     import: 'configserver:'
 
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
       fail-fast: true
       retry:
         initial-interval: 2000

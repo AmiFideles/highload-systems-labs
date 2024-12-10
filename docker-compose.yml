@@ -18,6 +18,196 @@ services:
     networks:
       - backend
 
+  liquibase-migrations:
+    image: liquibase/liquibase:4.18
+    depends_on:
+      - db
+    command:
+      - --hub-mode=off
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://db:5432/postgres
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./migrations:/liquibase/changelog
+    networks:
+      - backend
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: docker/eureka-server.Dockerfile
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: "curl --silent --fail eureka-server:8761/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  config-server:
+    build:
+      context: .
+      dockerfile: docker/config-server.Dockerfile
+    ports:
+      - "8888:8888"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+    healthcheck:
+      test: "curl --silent --fail config-server:8888/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/gateway.Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+    healthcheck:
+      test: "curl --silent --fail gateway:8080/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  authentication-service:
+    build:
+      context: .
+      dockerfile: docker/authentication-service.Dockerfile
+    ports:
+      - "8084:8084"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: r2dbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail authentication-service:8084/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  user-service:
+    build:
+      context: .
+      dockerfile: docker/user-service.Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: r2dbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail user-service:8081/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  review-service:
+    build:
+      context: .
+      dockerfile: docker/review-service.Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail review-service:8082/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+  market-service:
+    build:
+      context: .
+      dockerfile: docker/market-service.Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+    healthcheck:
+      test: "curl --silent --fail market-service:8083/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
+
+
 volumes:
   pgdata:
 

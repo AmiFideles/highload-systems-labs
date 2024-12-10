@@ -1,8 +1,5 @@
-server.port: 8095
+server.port: 8080
 
-logging:
-  level:
-    web: debug
 
 spring:
   application:
@@ -12,7 +9,7 @@ spring:
 
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
       fail-fast: true
       retry:
         initial-interval: 2000
@@ -20,34 +17,36 @@ spring:
         multiplier: 2
         max-attempts: 5
     gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
       routes:
         - id: users-service
           uri: lb://users-service
           predicates:
-            - Path=/api/v1/auth/login, /api/v1/users/**
+            - Path=/api/v1/users/**
           filters:
             - AuthenticationFilter
 
-        - id: categories-service
-          uri: lb://categories-service
+        - id: authentication-service
+          uri: lb://authentication-service
           predicates:
-            - Path=/api/v1/categories/**
+            - Path=/api/v1/auth/login
           filters:
             - AuthenticationFilter
 
-        - id: listings-service
-          uri: lb://listings-service
+        - id: market-service
+          uri: lb://market-service
           predicates:
-            - Path=/api/v1/listings/**
+            - Path=/api/v1/deals/**, /api/v1/listings/**, /api/v1/categories/**, /api/v1/saved-listings/**
           filters:
             - AuthenticationFilter
 
-        - id: monolith-service
-          uri: lb://monolith-service
+        - id: reviews-service
+          uri: lb://reviews-service
           predicates:
-            - Path=/monolith/api/v1/listings/**
+            - Path=/api/v1/reviews/**
           filters:
-            - RewritePath=/monolith/(?<segment>.*), /$\{segment}
             - AuthenticationFilter
 
 eureka:
