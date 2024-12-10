@@ -174,9 +174,7 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*ru/itmo/marketplace/api/**</exclude>
-                        <exclude>**/*ru/itmo/marketplace/model/**</exclude>
-                        <exclude>**/*ru/itmo/marketplace/mapper/**</exclude>
+                        <exclude>**/mapper/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -212,8 +210,7 @@
                                 </rule>
                             </rules>
                             <excludes>
-                                <exclude>**/*ru/itmo/marketplace/api/**</exclude>
-                                <exclude>**/*ru/itmo/marketplace/model/**</exclude>
+                                <exclude>**/mapper/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
