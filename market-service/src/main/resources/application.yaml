@@ -1,32 +1,9 @@
 server.port: 8083
 
-logging:
-  level:
-    web: DEBUG
-    org:
-      springframework:
-        security: DEBUG
-
 spring:
   application:
     name: market-service
 
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
-  datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
-    password: ${DATASOURCE_PASSWORD:postgres}
-    username: ${DATASOURCE_USERNAME:postgres}
-    driver-class-name: org.postgresql.Driver
-
-  liquibase:
-    enabled: false
-
-  data:
-    web:
-      pageable:
-        max-page-size: 50
 
   config:
     import: 'configserver:'

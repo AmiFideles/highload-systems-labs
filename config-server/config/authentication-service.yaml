@@ -1,2 +1,35 @@
 jwt:
   secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="
+
+
+logging:
+  level:
+    web: DEBUG
+    org:
+      springframework:
+        security: DEBUG
+        r2dbc: DEBUG
+
+spring:
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  r2dbc:
+    url: ${DATASOURCE_URL:r2dbc:postgresql://localhost:5432/postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+    username: ${DATASOURCE_USERNAME:postgres}
+
+  liquibase:
+    enabled: false
+
+  data:
+    web:
+      pageable:
+        max-page-size: 50
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
