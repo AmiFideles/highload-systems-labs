@@ -49,6 +49,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: notification-service
+          uri: lb:ws://notification-service
+          predicates:
+            - Path=/ws/**
+          filters:
+            - AuthenticationFilter
+
 eureka:
   instance:
     hostname: localhost
