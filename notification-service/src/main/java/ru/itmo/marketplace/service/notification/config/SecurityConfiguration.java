@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/ws-server/**").permitAll()
                 .requestMatchers("/ws/**").authenticated()
 
                 .requestMatchers("/api/v1/**").authenticated() // TODO: remove

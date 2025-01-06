@@ -115,6 +115,7 @@ public class DealReviewServiceImpl implements DealReviewService {
             Long dealId,
             DealReviewRequestDto dealReviewRequestDto
     ) {
+        // TODO: websocket call
         DealReviewEntity entity = dealReviewMapper.toEntity(dealReviewRequestDto);
         Mono<DealResponseDto> dealMono = dealService.getDeal(dealId).switchIfEmpty(
                 Mono.error(() -> new NotFoundException("Deal with id=%s not found".formatted(dealId)))

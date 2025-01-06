@@ -17,6 +17,9 @@ spring:
         multiplier: 2
         max-attempts: 5
 
+  main:
+    web-application-type: reactive
+
 eureka:
   instance:
     hostname: localhost

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.itmo.marketplace.service.notification.dto.NotificationDto;
 import ru.itmo.marketplace.service.notification.service.UserNotificationService;
 
+// TODO: remove
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/")

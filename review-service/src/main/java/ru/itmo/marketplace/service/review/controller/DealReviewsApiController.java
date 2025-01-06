@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import ru.itmo.modules.security.InternalAuthentication;
 @RequiredArgsConstructor
 public class DealReviewsApiController {
     private final DealReviewService dealReviewService;
+    private final StompSession wsStompSession;
 
     @RequestMapping(
             method = RequestMethod.POST,
@@ -96,6 +98,16 @@ public class DealReviewsApiController {
     ) {
         return dealReviewService.updateDealReview(authentication.getUserId(), id, dealReviewRequestDto)
                 .map(ResponseEntity::ok);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/hello",
+            produces = {"application/json"}
+    )
+    public Mono<ResponseEntity<?>> getDealReviewById() {
+        wsStompSession.send("/app/greeting", "Hi!");
+        return Mono.just(ResponseEntity.ok().build());
     }
 
 }
