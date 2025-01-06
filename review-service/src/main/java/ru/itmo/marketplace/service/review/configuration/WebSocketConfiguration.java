@@ -1,10 +1,12 @@
 package ru.itmo.marketplace.service.review.configuration;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
@@ -16,6 +18,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WebSocketConfiguration {
@@ -23,7 +26,9 @@ public class WebSocketConfiguration {
     private final DiscoveryClient discoveryClient;
 
     @Bean
+    @Profile("!test")
     public StompSession wsStompSession() {
+        log.info("AAABBBCCCDDD");
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());

@@ -79,6 +79,14 @@
 <div id="messages"></div>
 
 <script type="text/javascript">
+    const parseJwt = (token) => {
+        try {
+            return JSON.parse(atob(token.split('.')[1]));
+        } catch (e) {
+            return null;
+        }
+    };
+
     let token = '';
 
     function login() {
@@ -111,12 +119,12 @@
         const socketUrl = `http://localhost:8080/ws?auth=${token}`;
         const socket = new SockJS(socketUrl);
         const stompClient = Stomp.over(socket);
-
+        const userId = parseJwt(token)["user_id"]
         const connectHeaders = {};
 
         stompClient.connect(connectHeaders, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/user/1/queue/notifications', function(message) {
+            console.log(`Connected user ${userId}: frame`);
+            stompClient.subscribe(`/user/${userId}/queue/notifications`, function(message) {
                 const messageBody = message.body;
                 const messagesDiv = document.getElementById('messages');
                 const messageElement = document.createElement('div');
