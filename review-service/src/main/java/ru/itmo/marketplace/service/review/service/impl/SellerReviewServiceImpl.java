@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.review.seller.SellerReviewCreateRequestDto;
+import ru.itmo.common.dto.review.seller.SellerReviewCreatedNotificationDto;
 import ru.itmo.common.dto.review.seller.SellerReviewResponseDto;
 import ru.itmo.common.dto.review.seller.SellerReviewUpdateRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
@@ -17,6 +18,7 @@ import ru.itmo.common.exception.DuplicateException;
 import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.marketplace.service.review.entity.SellerReviewEntity;
 import ru.itmo.marketplace.service.review.mapper.SellerReviewMapper;
+import ru.itmo.marketplace.service.review.service.NotificationSenderService;
 import ru.itmo.marketplace.service.review.service.SellerReviewDataService;
 import ru.itmo.marketplace.service.review.service.SellerReviewService;
 import ru.itmo.marketplace.service.review.service.UserService;
@@ -33,6 +35,7 @@ public class SellerReviewServiceImpl implements SellerReviewService {
     private final SellerReviewDataService sellerReviewDataService;
     private final SellerReviewMapper sellerReviewMapper;
     private final UserService userService;
+    private final NotificationSenderService notificationSenderService;
 
     @Override
     @Transactional
@@ -43,11 +46,23 @@ public class SellerReviewServiceImpl implements SellerReviewService {
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + authorId)));
         return sellerReviewDataService.existsByAuthorId(authorId, createRequestDto.getSellerId()).flatMap(exists -> {
             if (exists) {
-                return Mono.error(new DuplicateException("Review by user with id=%s already exists"));
+                return Mono.error(new DuplicateException("Review by user with id=%s already exists".formatted(
+                        createRequestDto.getSellerId()
+                )));
             }
             SellerReviewEntity entity = sellerReviewMapper.toEntity(createRequestDto).withAuthorId(authorId);
             Mono<SellerReviewEntity> sellerReviewMono = sellerReviewDataService.create(entity);
-            return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono);
+            return mapToSellerReviewDto(sellerMono, authorMono, sellerReviewMono)
+                    .doOnNext(reviewDto -> {
+                        notificationSenderService.sendSellerReviewCreatedNotification(
+                                SellerReviewCreatedNotificationDto.builder()
+                                        .buyerName(reviewDto.getAuthor().getName())
+                                        .sellerId(createRequestDto.getSellerId())
+                                        .comment(createRequestDto.getComment())
+                                        .rating(createRequestDto.getRating())
+                                        .build()
+                        );
+                    });
         });
     }
 

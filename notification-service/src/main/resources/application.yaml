@@ -1,8 +1,8 @@
-server.port: 8082
+server.port: 8085
 
 spring:
   application:
-    name: reviews-service
+    name: notification-service
 
   config:
     import: 'configserver:'
@@ -16,9 +16,6 @@ spring:
         max-interval: 10000
         multiplier: 2
         max-attempts: 5
-
-  main:
-    web-application-type: reactive
 
 eureka:
   instance:

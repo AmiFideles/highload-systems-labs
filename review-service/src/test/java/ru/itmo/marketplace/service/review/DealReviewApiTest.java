@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -48,6 +49,9 @@ class DealReviewApiTest extends IntegrationEnvironment {
 
     @MockBean
     DealApiReactiveClient dealApiReactiveClient;
+
+    @MockBean
+    StompSession wsStompSession;
 
     @BeforeEach
     void setup() {
