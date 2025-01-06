@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                 .requestMatchers("/ws-server/**").permitAll()
                 .requestMatchers("/ws/**").authenticated()
 
-                .requestMatchers("/api/v1/**").authenticated() // TODO: remove
                 .and()
 
                 .build();
