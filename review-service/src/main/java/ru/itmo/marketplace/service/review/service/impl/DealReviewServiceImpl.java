@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 import ru.itmo.common.dto.deal.DealResponseDto;
+import ru.itmo.common.dto.review.deal.DealReviewCreatedNotificationDto;
 import ru.itmo.common.dto.review.deal.DealReviewRequestDto;
 import ru.itmo.common.dto.review.deal.DealReviewResponseDto;
 import ru.itmo.common.exception.DuplicateException;
@@ -18,6 +19,7 @@ import ru.itmo.marketplace.service.review.mapper.DealReviewMapper;
 import ru.itmo.marketplace.service.review.service.DealReviewDataService;
 import ru.itmo.marketplace.service.review.service.DealReviewService;
 import ru.itmo.marketplace.service.review.service.DealService;
+import ru.itmo.marketplace.service.review.service.NotificationSenderService;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class DealReviewServiceImpl implements DealReviewService {
     private final DealReviewMapper dealReviewMapper;
     private final DealReviewDataService dealReviewDataService;
     private final DealService dealService;
+    private final NotificationSenderService notificationSenderService;
 
     @Override
     public Mono<DealReviewResponseDto> createDealReview(Long authorId, DealReviewRequestDto dealReviewRequestDto) {
@@ -40,16 +43,26 @@ public class DealReviewServiceImpl implements DealReviewService {
             if (exists) {
                 return Mono.error(new DuplicateException("Deal with id=%s already exists".formatted(entity.getId())));
             }
-            return dealMono.flatMap(deal ->
-                    dealReviewDataService.createDealReview(entity).map(dealReview ->
-                            DealReviewResponseDto.builder()
-                                    .id(dealReview.getId())
-                                    .comment(dealReview.getComment())
-                                    .rating(dealReview.getRating())
-                                    .createdAt(dealReview.getCreatedAt())
-                                    .deal(deal)
-                                    .build()
-                    )
+            return dealMono.flatMap(deal -> {
+                        notificationSenderService.sendDealReviewCreatedNotification(
+                                DealReviewCreatedNotificationDto.builder()
+                                        .rating(dealReviewRequestDto.getRating())
+                                        .comment(dealReviewRequestDto.getComment())
+                                        .buyerName(deal.getBuyer().getName())
+                                        .sellerId(deal.getListing().getCreator().getId())
+                                        .listingTitle(deal.getListing().getTitle())
+                                        .build()
+                        );
+                        return dealReviewDataService.createDealReview(entity).map(dealReview ->
+                                DealReviewResponseDto.builder()
+                                        .id(dealReview.getId())
+                                        .comment(dealReview.getComment())
+                                        .rating(dealReview.getRating())
+                                        .createdAt(dealReview.getCreatedAt())
+                                        .deal(deal)
+                                        .build()
+                        );
+                    }
             );
         });
     }
@@ -115,6 +128,7 @@ public class DealReviewServiceImpl implements DealReviewService {
             Long dealId,
             DealReviewRequestDto dealReviewRequestDto
     ) {
+        // TODO: websocket call
         DealReviewEntity entity = dealReviewMapper.toEntity(dealReviewRequestDto);
         Mono<DealResponseDto> dealMono = dealService.getDeal(dealId).switchIfEmpty(
                 Mono.error(() -> new NotFoundException("Deal with id=%s not found".formatted(dealId)))

@@ -20,6 +20,7 @@ spring:
       httpclient:
         connect-timeout: 1000
         response-timeout: 5s
+
       routes:
         - id: users-service
           uri: lb://users-service
@@ -48,6 +49,15 @@ spring:
             - Path=/api/v1/reviews/**
           filters:
             - AuthenticationFilter
+
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/ws/**
+          filters:
+            - AuthParamToHeaderFilter
+            - AuthenticationFilter
+            - RemoveRequestHeader=Origin
 
 eureka:
   instance:
