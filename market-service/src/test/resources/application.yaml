@@ -8,3 +8,12 @@ spring:
       enabled: false
     discovery:
       enabled: false
+app:
+  kafka:
+    url: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
+    group-id: market-service
+    topics:
+      listing-status-updated: listing-status-updated
+      saved-listing-unavailable: listing-unavailable
+      deal-created: deal-created
+      deal-confirmation: deal-confirmation
