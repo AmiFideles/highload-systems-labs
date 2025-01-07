@@ -36,8 +36,8 @@ public class ListingCustomMapper {
                 .map(categoryId -> categoryRepository.findById(categoryId)
                         .orElseThrow(() -> new NotFoundException("Category not found with id: " + categoryId)))
                 .collect(Collectors.toSet());
-
         listing.setCategories(categories);
+        listing.setStatus(fromDto(listingRequestDto.getListingStatusDto()));
 
         return listing;
     }

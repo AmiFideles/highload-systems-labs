@@ -14,6 +14,7 @@ import ru.itmo.service.market.entity.ListingStatus;
 public interface ListingMapper {
     Listing fromDto(ListingRequestDto listingRequestDto);
     ListingStatus fromDto(ListingStatusDto listingStatusDto);
+    ListingStatusDto toDto(ListingStatus listingStatus);
     ListingResponseDto toDto(Listing listing);
     ModeratedListingResponseDto toModeratedDto(Listing listing);
 }
