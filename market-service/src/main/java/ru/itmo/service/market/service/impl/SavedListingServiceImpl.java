@@ -14,6 +14,7 @@ import ru.itmo.service.market.repository.SavedListingRepository;
 import ru.itmo.service.market.service.ListingService;
 import ru.itmo.service.market.service.SavedListingService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -55,5 +56,11 @@ public class SavedListingServiceImpl implements SavedListingService {
     public boolean deleteById(Long listingId, Long userId) {
         int deletedCount = savedListingRepository.deleteByListingIdAndUserId(listingId, userId);
         return deletedCount > 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findByListingId(Long listingId) {
+        return savedListingRepository.findUserIdByListingId(listingId);
     }
 }

@@ -7,3 +7,13 @@ spring:
       enabled: false
     discovery:
       enabled: false
+
+app:
+  kafka:
+    url: "localhost:29092,localhost:39092,localhost:49092"
+    group-id: notification-service
+    topics:
+      listing-status-updated: listing-status-updated
+      saved-listing-unavailable: saved-listing-unavailable
+      deal-created: deal-created
+      deal-confirmation: deal-confirmation
