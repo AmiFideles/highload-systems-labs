@@ -56,6 +56,14 @@
         <sqlFile path="scripts/07.testdata.sql" relativeToChangelogFile="true" dbms="postgresql"/>
     </changeSet>
 
+    <changeSet id="itmo-hs-v1-user-table-update" author="${author}" context="testdata">
+        <sqlFile path="scripts/08.user_table_update.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+    </changeSet>
+
+    <changeSet id="itmo-hs-v1-listing-table-update" author="${author}" context="testdata">
+        <sqlFile path="scripts/09.listing_table_update.sql" relativeToChangelogFile="true" dbms="postgresql"/>
+    </changeSet>
+
     <changeSet id="itmo-hs-v1-end" author="${author}">
         <tagDatabase tag="itmo-hs-v1-end"/>
     </changeSet>

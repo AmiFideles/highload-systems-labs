@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +44,10 @@ public class User implements UserDetails {
     @Column("role")
     @NotNull
     private UserRole role;
+
+    @Column("avatar_file_name")
+    @Nullable
+    private String avatarFileName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

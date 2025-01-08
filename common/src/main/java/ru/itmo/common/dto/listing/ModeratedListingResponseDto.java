@@ -48,5 +48,8 @@ public class ModeratedListingResponseDto {
     @JsonProperty("status")
     private String status;
 
+    @JsonProperty("image_file_name")
+    private String imageFileName;
+
 }
 
