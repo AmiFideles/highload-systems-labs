@@ -59,6 +59,13 @@ spring:
             - AuthenticationFilter
             - RemoveRequestHeader=Origin
 
+        - id: image-service
+          uri: lb://image-service
+          predicates:
+            - Path=/api/v1/images/**
+          filters:
+            - AuthenticationFilter
+
 eureka:
   instance:
     hostname: localhost
