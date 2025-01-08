@@ -31,5 +31,8 @@ public class UserResponseDto {
     @JsonProperty("role")
     private UserRoleDto role;
 
+    @JsonProperty("avatar_file_name")
+    private String avatarFileName;
+
 }
 

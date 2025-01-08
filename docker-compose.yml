@@ -18,6 +18,19 @@ services:
     networks:
       - backend
 
+  s3:
+    image: 'bitnami/minio:latest'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=user
+      - MINIO_ROOT_PASSWORD=password
+    networks:
+      - backend
+    volumes:
+      - 'minio-volume:/data'
+
   liquibase-migrations:
     image: liquibase/liquibase:4.18
     depends_on:
@@ -156,6 +169,8 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      db:
+        condition: service_healthy
       eureka-server:
         condition: service_healthy
       config-server:
@@ -164,7 +179,7 @@ services:
         condition: service_healthy
       user-service:
         condition: service_healthy
-      db:
+      notification-service:
         condition: service_healthy
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
@@ -213,17 +228,16 @@ services:
       dockerfile: docker/notification-service.Dockerfile
     ports:
       - "8085:8085"
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#      gateway:
-#        condition: service_healthy
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8888
-      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
     healthcheck:
       test: "curl --silent --fail notification-service:8085/actuator/health | grep UP || exit 1"
       interval: 10s
@@ -326,11 +340,39 @@ services:
       DYNAMIC_CONFIG_ENABLED: 'false'
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+
+  image-service:
+    build:
+      context: .
+      dockerfile: docker/image-service.Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8888
+      DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      MINIO_URL: http://s3:9000
+      MINIO_USERNAME: user
+      MINIO_PASSWORD: password
+    healthcheck:
+      test: "curl --silent --fail image-service:8086/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - backend
 
 volumes:
   pgdata:
+  minio-volume:
 
 networks:
   backend:

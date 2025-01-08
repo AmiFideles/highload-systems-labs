@@ -42,5 +42,8 @@ public class ListingRequestDto {
     @JsonProperty("status")
     private ListingStatusDto listingStatusDto;
 
+    @JsonProperty("image_file_name")
+    private String imageFileName;
+
 }
 

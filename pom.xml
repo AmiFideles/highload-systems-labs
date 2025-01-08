@@ -24,6 +24,7 @@
         <module>authentication-service</module>
         <module>authentication-service-client</module>
         <module>notification-service</module>
+        <module>image-service</module>
     </modules>
 
     <properties>
