@@ -8,6 +8,10 @@ spring:
       enabled: false
     discovery:
       enabled: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migrations/master.xml
+
 app:
   kafka:
     url: "kafka-1:9092,kafka-2:9092,kafka-3:9092"

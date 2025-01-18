@@ -1,14 +1,7 @@
 package ru.itmo.marketplace.service.review;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -19,8 +12,7 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
-import liquibase.resource.DirectoryResourceAccessor;
-import org.springframework.core.io.ClassPathResource;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -44,14 +36,13 @@ public abstract class IntegrationEnvironment {
             DATA_SOURCE = dataSource;
 
             Connection connection = getConnection();
-            Path path = new File("../").toPath().toAbsolutePath().normalize();
             Database database =
                     DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
             Liquibase liquibase = new Liquibase(MASTER_PATH,
-                    new DirectoryResourceAccessor(path), database
+                    new ClassLoaderResourceAccessor(), database
             );
             liquibase.update(new Contexts("testdata"), new LabelExpression());
-        } catch (SQLException | LiquibaseException | FileNotFoundException e) {
+        } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);
         }
     }
