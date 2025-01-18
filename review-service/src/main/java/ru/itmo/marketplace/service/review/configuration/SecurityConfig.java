@@ -21,6 +21,22 @@ import ru.itmo.modules.security.ReactiveSecurityModuleConfig;
 @EnableWebFluxSecurity
 @Configuration
 public class SecurityConfig {
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/api/v1/user-management/auth-info",
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/error/**",
+            "/favicon.ico",
+            "/error",
+            "/api/auth/**"
+    };
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
@@ -38,8 +54,8 @@ public class SecurityConfig {
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/api/v1/auth/**").permitAll()
                         .pathMatchers("/api/v1/reviews/**").authenticated()
+                        .pathMatchers(AUTH_WHITELIST).permitAll()
                 )
                 .build();
     }
-
 }

@@ -1,4 +1,4 @@
-package ru.itmo.service.user.configuration;
+package ru.itmo.service.market.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -17,8 +17,8 @@ public class ApplicationConfig {
         return new OpenAPI()
                 .servers(List.of(new Server().url("http://localhost:8080")))
                 .info(new Info()
-                        .title("Users Service API")
-                        .description("Users Service API Specs")
+                        .title("Market Service API")
+                        .description("Market Service API Specs")
                         .version("1.0.0"));
     }
 }
