@@ -167,7 +167,8 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "newuser@example.com",
                 "securePassword",
                 "New User",
-                UserRoleDto.BUYER
+                UserRoleDto.BUYER,
+                null
         );
 
         UserResponseDto response = webTestClient.post()
@@ -193,7 +194,7 @@ public class UsersApiTest extends IntegrationEnvironment {
     @SneakyThrows
     void createUser__whenInvalidInput_thenBadRequest() {
         User admin = testUtils.createAdmin();
-        UserRequestDto invalidUser = new UserRequestDto(null, "password", "Name", UserRoleDto.BUYER);
+        UserRequestDto invalidUser = new UserRequestDto(null, "password", "Name", UserRoleDto.BUYER, null);
 
         webTestClient.post()
                 .uri("/api/v1/users")
@@ -210,7 +211,7 @@ public class UsersApiTest extends IntegrationEnvironment {
     @SneakyThrows
     void createUser__whenUserNameAlreadyExists_thenBadRequest() {
         User admin = testUtils.createAdmin();
-        UserRequestDto invalidUser = new UserRequestDto(null, "password", admin.getName(), UserRoleDto.BUYER);
+        UserRequestDto invalidUser = new UserRequestDto(null, "password", admin.getName(), UserRoleDto.BUYER, null);
 
         webTestClient.post()
                 .uri("/api/v1/users")
@@ -231,7 +232,8 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "test@example.com",
                 "password",
                 "Name",
-                UserRoleDto.BUYER
+                UserRoleDto.BUYER,
+                null
         );
 
         webTestClient.post()
@@ -253,7 +255,8 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "updateduser@example.com",
                 "newSecurePassword",
                 "Updated User",
-                UserRoleDto.BUYER
+                UserRoleDto.BUYER,
+                null
         );
 
         UserResponseDto response = webTestClient.put()
@@ -283,7 +286,8 @@ public class UsersApiTest extends IntegrationEnvironment {
                 null,
                 null,
                 null,
-                UserRoleDto.BUYER
+                UserRoleDto.BUYER,
+                null
         );
 
         webTestClient.put()
@@ -305,7 +309,8 @@ public class UsersApiTest extends IntegrationEnvironment {
                 "updated@example.com",
                 "newPassword",
                 "Updated Name",
-                UserRoleDto.BUYER
+                UserRoleDto.BUYER,
+                null
         );
 
         webTestClient.put()
