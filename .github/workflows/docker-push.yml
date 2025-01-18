@@ -32,7 +32,7 @@ jobs:
       - name: Build Docker image for ${{ matrix.service }}
         env:
           IMAGE_TAG: ${{ github.sha }}
-        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}:${{ env.IMAGE_TAG }} . -f docker/${{ matrix.service }}.Dockerfile
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.REPOSITORY_LC }}/${{ matrix.service }}:${{ env.IMAGE_TAG }} . -f docker/${{ matrix.service }}.Dockerfile
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
