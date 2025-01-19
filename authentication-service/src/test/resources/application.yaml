@@ -11,3 +11,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:migrations/master.xml
+
+api:
+  server:
+    url: http://localhost:8080
