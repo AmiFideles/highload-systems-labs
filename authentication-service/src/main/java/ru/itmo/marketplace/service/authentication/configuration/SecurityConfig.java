@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +20,23 @@ import ru.itmo.common.exception.ControllerAdvice;
 @EnableWebFluxSecurity
 @Configuration
 public class SecurityConfig {
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/api/v1/user-management/auth-info",
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/error/**",
+            "/favicon.ico",
+            "/error",
+            "/api/auth/**"
+    };
+
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http
@@ -33,6 +49,7 @@ public class SecurityConfig {
                         .pathMatchers("/error").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/api/v1/auth/**").permitAll()
+                        .pathMatchers(AUTH_WHITELIST).permitAll()
                 )
                 .build();
     }

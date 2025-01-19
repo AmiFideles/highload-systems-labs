@@ -51,3 +51,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+api:
+  server:
+    url: ${API_SERVER_URL:http://localhost:8080}

@@ -17,6 +17,10 @@ spring:
         multiplier: 2
         max-attempts: 5
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       httpclient:
         connect-timeout: 1000
         response-timeout: 5s
@@ -76,3 +80,26 @@ eureka:
     registryFetchIntervalSeconds: 5
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: gateway-service
+        url: /v3/api-docs
+
+      - name: market-service
+        url: /market-service/v3/api-docs
+
+      - name: users-service
+        url: /users-service/v3/api-docs
+
+      - name: authentication-service
+        url: /authentication-service/v3/api-docs
+
+      - name: reviews-service
+        url: /reviews-service/v3/api-docs

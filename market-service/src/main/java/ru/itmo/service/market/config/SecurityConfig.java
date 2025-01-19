@@ -22,6 +22,24 @@ import ru.itmo.modules.security.SecurityModuleConfig;
 })
 @Configuration
 public class SecurityConfig {
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/api/v1/user-management/auth-info",
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/error/**",
+            "/favicon.ico",
+            "/error",
+            "/api/auth/**"
+    };
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -40,6 +58,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/deals/**").authenticated()
                 .requestMatchers("/api/v1/listings/**").authenticated()
                 .requestMatchers("/api/v1/saved-listings/**").authenticated()
+                .requestMatchers(AUTH_WHITELIST).permitAll()
                 .and()
 
                 .build();

@@ -28,7 +28,6 @@ public class WebSocketConfiguration {
     @Bean
     @Profile("!test")
     public StompSession wsStompSession() {
-        log.info("AAABBBCCCDDD");
         WebSocketClient webSocketClient = new StandardWebSocketClient();
         WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
