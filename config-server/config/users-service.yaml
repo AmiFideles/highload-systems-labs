@@ -29,3 +29,7 @@ logging:
       springframework:
         security: DEBUG
         r2dbc: DEBUG
+
+api:
+  server:
+    url: ${API_SERVER_URL:http://localhost:8080}

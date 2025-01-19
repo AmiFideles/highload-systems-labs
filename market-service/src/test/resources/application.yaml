@@ -8,3 +8,20 @@ spring:
       enabled: false
     discovery:
       enabled: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migrations/master.xml
+
+app:
+  kafka:
+    url: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
+    group-id: market-service
+    topics:
+      listing-status-updated: listing-status-updated
+      saved-listing-unavailable: listing-unavailable
+      deal-created: deal-created
+      deal-confirmation: deal-confirmation
+
+api:
+  server:
+    url: http://localhost:8080

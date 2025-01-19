@@ -33,3 +33,7 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+api:
+  server:
+    url: ${API_SERVER_URL:http://localhost:8080}

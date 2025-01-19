@@ -39,7 +39,10 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
             <version>3.4.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
         <!-- util -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -108,7 +111,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -116,7 +118,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>

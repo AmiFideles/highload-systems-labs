@@ -1,5 +1,10 @@
 package ru.itmo.service.market.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,14 @@ public class ListingsApiController {
     private final ListingService listingService;
     private final ListingCustomMapper listingMapper;
 
+    @Operation(summary = "Создать объявление",
+            description = "Создает новое объявление, доступно только продавцам")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Успешное создание объявления",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/listings",
@@ -46,6 +59,14 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Получить объявление по ID",
+            description = "Возвращает информацию об объявлении по его ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Объявление найдено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/listings/{id}",
@@ -62,6 +83,15 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Обновить объявление",
+            description = "Обновляет данные объявления, доступно только продавцам")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Объявление обновлено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/listings/{id}",
@@ -84,6 +114,13 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Удалить объявление",
+            description = "Удаляет объявление по ID, доступно только продавцам")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Объявление удалено"),
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/listings/{id}",
@@ -100,6 +137,13 @@ public class ListingsApiController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Поиск объявлений",
+            description = "Позволяет фильтровать объявления по различным параметрам")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Результаты поиска",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/listings",
@@ -123,6 +167,14 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Получить открытые объявления",
+            description = "Возвращает открытые объявления для модераторов и администраторов")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список открытых объявлений",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/listings/open",
@@ -138,6 +190,15 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Обновить статус объявления",
+            description = "Позволяет модератору или администратору изменить статус объявления")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Статус объявления обновлен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ModeratedListingResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/listings/{id}/status",
@@ -159,6 +220,14 @@ public class ListingsApiController {
         );
     }
 
+    @Operation(summary = "Получить объявления пользователя",
+            description = "Возвращает список объявлений пользователя по статусу")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список объявлений пользователя",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/listings/seller",

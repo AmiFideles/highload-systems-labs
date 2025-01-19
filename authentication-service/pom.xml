@@ -66,6 +66,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
 
         <!-- persistence -->
         <dependency>
@@ -151,7 +156,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -159,7 +163,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>

@@ -57,6 +57,9 @@ public class Listing {
     @Column(name = "used", nullable = false)
     boolean used;
 
+    @Column(name = "image_file_name")
+    private String imageFileName;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

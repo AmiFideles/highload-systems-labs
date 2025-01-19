@@ -24,6 +24,7 @@
         <module>authentication-service</module>
         <module>authentication-service-client</module>
         <module>notification-service</module>
+        <module>image-service</module>
     </modules>
 
     <properties>
@@ -59,6 +60,11 @@
                 <artifactId>mapstruct</artifactId>
                 <version>1.6.2</version>
             </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>2.6.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -75,6 +81,20 @@
                             <goals>
                                 <goal>repackage</goal>
                                 <goal>build-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.12</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                                <goal>report</goal>
                             </goals>
                         </execution>
                     </executions>

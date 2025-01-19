@@ -60,5 +60,8 @@ public class ListingResponseDto {
     @JsonProperty("used")
     private Boolean used;
 
+    @JsonProperty("image_file_name")
+    private String imageFileName;
+
 }
 

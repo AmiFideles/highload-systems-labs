@@ -1,5 +1,8 @@
 package ru.itmo.marketplace.service.review.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,12 @@ import ru.itmo.modules.security.InternalAuthentication;
 public class DealReviewsApiController {
     private final DealReviewService dealReviewService;
 
+    @Operation(summary = "Создание отзыва о сделке", description = "Создает новый отзыв о сделке от текущего пользователя (покупателя).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "",
@@ -41,6 +50,12 @@ public class DealReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Удаление отзыва о сделке", description = "Удаляет отзыв о сделке по указанному ID. Доступно для покупателя, оставившего отзыв, или администратора.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно удален"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+    })
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/{id}",
@@ -55,6 +70,12 @@ public class DealReviewsApiController {
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @Operation(summary = "Получение отзыва о сделке по ID", description = "Возвращает информацию о отзыве по его ID. Доступно для покупателя, оставившего отзыв, или администратора.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно получен"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/{id}",
@@ -68,6 +89,12 @@ public class DealReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Получение списка отзывов о сделках", description = "Возвращает пагинированный список отзывов о сделках текущего пользователя. Доступно для покупателя.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "",
@@ -82,6 +109,13 @@ public class DealReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Обновление отзыва о сделке", description = "Обновляет существующий отзыв о сделке по указанному ID. Доступно для покупателя, оставившего отзыв.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлен"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя, оставившего отзыв")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/{id}",

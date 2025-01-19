@@ -1,5 +1,10 @@
 package ru.itmo.marketplace.service.authentication.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,15 @@ public class AuthController {
     private final AuthService authService;
     private final ReactiveAuthenticationManager authenticationManager;
 
+
+    @Operation(summary = "Проверка валидности токена", description = "Позволяет проверить токен и получить ID пользователя и его роль.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Токен валиден",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidateTokenResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Токен недействителен или истек"),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/validate",
@@ -46,6 +60,14 @@ public class AuthController {
                 ));
     }
 
+    @Operation(summary = "Авторизация пользователя", description = "Аутентифицирует пользователя и выдает JWT-токен.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Успешный вход",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AuthTokenResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Неверные учетные данные"),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/login",

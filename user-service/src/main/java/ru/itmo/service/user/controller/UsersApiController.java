@@ -1,5 +1,10 @@
 package ru.itmo.service.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +35,13 @@ public class UsersApiController {
     private final UserMapper mapper;
     private final UserService userService;
 
+    @Operation(summary = "Создание нового пользователя", description = "Только администраторы могут создавать пользователей.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Пользователь успешно создан",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен (не администратор)")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "",
@@ -47,6 +59,13 @@ public class UsersApiController {
                 .map(user -> ResponseEntity.ok(mapper.toDto(user)));
     }
 
+    @Operation(summary = "Получение пользователя по ID", description = "Возвращает данные пользователя по его идентификатору.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Пользователь найден",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/{id}",
@@ -60,6 +79,14 @@ public class UsersApiController {
                 .map(user -> ResponseEntity.ok(mapper.toDto(user)));
     }
 
+
+    @Operation(summary = "Получение списка пользователей по ID", description = "Возвращает список пользователей по указанным идентификаторам.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Пользователи найдены",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Некоторые пользователи не найдены")
+    })
     @GetMapping(
             value = "/in",
             produces = {"application/json"}
@@ -79,6 +106,12 @@ public class UsersApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Получение списка пользователей с пагинацией", description = "Позволяет получать пользователей постранично.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Страница с пользователями",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)))
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "",
@@ -91,6 +124,13 @@ public class UsersApiController {
                 .map(page -> ResponseEntity.ok(page.map(mapper::toDto)));
     }
 
+    @Operation(summary = "Обновление данных пользователя", description = "Позволяет обновить данные пользователя по его ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Пользователь обновлен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/{id}",

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.itmo.service.market.entity.SavedListing;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SavedListingService {
@@ -15,4 +16,6 @@ public interface SavedListingService {
     SavedListing create(SavedListing entity);
 
     boolean deleteById(Long listingId, Long userId);
+
+    List<Long> findByListingId(Long listingId);
 }
