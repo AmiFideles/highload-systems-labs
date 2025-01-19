@@ -1,5 +1,8 @@
 package ru.itmo.service.market.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,11 @@ public class CategoriesApiController {
     private final CategoryMapper mapper;
     private final CategoryService service;
 
+    @Operation(summary = "Получить список категорий", description = "Возвращает пагинированный список категорий")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список категорий успешно получен"),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры пагинации")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/categories",
@@ -37,6 +45,11 @@ public class CategoriesApiController {
         );
     }
 
+    @Operation(summary = "Получить категорию по ID", description = "Возвращает категорию с указанным ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Категория успешно получена"),
+            @ApiResponse(responseCode = "404", description = "Категория не найдена")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/categories/{id}",
@@ -53,6 +66,11 @@ public class CategoriesApiController {
         );
     }
 
+    @Operation(summary = "Создать новую категорию", description = "Создает новую категорию и возвращает созданную категорию")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Категория успешно создана"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные категории")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/categories",
@@ -70,6 +88,12 @@ public class CategoriesApiController {
         );
     }
 
+    @Operation(summary = "Обновить категорию по ID", description = "Обновляет категорию с указанным ID и возвращает обновленную категорию")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Категория успешно обновлена"),
+            @ApiResponse(responseCode = "404", description = "Категория не найдена"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные категории")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/categories/{id}",
@@ -91,6 +115,11 @@ public class CategoriesApiController {
         );
     }
 
+    @Operation(summary = "Удалить категорию по ID", description = "Удаляет категорию с указанным ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Категория успешно удалена"),
+            @ApiResponse(responseCode = "404", description = "Категория не найдена")
+    })
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(
             method = RequestMethod.DELETE,

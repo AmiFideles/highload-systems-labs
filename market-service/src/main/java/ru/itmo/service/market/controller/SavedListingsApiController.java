@@ -1,5 +1,8 @@
 package ru.itmo.service.market.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,11 @@ public class SavedListingsApiController {
     private final SavedListingCustomMapper savedListingMapper;
     private final SavedListingService savedListingService;
 
+    @Operation(summary = "Добавление сохраненного объявления", description = "Создает новое сохраненное объявление для текущего пользователя.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно добавлено"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для добавления сохраненного объявления")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/saved-listings",
@@ -43,6 +51,11 @@ public class SavedListingsApiController {
         );
     }
 
+    @Operation(summary = "Получение сохраненного объявления по ID", description = "Возвращает информацию о сохраненном объявлении по указанному ID. Доступно только для владельца объявления.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно получено"),
+            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/saved-listings/{listing_id}",
@@ -60,6 +73,11 @@ public class SavedListingsApiController {
         );
     }
 
+    @Operation(summary = "Получение списка сохраненных объявлений", description = "Возвращает пагинированный список сохраненных объявлений текущего пользователя.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список сохраненных объявлений успешно получен"),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации сохраненных объявлений")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/saved-listings",
@@ -75,6 +93,11 @@ public class SavedListingsApiController {
         );
     }
 
+    @Operation(summary = "Удаление сохраненного объявления", description = "Удаляет сохраненное объявление по указанному ID. Доступно только для владельца объявления.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно удалено"),
+            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено")
+    })
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/saved-listings/{listing_id}",

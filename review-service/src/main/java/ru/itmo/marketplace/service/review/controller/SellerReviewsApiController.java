@@ -1,5 +1,8 @@
 package ru.itmo.marketplace.service.review.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,12 @@ import ru.itmo.modules.security.InternalAuthentication;
 public class SellerReviewsApiController {
     private final SellerReviewService sellerReviewService;
 
+    @Operation(summary = "Создание отзыва о продавце", description = "Создает новый отзыв о продавце от текущего пользователя (покупателя).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             value = "",
@@ -38,6 +47,12 @@ public class SellerReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Удаление отзыва о продавце", description = "Удаляет отзыв о продавце по указанному ID. Доступно для покупателя, оставившего отзыв, или администратора.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно удален"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+    })
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/{seller_id}",
@@ -52,6 +67,12 @@ public class SellerReviewsApiController {
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @Operation(summary = "Получение своих отзывов о продавцах", description = "Возвращает пагинированный список отзывов о продавцах текущего пользователя. Доступно для покупателя.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "",
@@ -66,6 +87,12 @@ public class SellerReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Получение отзывов о продавце по его ID", description = "Возвращает пагинированный список отзывов о продавце по его ID. Доступно для всех пользователей.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
+            @ApiResponse(responseCode = "404", description = "Отзывы не найдены"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+    })
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/{seller_id}",
@@ -79,6 +106,13 @@ public class SellerReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 
+    @Operation(summary = "Обновление отзыва о продавце", description = "Обновляет существующий отзыв о продавце по указанному ID. Доступно для покупателя, оставившего отзыв.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлен"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва"),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя, оставившего отзыв")
+    })
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/{seller_id}",
@@ -95,4 +129,3 @@ public class SellerReviewsApiController {
                 .map(ResponseEntity::ok);
     }
 }
-
