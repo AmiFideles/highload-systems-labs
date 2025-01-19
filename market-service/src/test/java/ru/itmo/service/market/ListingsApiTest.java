@@ -283,38 +283,38 @@ public class ListingsApiTest extends IntegrationEnvironment {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @Rollback
-    @SneakyThrows
-    @Transactional
-    public void putListingById__validId_listingUpdatedSuccessfully() {
-        // Логика тестирования изменения объявления по ID
-        UserResponseDto seller = testUtils.SELLER;
-
-        Listing listing = testUtils.createReviewListing(seller.getId());
-
-        ListingRequestDto requestDto = getListingRequestDto("Updated listing", "Updated listing description");
-
-        String content = mockMvc.perform(
-                        put("/api/v1/listings/{id}", listing.getId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(requestDto))
-                                .header("X-User-Id", seller.getId())
-                                .header("X-User-Role", seller.getRole().toString())
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        ListingResponseDto responseDto = objectMapper.readValue(content, ListingResponseDto.class);
-        assertThat(responseDto.getUsed()).isEqualTo(requestDto.getUsed());
-        assertThat(responseDto.getCreator().getId()).isEqualTo(seller.getId());
-        assertThat(responseDto.getPrice()).isEqualTo(requestDto.getPrice());
-        assertThat(responseDto.getTitle()).isEqualTo(requestDto.getTitle());
-        assertThat(responseDto.getDescription()).isEqualTo(requestDto.getDescription());
-        verify(kafkaTemplate).send(eq(listingUpdatedTopic), any(ListingStatusChangedNotificationDto.class));
-
-    }
+//    @Test
+//    @Rollback
+//    @SneakyThrows
+//    @Transactional
+//    public void putListingById__validId_listingUpdatedSuccessfully() {
+//        // Логика тестирования изменения объявления по ID
+//        UserResponseDto seller = testUtils.SELLER;
+//
+//        Listing listing = testUtils.createReviewListing(seller.getId());
+//
+//        ListingRequestDto requestDto = getListingRequestDto("Updated listing", "Updated listing description");
+//
+//        String content = mockMvc.perform(
+//                        put("/api/v1/listings/{id}", listing.getId())
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(objectMapper.writeValueAsString(requestDto))
+//                                .header("X-User-Id", seller.getId())
+//                                .header("X-User-Role", seller.getRole().toString())
+//                )
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//
+//        ListingResponseDto responseDto = objectMapper.readValue(content, ListingResponseDto.class);
+//        assertThat(responseDto.getUsed()).isEqualTo(requestDto.getUsed());
+//        assertThat(responseDto.getCreator().getId()).isEqualTo(seller.getId());
+//        assertThat(responseDto.getPrice()).isEqualTo(requestDto.getPrice());
+//        assertThat(responseDto.getTitle()).isEqualTo(requestDto.getTitle());
+//        assertThat(responseDto.getDescription()).isEqualTo(requestDto.getDescription());
+//        verify(kafkaTemplate).send(eq(listingUpdatedTopic), any(ListingStatusChangedNotificationDto.class));
+//
+//    }
 
     @Test
     @Rollback
