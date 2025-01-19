@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.kafka.common.internals.KafkaCompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,15 +13,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmo.common.dto.deal.DealCreateRequestDto;
-import ru.itmo.common.dto.deal.DealResponseDto;
-import ru.itmo.common.dto.deal.DealStatusDto;
-import ru.itmo.common.dto.deal.DealStatusUpdateRequestDto;
+import ru.itmo.common.dto.deal.*;
 import ru.itmo.common.dto.user.UserResponseDto;
+import ru.itmo.common.kafka.Message;
 import ru.itmo.modules.security.UserSecurityContextHolder;
 import ru.itmo.service.market.entity.Deal;
 import ru.itmo.service.market.entity.DealStatus;
@@ -32,10 +33,11 @@ import ru.itmo.service.user.client.UserApiClient;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,10 +63,13 @@ public class DealsApiTest extends IntegrationEnvironment {
     @MockBean
     private UserApiClient userApiClient;
 
-    @Autowired
-    private UserSecurityContextHolder contextHolder;
+    @MockBean
+    private KafkaTemplate<String, Message> kafkaTemplate;
 
     private static final long UNKNOWN_ID = 9999999L;
+
+    private static final String dealCreatedTopic = "deal-created";
+    private static final String dealConfirmationTopic = "deal-confirmation";
 
     @BeforeEach
     void setup() {
@@ -76,6 +81,11 @@ public class DealsApiTest extends IntegrationEnvironment {
             Long uid = invocationOnMock.getArgument(0);
             return testUtils.USERS_MAP.get(uid);
         });
+
+        CompletableFuture<SendResult<String, String>> future = new CompletableFuture<>();
+
+        when(kafkaTemplate.send(anyString(), any(Message.class))).thenAnswer(unused -> future);
+
     }
 
 
@@ -109,6 +119,7 @@ public class DealsApiTest extends IntegrationEnvironment {
         assertThat(dealResponseDto.getListing().getId()).isEqualTo(dealCreateRequestDto.getListingId());
         assertThat(dealResponseDto.getBuyer().getId()).isEqualTo(buyer.getId());
         assertThat(dealResponseDto.getStatus()).isEqualTo(DealStatusDto.PENDING);
+        verify(kafkaTemplate).send(eq(dealCreatedTopic), any(DealCreatedDto.class));
     }
 
     @Test
@@ -341,6 +352,7 @@ public class DealsApiTest extends IntegrationEnvironment {
         assertThat(dealResponseDto.getListing().getId()).isEqualTo(pendingDeal.getListing().getId());
         assertThat(dealResponseDto.getBuyer().getId()).isEqualTo(buyer.getId());
         assertThat(dealResponseDto.getStatus()).isEqualTo(dealCreateRequestDto.getStatus());
+        verify(kafkaTemplate).send(eq(dealConfirmationTopic), any(DealConfirmationDto.class));
     }
 
     @Test
@@ -371,6 +383,7 @@ public class DealsApiTest extends IntegrationEnvironment {
         assertThat(dealResponseDto.getListing().getId()).isEqualTo(pendingDeal.getListing().getId());
         assertThat(dealResponseDto.getBuyer().getId()).isEqualTo(buyer.getId());
         assertThat(dealResponseDto.getStatus()).isEqualTo(dealCreateRequestDto.getStatus());
+        verify(kafkaTemplate).send(eq(dealConfirmationTopic), any(DealConfirmationDto.class));
     }
 
     @Test
@@ -402,6 +415,7 @@ public class DealsApiTest extends IntegrationEnvironment {
         assertThat(dealResponseDto.getListing().getId()).isEqualTo(pendingDeal.getListing().getId());
         assertThat(dealResponseDto.getBuyer().getId()).isEqualTo(buyer.getId());
         assertThat(dealResponseDto.getStatus()).isEqualTo(dealCreateRequestDto.getStatus());
+        verify(kafkaTemplate).send(eq(dealConfirmationTopic), any(DealConfirmationDto.class));
     }
 
     @Test
@@ -525,7 +539,8 @@ public class DealsApiTest extends IntegrationEnvironment {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        List<DealResponseDto> response = objectMapper.readValue(responseContent, new TypeReference<>() {});
+        List<DealResponseDto> response = objectMapper.readValue(responseContent, new TypeReference<>() {
+        });
         assertThat(response).hasSize(deals.size());
     }
 
@@ -547,7 +562,8 @@ public class DealsApiTest extends IntegrationEnvironment {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        List<DealResponseDto> response = objectMapper.readValue(responseContent, new TypeReference<>() {});
+        List<DealResponseDto> response = objectMapper.readValue(responseContent, new TypeReference<>() {
+        });
         assertThat(response).isEmpty();
     }
 }
