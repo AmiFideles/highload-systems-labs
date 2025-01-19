@@ -21,3 +21,7 @@ app:
       saved-listing-unavailable: listing-unavailable
       deal-created: deal-created
       deal-confirmation: deal-confirmation
+
+api:
+  server:
+    url: http://localhost:8080

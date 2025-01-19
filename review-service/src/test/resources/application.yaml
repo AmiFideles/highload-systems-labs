@@ -12,3 +12,6 @@ spring:
     change-log: classpath:migrations/master.xml
   main:
     web-application-type: reactive
+api:
+  server:
+    url: http://localhost:8080
