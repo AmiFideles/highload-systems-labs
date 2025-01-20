@@ -1,6 +1,8 @@
 package ru.itmo.service.market.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -17,6 +19,7 @@ import ru.itmo.modules.security.InternalAuthentication;
 import ru.itmo.service.market.entity.SavedListing;
 import ru.itmo.service.market.mapper.custom.SavedListingCustomMapper;
 import ru.itmo.service.market.service.SavedListingService;
+import ru.itmo.common.dto.ApiErrorDto;
 
 @Slf4j
 @RestController
@@ -29,7 +32,8 @@ public class SavedListingsApiController {
     @Operation(summary = "Добавление сохраненного объявления", description = "Создает новое сохраненное объявление для текущего пользователя.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно добавлено"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные для добавления сохраненного объявления")
+            @ApiResponse(responseCode = "400", description = "Неверные данные для добавления сохраненного объявления",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -54,7 +58,8 @@ public class SavedListingsApiController {
     @Operation(summary = "Получение сохраненного объявления по ID", description = "Возвращает информацию о сохраненном объявлении по указанному ID. Доступно только для владельца объявления.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно получено"),
-            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено")
+            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -76,7 +81,8 @@ public class SavedListingsApiController {
     @Operation(summary = "Получение списка сохраненных объявлений", description = "Возвращает пагинированный список сохраненных объявлений текущего пользователя.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список сохраненных объявлений успешно получен"),
-            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации сохраненных объявлений")
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации сохраненных объявлений",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -96,7 +102,8 @@ public class SavedListingsApiController {
     @Operation(summary = "Удаление сохраненного объявления", description = "Удаляет сохраненное объявление по указанному ID. Доступно только для владельца объявления.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Сохраненное объявление успешно удалено"),
-            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено")
+            @ApiResponse(responseCode = "404", description = "Сохраненное объявление с указанным ID не найдено",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.DELETE,

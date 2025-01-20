@@ -44,7 +44,7 @@ services:
       - --password=postgres
       - update
     volumes:
-      - ./migrations:/liquibase/changelog
+      - ./common/src/main/resources/migrations:/liquibase/changelog
     networks:
       - backend
 
@@ -340,6 +340,8 @@ services:
       DYNAMIC_CONFIG_ENABLED: 'false'
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+    networks:
+      - backend
 
   image-service:
     build:

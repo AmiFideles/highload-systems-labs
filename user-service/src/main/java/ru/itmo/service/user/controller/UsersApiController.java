@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.user.UserRequestDto;
 import ru.itmo.common.dto.user.UserResponseDto;
 import ru.itmo.common.exception.AccessDeniedException;
@@ -40,7 +41,9 @@ public class UsersApiController {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно создан",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен (не администратор)")
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен (не администратор)",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -64,7 +67,9 @@ public class UsersApiController {
             @ApiResponse(responseCode = "200", description = "Пользователь найден",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -79,13 +84,14 @@ public class UsersApiController {
                 .map(user -> ResponseEntity.ok(mapper.toDto(user)));
     }
 
-
     @Operation(summary = "Получение списка пользователей по ID", description = "Возвращает список пользователей по указанным идентификаторам.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Пользователи найдены",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Некоторые пользователи не найдены")
+            @ApiResponse(responseCode = "404", description = "Некоторые пользователи не найдены",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @GetMapping(
             value = "/in",
@@ -129,7 +135,9 @@ public class UsersApiController {
             @ApiResponse(responseCode = "200", description = "Пользователь обновлен",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.PUT,
