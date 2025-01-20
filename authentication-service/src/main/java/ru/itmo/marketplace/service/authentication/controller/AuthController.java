@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.user.AuthTokenRequestDto;
 import ru.itmo.common.dto.user.AuthTokenResponseDto;
 import ru.itmo.common.dto.user.ValidateTokenRequestDto;
@@ -39,8 +38,12 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Токен валиден",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ValidateTokenResponseDto.class))),
-            @ApiResponse(responseCode = "401", description = "Токен недействителен или истек"),
-            @ApiResponse(responseCode = "400", description = "Некорректный запрос")
+            @ApiResponse(responseCode = "401", description = "Токен недействителен или истек",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -65,8 +68,12 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Успешный вход",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = AuthTokenResponseDto.class))),
-            @ApiResponse(responseCode = "401", description = "Неверные учетные данные"),
-            @ApiResponse(responseCode = "400", description = "Некорректный запрос")
+            @ApiResponse(responseCode = "401", description = "Токен недействителен или истек",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
     })
     @RequestMapping(
             method = RequestMethod.POST,

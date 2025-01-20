@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.listing.*;
 import ru.itmo.common.exception.NotFoundException;
 import ru.itmo.modules.security.InternalAuthentication;
@@ -39,7 +40,9 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Успешное создание объявления",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -65,7 +68,9 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Объявление найдено",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено")
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))) // Add error DTO
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -89,8 +94,12 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Объявление обновлено",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))), // Add error DTO
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))) // Add error DTO
     })
     @RequestMapping(
             method = RequestMethod.PUT,
@@ -118,8 +127,12 @@ public class ListingsApiController {
             description = "Удаляет объявление по ID, доступно только продавцам")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Объявление удалено"),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.DELETE,
@@ -143,6 +156,9 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Результаты поиска",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Некорректные параметры для фильтрации",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))) // Add error DTO
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -173,7 +189,9 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Список открытых объявлений",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -196,8 +214,12 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Статус объявления обновлен",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ModeratedListingResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.PUT,
@@ -226,7 +248,9 @@ public class ListingsApiController {
             @ApiResponse(responseCode = "200", description = "Список объявлений пользователя",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ListingResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,

@@ -1,6 +1,8 @@
 package ru.itmo.marketplace.service.review.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.review.seller.SellerReviewCreateRequestDto;
 import ru.itmo.common.dto.review.seller.SellerReviewResponseDto;
 import ru.itmo.common.dto.review.seller.SellerReviewUpdateRequestDto;
@@ -29,8 +32,8 @@ public class SellerReviewsApiController {
     @Operation(summary = "Создание отзыва о продавце", description = "Создает новый отзыв о продавце от текущего пользователя (покупателя).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва"),
-            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -50,8 +53,8 @@ public class SellerReviewsApiController {
     @Operation(summary = "Удаление отзыва о продавце", description = "Удаляет отзыв о продавце по указанному ID. Доступно для покупателя, оставившего отзыв, или администратора.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно удален"),
-            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
-            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.DELETE,
@@ -70,8 +73,8 @@ public class SellerReviewsApiController {
     @Operation(summary = "Получение своих отзывов о продавцах", description = "Возвращает пагинированный список отзывов о продавцах текущего пользователя. Доступно для покупателя.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
-            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов"),
-            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -90,8 +93,8 @@ public class SellerReviewsApiController {
     @Operation(summary = "Получение отзывов о продавце по его ID", description = "Возвращает пагинированный список отзывов о продавце по его ID. Доступно для всех пользователей.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
-            @ApiResponse(responseCode = "404", description = "Отзывы не найдены"),
-            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
+            @ApiResponse(responseCode = "404", description = "Отзывы не найдены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -109,9 +112,9 @@ public class SellerReviewsApiController {
     @Operation(summary = "Обновление отзыва о продавце", description = "Обновляет существующий отзыв о продавце по указанному ID. Доступно для покупателя, оставившего отзыв.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлен"),
-            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва"),
-            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя, оставившего отзыв")
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя, оставившего отзыв", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.PUT,

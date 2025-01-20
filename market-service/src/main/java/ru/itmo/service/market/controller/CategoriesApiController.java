@@ -3,6 +3,8 @@ package ru.itmo.service.market.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.category.CategoryRequestDto;
 import ru.itmo.common.dto.category.CategoryResponseDto;
 import ru.itmo.common.exception.NotFoundException;
@@ -29,7 +32,9 @@ public class CategoriesApiController {
     @Operation(summary = "Получить список категорий", description = "Возвращает пагинированный список категорий")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список категорий успешно получен"),
-            @ApiResponse(responseCode = "400", description = "Неверные параметры пагинации")
+            @ApiResponse(responseCode = "400", description = "Неверные параметры пагинации",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -48,7 +53,9 @@ public class CategoriesApiController {
     @Operation(summary = "Получить категорию по ID", description = "Возвращает категорию с указанным ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Категория успешно получена"),
-            @ApiResponse(responseCode = "404", description = "Категория не найдена")
+            @ApiResponse(responseCode = "404", description = "Категория не найдена",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.GET,
@@ -69,7 +76,9 @@ public class CategoriesApiController {
     @Operation(summary = "Создать новую категорию", description = "Создает новую категорию и возвращает созданную категорию")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Категория успешно создана"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные категории")
+            @ApiResponse(responseCode = "400", description = "Неверные данные категории",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.POST,
@@ -91,8 +100,12 @@ public class CategoriesApiController {
     @Operation(summary = "Обновить категорию по ID", description = "Обновляет категорию с указанным ID и возвращает обновленную категорию")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Категория успешно обновлена"),
-            @ApiResponse(responseCode = "404", description = "Категория не найдена"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные категории")
+            @ApiResponse(responseCode = "404", description = "Категория не найдена",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "400", description = "Неверные данные категории",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @RequestMapping(
             method = RequestMethod.PUT,
@@ -118,7 +131,9 @@ public class CategoriesApiController {
     @Operation(summary = "Удалить категорию по ID", description = "Удаляет категорию с указанным ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Категория успешно удалена"),
-            @ApiResponse(responseCode = "404", description = "Категория не найдена")
+            @ApiResponse(responseCode = "404", description = "Категория не найдена",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorDto.class)))
     })
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(

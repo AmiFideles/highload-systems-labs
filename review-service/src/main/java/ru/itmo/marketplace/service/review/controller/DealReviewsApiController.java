@@ -1,6 +1,8 @@
 package ru.itmo.marketplace.service.review.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import ru.itmo.common.dto.ApiErrorDto;
 import ru.itmo.common.dto.review.deal.DealReviewRequestDto;
 import ru.itmo.common.dto.review.deal.DealReviewResponseDto;
 import ru.itmo.marketplace.service.review.service.DealReviewService;
@@ -32,7 +35,8 @@ public class DealReviewsApiController {
     @Operation(summary = "Создание отзыва о сделке", description = "Создает новый отзыв о сделке от текущего пользователя (покупателя).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для создания отзыва",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
     })
     @RequestMapping(
@@ -53,7 +57,8 @@ public class DealReviewsApiController {
     @Operation(summary = "Удаление отзыва о сделке", description = "Удаляет отзыв о сделке по указанному ID. Доступно для покупателя, оставившего отзыв, или администратора.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно удален"),
-            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
     })
     @RequestMapping(
@@ -73,7 +78,8 @@ public class DealReviewsApiController {
     @Operation(summary = "Получение отзыва о сделке по ID", description = "Возвращает информацию о отзыве по его ID. Доступно для покупателя, оставившего отзыв, или администратора.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно получен"),
-            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя или администратора")
     })
     @RequestMapping(
@@ -92,7 +98,8 @@ public class DealReviewsApiController {
     @Operation(summary = "Получение списка отзывов о сделках", description = "Возвращает пагинированный список отзывов о сделках текущего пользователя. Доступно для покупателя.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен"),
-            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов"),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры для фильтрации отзывов",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя")
     })
     @RequestMapping(
@@ -112,8 +119,10 @@ public class DealReviewsApiController {
     @Operation(summary = "Обновление отзыва о сделке", description = "Обновляет существующий отзыв о сделке по указанному ID. Доступно для покупателя, оставившего отзыв.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлен"),
-            @ApiResponse(responseCode = "404", description = "Отзыв не найден"),
-            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва"),
+            @ApiResponse(responseCode = "404", description = "Отзыв не найден",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
+            @ApiResponse(responseCode = "400", description = "Неверные данные для обновления отзыва",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "403", description = "Запрещено: доступ только для покупателя, оставившего отзыв")
     })
     @RequestMapping(

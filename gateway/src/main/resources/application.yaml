@@ -103,3 +103,6 @@ springdoc:
 
       - name: reviews-service
         url: /reviews-service/v3/api-docs
+
+      - name: image-service
+        url: /image-service/v3/api-docs
